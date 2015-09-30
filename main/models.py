@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from django.utils import timezone
+import django
 from asct import settings
 
 
@@ -74,7 +74,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     # The user's job
     position = models.CharField(max_length=500, blank=True)
     # The user's registration date
-    registration_date = models.DateTimeField(default=timezone.now())
+    registration_date = models.DateTimeField(default=django.utils.timezone.now)
 
     objects = UserProfileManager()
 
