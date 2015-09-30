@@ -107,8 +107,22 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         return self.is_superuser
 
 
+class Result(models.Model):
+    # The result
+    result = models.FloatField(default=0)
+    # The owner of exam
+    user = models.OneToOneField(settings.AUTH_USER_MODEL)
+
+
 class Exam(models.Model):
-    pass
+    # The name of exam
+    name = models.CharField(max_length=500)
+    # The description of exam
+    description = models.TextField(blank=True)
+    # The owner of exam
+    owner = models.OneToOneField(settings.AUTH_USER_MODEL)
+    # The result
+    result = models.ForeignKey(Result, blank=True, null=True)
 
 
 class SubTheme(models.Model):
@@ -116,9 +130,9 @@ class SubTheme(models.Model):
     name = models.CharField(max_length=500)
     # The description of theme
     description = models.TextField(blank=True)
-    # The owner of journal
+    # The owner of theme
     owner = models.OneToOneField(settings.AUTH_USER_MODEL)
-    # The sub themes to study
+    # The exam
     exam = models.OneToOneField(Exam, blank=True, null=True)
 
 
@@ -127,7 +141,7 @@ class Theme(models.Model):
     name = models.CharField(max_length=500)
     # The description of theme
     description = models.TextField(blank=True)
-    # The owner of journal
+    # The owner of theme
     owner = models.OneToOneField(settings.AUTH_USER_MODEL)
     # The sub themes to study
     sub_theme = models.ForeignKey(SubTheme, blank=True, null=True)
