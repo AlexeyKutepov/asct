@@ -69,6 +69,10 @@ TEMPLATES = [
     },
 ]
 
+AUTH_USER_MODEL = 'main.UserProfile'
+
+ROOT_URLCONF = 'asct.urls'
+
 WSGI_APPLICATION = 'asct.wsgi.application'
 
 
