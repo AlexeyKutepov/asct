@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-import django
+from django.utils import timezone
 from asct import settings
 
 
@@ -74,7 +74,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     # The user's job
     position = models.CharField(max_length=500, blank=True)
     # The user's registration date
-    registration_date = models.DateTimeField(default=django.utils.timezone.now)
+    registration_date = models.DateTimeField(default=timezone.now)
 
     objects = UserProfileManager()
 
@@ -111,7 +111,7 @@ class Result(models.Model):
     # The result
     result = models.FloatField(default=0)
     # The owner of exam
-    user = models.OneToOneField(settings.AUTH_USER_MODEL)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
 
 
 class Exam(models.Model):
@@ -120,7 +120,7 @@ class Exam(models.Model):
     # The description of exam
     description = models.TextField(blank=True)
     # The owner of exam
-    owner = models.OneToOneField(settings.AUTH_USER_MODEL)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
     # The result
     result = models.ForeignKey(Result, blank=True, null=True)
 
@@ -131,9 +131,9 @@ class SubTheme(models.Model):
     # The description of theme
     description = models.TextField(blank=True)
     # The owner of theme
-    owner = models.OneToOneField(settings.AUTH_USER_MODEL)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
     # The exam
-    exam = models.OneToOneField(Exam, blank=True, null=True)
+    exam = models.ForeignKey(Exam, blank=True, null=True)
 
 
 class Theme(models.Model):
@@ -142,7 +142,7 @@ class Theme(models.Model):
     # The description of theme
     description = models.TextField(blank=True)
     # The owner of theme
-    owner = models.OneToOneField(settings.AUTH_USER_MODEL)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
     # The sub themes to study
     sub_theme = models.ForeignKey(SubTheme, blank=True, null=True)
 
@@ -151,6 +151,13 @@ class Journal(models.Model):
     # The name of journal
     name = models.CharField(max_length=500)
     # The owner of journal
-    owner = models.OneToOneField(settings.AUTH_USER_MODEL)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
     # The themes to study
-    theme = models.ForeignKey(Theme, blank=True, null=True)
+    theme = models.OneToOneField(Theme, blank=True, null=True)
+
+
+class ScheduledThemes(models.Model):
+    date_from = models.DateTimeField(default=timezone.now)
+    date_to = models.DateTimeField(default=timezone.now)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    theme = models.ForeignKey(Theme)
