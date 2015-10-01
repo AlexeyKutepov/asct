@@ -112,6 +112,8 @@ class Result(models.Model):
     result = models.FloatField(default=0)
     # The owner of exam
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    # Date of result
+    date = models.DateTimeField(blank=True, null=True)
 
 
 class Exam(models.Model):
@@ -145,6 +147,8 @@ class Theme(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
     # The sub themes to study
     sub_theme = models.ForeignKey(SubTheme, blank=True, null=True)
+    # The exam
+    exam = models.ForeignKey(Exam, blank=True, null=True)
 
 
 class Journal(models.Model):
@@ -156,7 +160,7 @@ class Journal(models.Model):
     theme = models.OneToOneField(Theme, blank=True, null=True)
 
 
-class ScheduledThemes(models.Model):
+class ScheduledTheme(models.Model):
     date_from = models.DateTimeField(default=timezone.now)
     date_to = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)

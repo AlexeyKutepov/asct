@@ -3,6 +3,37 @@ from main.models import *
 from django.contrib.auth.admin import UserAdmin
 from main.models import UserProfile
 
+@admin.register(ScheduledTheme)
+class ScheduledTheme(admin.ModelAdmin):
+    list_display = ('date_from', 'date_to', 'user', 'theme')
+    list_filter = ('date_from', 'date_to', 'user', 'theme')
+
+@admin.register(Result)
+class Result(admin.ModelAdmin):
+    list_display = ('result', 'user', 'date')
+    list_filter = ('result', 'user', 'date')
+
+@admin.register(Exam)
+class Exam(admin.ModelAdmin):
+    list_display = ('name', 'description', 'owner', 'result')
+    list_filter = ('name', 'description', 'owner', 'result')
+
+@admin.register(SubTheme)
+class SubTheme(admin.ModelAdmin):
+    list_display = ('name', 'description', 'owner', 'exam')
+    list_filter = ('name', 'description', 'owner', 'exam')
+
+@admin.register(Theme)
+class Theme(admin.ModelAdmin):
+    list_display = ('name', 'description', 'owner', 'sub_theme', 'exam')
+    list_filter = ('name', 'description', 'owner', 'sub_theme', 'exam')
+
+@admin.register(Journal)
+class Journal(admin.ModelAdmin):
+    list_display = ('name', 'owner', 'theme')
+    list_filter = ('name', 'owner', 'theme')
+
+
 @admin.register(UserProfile)
 class UserProfileAdmin(UserAdmin):
     date_hierarchy = 'date_of_birth'
