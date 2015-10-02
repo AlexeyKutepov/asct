@@ -265,16 +265,12 @@
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
-                        <li class="sidebar-search">
-                            <div class="input-group custom-search-form">
-                                <input type="text" class="form-control" placeholder="Search...">
-                                <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                            </div>
-                            <!-- /input-group -->
+                        <li class="sidebar-photo">
+                            {% if user.photo %}
+                                <img src="{{ MEDIA_URL }}{{ user.photo }}" alt="Фото" width="auto" height="auto">
+                            {% else %}
+                                <img src="holder.js/200x200">
+                            {% endif %}
                         </li>
                         <li>
                             <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
@@ -927,6 +923,8 @@
 
    <!-- Custom Theme JavaScript -->
     <script src="/static/js/sb-admin-2.js"></script>
+
+    <script src="/static/js/holder.js"></script>
 
 </body>
 
