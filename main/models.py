@@ -46,6 +46,15 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         (FEMALE, 'FEMALE'),
     )
 
+    ADMIN = 'ADMIN'
+    OPERATOR = 'OPERATOR'
+    PROBATIONER = 'PROBATIONER'
+    USER_TYPE = (
+        (ADMIN, 'ADMIN'),
+        (OPERATOR, 'OPERATOR'),
+        (PROBATIONER, 'PROBATIONER'),
+    )
+
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -75,6 +84,8 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     position = models.CharField(max_length=500, blank=True)
     # The user's registration date
     registration_date = models.DateTimeField(default=timezone.now)
+    # user type
+    user_type = models.CharField(max_length=11, choices=USER_TYPE, default=ADMIN)
 
     objects = UserProfileManager()
 
@@ -107,35 +118,13 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         return self.is_superuser
 
 
-class Result(models.Model):
-    # The result
-    result = models.FloatField(default=0)
-    # The owner of exam
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    # Date of result
-    date = models.DateTimeField(blank=True, null=True)
-
-
-class Exam(models.Model):
-    # The name of exam
-    name = models.CharField(max_length=500)
-    # The description of exam
-    description = models.TextField(blank=True)
-    # The owner of exam
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
-    # The result
-    result = models.ForeignKey(Result, blank=True, null=True)
-
-
-class SubTheme(models.Model):
-    # The name of theme
+class Journal(models.Model):
+    # The name of journal
     name = models.CharField(max_length=500)
     # The description of theme
     description = models.TextField(blank=True)
-    # The owner of theme
+    # The owner of journal
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
-    # The exam
-    exam = models.ForeignKey(Exam, blank=True, null=True)
 
 
 class Theme(models.Model):
@@ -145,23 +134,92 @@ class Theme(models.Model):
     description = models.TextField(blank=True)
     # The owner of theme
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
-    # The sub themes to study
-    sub_theme = models.ForeignKey(SubTheme, blank=True, null=True)
-    # The exam
-    exam = models.ForeignKey(Exam, blank=True, null=True)
-
-
-class Journal(models.Model):
-    # The name of journal
-    name = models.CharField(max_length=500)
-    # The owner of journal
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
-    # The themes to study
-    theme = models.OneToOneField(Theme, blank=True, null=True)
+    # The journal
+    journal = models.ForeignKey(Journal, blank=True, null=True)
 
 
 class ScheduledTheme(models.Model):
+    # Start date
     date_from = models.DateTimeField(default=timezone.now)
+    # End date
     date_to = models.DateTimeField(default=timezone.now)
+    # User
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    #Theme
     theme = models.ForeignKey(Theme)
+
+
+class ThemeExam(models.Model):
+    # The name of exam
+    name = models.CharField(max_length=500)
+    # The description of exam
+    description = models.TextField(blank=True)
+    # The owner of exam
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
+    # Theme
+    theme = models.ForeignKey(Theme, blank=True, null=True)
+
+
+class ThemeResult(models.Model):
+    # The result
+    result = models.FloatField(default=0)
+    # The owner of exam
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    # Date of result
+    date = models.DateTimeField(blank=True, null=True)
+    # Theme exam
+    theme_exam = models.ForeignKey(ThemeExam, blank=True, null=True)
+
+
+class SubTheme(models.Model):
+    # The name of theme
+    name = models.CharField(max_length=500)
+    # The description of theme
+    description = models.TextField(blank=True)
+    # The owner of theme
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
+    # The parent theme to study
+    parent_theme = models.ForeignKey(Theme, blank=True, null=True)
+
+
+class ScheduledSubTheme(models.Model):
+    # Start date
+    date_from = models.DateTimeField(default=timezone.now)
+    # End date
+    date_to = models.DateTimeField(default=timezone.now)
+    # User
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    #Sub theme
+    sub_theme = models.ForeignKey(SubTheme)
+
+
+class SubThemeExam(models.Model):
+    # The name of exam
+    name = models.CharField(max_length=500)
+    # The description of exam
+    description = models.TextField(blank=True)
+    # The owner of exam
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
+    # The exam
+    sub_theme = models.ForeignKey(SubTheme, blank=True, null=True)
+
+
+class SubThemeResult(models.Model):
+    # The result
+    result = models.FloatField(default=0)
+    # The owner of exam
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    # Date of result
+    date = models.DateTimeField(blank=True, null=True)
+    # Sub theme exam
+    sub_theme_exam = models.ForeignKey(SubThemeExam)
+
+
+class File(models.Model):
+    # File
+    file = models.FileField(upload_to='files')
+    # Theme
+    theme = models.ForeignKey(Theme, blank=True, null=True)
+    # Sub theme
+    sub_theme = models.ForeignKey(SubTheme, blank=True, null=True)
+
