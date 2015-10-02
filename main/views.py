@@ -1,5 +1,4 @@
-from django.http import HttpResponse
 from django.shortcuts import render
 
 def index(request):
-    return HttpResponse("ASCT says hey there world!")
+    return render(request, "base.html")
