@@ -16,9 +16,9 @@ def login(request):
             auth.login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
-            return render(request, "login.html", {"login_error": "has-error"})
+            return render(request, "authentication/login.html", {"login_error": "has-error"})
     else:
-        return render(request, "login.html")
+        return render(request, "authentication/login.html")
 
 
 @login_required(login_url='/')
