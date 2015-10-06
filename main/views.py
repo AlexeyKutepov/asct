@@ -11,7 +11,18 @@ def test_page(request):
 @login_required
 def index(request):
     if request.user.user_type == UserProfile.ADMIN:
-        return render(request, "main/admin_profile.html")
+        admin_list = UserProfile.objects.filter(user_type=UserProfile.ADMIN)
+        operator_list = UserProfile.objects.filter(user_type=UserProfile.OPERATOR)
+        probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER)
+        return render(
+            request,
+            "main/admin_profile.html",
+            {
+                "admin_list": admin_list,
+                "operator_list": operator_list,
+                "probationer_list": probationer_list,
+            }
+        )
     elif request.user.user_type == UserProfile.OPERATOR:
         return render(request, "main/operator_profile.html")
     elif request.user.user_type == UserProfile.PROBATIONER:
