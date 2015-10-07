@@ -36,3 +36,9 @@ def index(request):
         return render(request, "main/probationer_profile.html")
     else:
         return render(request, "base.html")
+
+
+@login_required
+def user_settings(request, id):
+    user_data = UserProfile.objects.get(id=id)
+    return render(request, "main/user_settings.html", {"user_data": user_data})

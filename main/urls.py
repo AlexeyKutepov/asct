@@ -6,5 +6,6 @@ from main import views
 
 urlpatterns = patterns('',
         url(r'^test/$', views.test_page, name='test'),
+        url(r'^user/settings/(?P<id>\d+)/$', views.user_settings, name='user_settings'),
         url(r'^$', views.index, name='index'),
 )
