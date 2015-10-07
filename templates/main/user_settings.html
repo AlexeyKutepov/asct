@@ -1,4 +1,30 @@
 {% extends "base.html" %}
 {% block dashboard %}
-{{ user_data.get_full_name }}
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">Редактирование профиля пользователя</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="row">
+                <div class="form-group">
+                    <label for="inputLastName">Фамилия</label>
+                    <input type="text" class="form-control" id="inputLastName" placeholder="Фамилия" value="{{ user_data.last_name }}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="inputFirstName">Имя</label>
+                    <input type="text" class="form-control" id="inputFirstName" placeholder="Имя" value="{{ user_data.first_name }}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="inputMiddleName">Отчество</label>
+                    <input type="text" class="form-control" id="inputMiddleName" placeholder="Отчество" value="{{ user_data.middle_name }}">
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
