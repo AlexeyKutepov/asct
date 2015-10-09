@@ -8,7 +8,7 @@
     <form id="formUserSettings" action="{% url "user_settings" id=user_data.id %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
         <div class="row">
-            <div class="form-group">
+            <div class="form-group col-lg-4">
                 {% if user_data.photo %}
                     <img id="impPreview"
                          src="{{ MEDIA_URL }}{{ user_data.photo }}"
@@ -73,10 +73,10 @@
                 {% else %}
                     <div id="divGender" class="row">
                         <div class="col-lg-6">
-                            <label><input id="radioMale" type="radio" name="gender" value="MALE">Мужской</label>
+                            <input id="radioMale" type="radio" name="gender" value="MALE">Мужской
                         </div>
                         <div class="col-lg-6">
-                            <label><input id="radioFemale" type="radio" name="gender" value="FEMALE" checked>Женский</label>
+                            <input id="radioFemale" type="radio" name="gender" value="FEMALE" checked>Женский
                         </div>
                     </div>
                 {% endif %}
@@ -103,6 +103,47 @@
                                placeholder="Должность" value="{{ user_data.position }}">
                     </div>
                 </div>
+
+                {% if user.user_type == "ADMIN" %}
+                    <label class="control-label" for="divGender">Тип пользователя:</label>
+                    {% if user_data.user_type == "ADMIN" %}
+                        <div id="divUserType" class="row">
+                            <div class="col-lg-4">
+                                <input id="radioAdmin" type="radio" name="userType" value="ADMIN" checked>Администратор
+                            </div>
+                            <div class="col-lg-4">
+                                <input id="radioOperator" type="radio" name="userType" value="OPERATOR">Оператор
+                            </div>
+                            <div class="col-lg-4">
+                                <input id="radioProbationer" type="radio" name="userType" value="PROBATIONER">Испытуемый
+                            </div>
+                        </div>
+                    {% elif user_data.user_type == "OPERATOR" %}
+                        <div id="divUserType" class="row">
+                            <div class="col-lg-4">
+                                <input id="radioAdmin" type="radio" name="userType" value="ADMIN">Администратор
+                            </div>
+                            <div class="col-lg-4">
+                                <input id="radioOperator" type="radio" name="userType" value="OPERATOR" checked>Оператор
+                            </div>
+                            <div class="col-lg-4">
+                                <input id="radioProbationer" type="radio" name="userType" value="PROBATIONER">Испытуемый
+                            </div>
+                        </div>
+                    {% else %}
+                       <div id="divUserType" class="row">
+                           <div class="col-lg-4">
+                               <input id="radioAdmin" type="radio" name="userType" value="ADMIN">Администратор
+                           </div>
+                           <div class="col-lg-4">
+                               <input id="radioOperator" type="radio" name="userType" value="OPERATOR">Оператор
+                           </div>
+                           <div class="col-lg-4">
+                               <input id="radioProbationer" type="radio" name="userType" value="PROBATIONER" checked>Испытуемый
+                           </div>
+                       </div>
+                    {% endif %}
+                {% endif %}
             </div>
         </div>
         <div class="row">

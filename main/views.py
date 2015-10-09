@@ -58,6 +58,8 @@ def user_settings(request, id):
         user_data.company = request.POST["company"]
         user_data.department = request.POST["department"]
         user_data.position = request.POST["position"]
+        if "userType" in request.POST:
+            user_data.user_type = request.POST["userType"]
         user_data.save()
 
     return render(request, "main/user_settings.html", {"user_data": user_data})
