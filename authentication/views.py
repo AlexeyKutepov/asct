@@ -53,5 +53,40 @@ def user_settings(request, id):
             user_data.user_type = request.POST["userType"]
         user_data.save()
         result["show_alert_success"] = True
-
     return render(request, "authentication/user_settings.html", result)
+
+
+@login_required
+def create_new_user(request):
+    if "create" in request.POST:
+        email = request.POST["email"]
+        try:
+            user_profile_in_db = UserProfile.objects.get(email=email)
+            if user_profile_in_db:
+                pass
+                # return HttpResponseRedirect(reverse("authentication_alert", args=["danger", "Пользователь с e-mail адресом "+email+" уже существует!"]))
+        except:
+            # Exception does not matter
+            pass
+        if "photo" in request.FILES:
+            photo = request.FILES["photo"]
+        else:
+            photo = None
+        if not imghdr.what(photo):
+            photo = None
+        user = auth.get_user_model().objects.create_user(
+            email=email,
+            password=request.POST["password1"],
+            date_of_birth=request.POST["dateOfBirth"],
+            last_name=request.POST["lastName"],
+            first_name=request.POST["firstName"],
+            middle_name=request.POST["middleName"],
+            gender=request.POST["gender"],
+            company=request.POST["company"],
+            department=request.POST["department"],
+            position=request.POST["position"],
+            photo=photo
+        )
+        return HttpResponseRedirect(reverse("index"))
+    else:
+        return render(request, "authentication/create_new_user.html")
