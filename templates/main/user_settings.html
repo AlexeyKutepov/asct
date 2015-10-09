@@ -2,21 +2,44 @@
 {% block dashboard %}
     <div class="row">
         <div class="col-lg-12">
-            <h3 class="page-header">Редактирование профиля пользователя</h3>
+            <h3 class="page-header">{{ user_data.get_full_name }} (редактирование профиля)</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group">
+            {% if user_data.photo %}
+                <img id="impPreview"
+                     src="{{ MEDIA_URL }}{{ user_data.photo }}"
+                     alt="Photo" width="200" height="auto">
+                <p></p>
+                <input id="inputPhoto" name="photo" type="file" accept="image/*" onchange="onPreview(this)">
+            {% else %}
+                <img id="impPreview"
+                     data-src="holder.js/200x200/auto/white"
+                     alt="Photo" width="200" height="200">
+                <p></p>
+                <input id="inputPhoto" name="picture" type="file" accept="image/*" onchange="onPreview(this)">
+            {% endif %}
         </div>
     </div>
     <div class="row">
         <div class="col-lg-4">
             <div class="row">
                 <div class="form-group">
-                    <label for="inputLastName">Фамилия</label>
-                    <input type="text" class="form-control" id="inputLastName" placeholder="Фамилия" value="{{ user_data.last_name }}">
+                    <label for="inputEmail">* e-mail</label>
+                    <input type="email" class="form-control" id="inputEmail" placeholder="e-mail" value="{{ user_data.email }}" required>
                 </div>
             </div>
             <div class="row">
                 <div class="form-group">
-                    <label for="inputFirstName">Имя</label>
-                    <input type="text" class="form-control" id="inputFirstName" placeholder="Имя" value="{{ user_data.first_name }}">
+                    <label for="inputLastName">* Фамилия</label>
+                    <input type="text" class="form-control" id="inputLastName" placeholder="Фамилия" value="{{ user_data.last_name }}" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="inputFirstName">* Имя</label>
+                    <input type="text" class="form-control" id="inputFirstName" placeholder="Имя" value="{{ user_data.first_name }}" required>
                 </div>
             </div>
             <div class="row">
@@ -25,6 +48,55 @@
                     <input type="text" class="form-control" id="inputMiddleName" placeholder="Отчество" value="{{ user_data.middle_name }}">
                 </div>
             </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="inputDateOfBirth"><b>* Дата рождения:</b></label>
+                    <input id="inputDateOfBirth" name="dateOfBirth" type="date" class="form-control" value="{{ user_data.date_of_birth|date:"Y-m-d" }}" required>
+                </div>
+            </div>
+            <label class="control-label" for="divGender">Пол:</label>
+            {% if user.gender == "MALE" %}
+            <div id="divGender" class="row">
+                <div class="col-lg-6">
+                    <input id="radioMale" type="radio" name="gender" value="MALE" checked>Мужской
+                </div>
+                <div class="col-lg-6">
+                    <input id="radioFemale" type="radio" name="gender" value="FEMALE">Женский
+                </div>
+            </div>
+            {% else %}
+                <div id="divGender" class="row">
+                    <div class="col-lg-6">
+                        <label><input id="radioMale" type="radio" name="gender" value="MALE">Мужской</label>
+                    </div>
+                    <div class="col-lg-6">
+                        <label><input id="radioFemale" type="radio" name="gender" value="FEMALE" checked>Женский</label>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-lg-4 col-lg-offset-1">
+            <div class="row">
+                <div class="form-group">
+                    <label for="inputCompany">Компания</label>
+                    <input type="text" class="form-control" id="inputCompany" placeholder="Компания" value="{{ user_data.company }}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="inputDepartment">Подразделение</label>
+                    <input type="text" class="form-control" id="inputDepartment" placeholder="Подразделение" value="{{ user_data.department }}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="inputPosition">Должность</label>
+                    <input type="text" class="form-control" id="inputPosition" placeholder="Должность" value="{{ user_data.position }}">
+                </div>
+            </div>
         </div>
     </div>
+{% endblock %}
+{% block scripts %}
+    <script src="/static/js/user_settings.js"></script>
 {% endblock %}

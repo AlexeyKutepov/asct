@@ -91,7 +91,7 @@ def populate():
         "123456",
         "Григорьев",
         "Григорий",
-        "Грегорьевич",
+        "Григорьевич",
         "1990-09-09",
         UserProfile.MALE,
         UserProfile.PROBATIONER
