@@ -42,6 +42,7 @@ def index(request):
 @login_required
 def user_settings(request, id):
     user_data = UserProfile.objects.get(id=id)
+    result = {"user_data": user_data}
     if "save" in request.POST:
         if "photo" in request.FILES:
             photo = request.FILES["photo"]
@@ -61,5 +62,6 @@ def user_settings(request, id):
         if "userType" in request.POST:
             user_data.user_type = request.POST["userType"]
         user_data.save()
+        result["show_alert_success"] = True
 
-    return render(request, "main/user_settings.html", {"user_data": user_data})
+    return render(request, "main/user_settings.html", result)
