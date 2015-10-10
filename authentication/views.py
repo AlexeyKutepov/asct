@@ -1,3 +1,5 @@
+import random
+import string
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
@@ -6,6 +8,10 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
 from main.models import UserProfile
 import imghdr
+
+
+def generate_password(size=8, chars=string.ascii_uppercase + string.ascii_lowercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 
 
 @csrf_protect
@@ -53,6 +59,7 @@ def user_settings(request, id):
             user_data.user_type = request.POST["userType"]
         user_data.save()
         result["show_alert_success"] = True
+        request["message"] = "Изменения сохранены"
     return render(request, "authentication/user_settings.html", result)
 
 
@@ -72,11 +79,11 @@ def create_new_user(request):
             photo = request.FILES["photo"]
         else:
             photo = None
-        if not imghdr.what(photo):
+        if photo and not imghdr.what(photo):
             photo = None
         user = auth.get_user_model().objects.create_user(
             email=email,
-            password=request.POST["password1"],
+            password=generate_password(),
             date_of_birth=request.POST["dateOfBirth"],
             last_name=request.POST["lastName"],
             first_name=request.POST["firstName"],
@@ -85,8 +92,29 @@ def create_new_user(request):
             company=request.POST["company"],
             department=request.POST["department"],
             position=request.POST["position"],
+            user_type=request.POST["userType"],
             photo=photo
         )
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "authentication/create_new_user.html")
+
+
+@login_required
+def give_new_password(request, id):
+    if request.user.user_type != UserProfile.ADMIN:
+        result = {
+            "status": "error",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
+    else:
+        user_data = UserProfile.objects.get(id=id)
+        password = generate_password()
+        user_data.password = password
+        user_data.save()
+        result = {
+            "status": "success",
+            "message": "<p>Пользователь " + user_data.get_full_name() + " получил новый пароль для доступа в ASCT: " + password + "</p> <p>Пароль отправлен на электронную почту пользователя: " + user_data.email + "</p>"
+        }
+        return render(request, "alert.html", result)
