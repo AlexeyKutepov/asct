@@ -2,10 +2,12 @@ import random
 import string
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
+from asct import settings
 from main.models import UserProfile
 import imghdr
 
@@ -81,9 +83,10 @@ def create_new_user(request):
             photo = None
         if photo and not imghdr.what(photo):
             photo = None
+        password = generate_password()
         user = auth.get_user_model().objects.create_user(
             email=email,
-            password=generate_password(),
+            password=password,
             date_of_birth=request.POST["dateOfBirth"],
             last_name=request.POST["lastName"],
             first_name=request.POST["firstName"],
@@ -95,6 +98,16 @@ def create_new_user(request):
             user_type=request.POST["userType"],
             photo=photo
         )
+        try:
+            send_mail(
+                'Регистрация в ASCT',
+                'Здравствуйте ' + user.first_name + '! \n \n Вы успешно зарегистрированы в сервисе ASCT \n \n Ваш логин: ' + user.email + ' \n Ваш пароль: ' + password,
+                getattr(settings, "EMAIL_HOST_USER", None),
+                [user.email],
+                fail_silently=False
+            )
+        except:
+            pass
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "authentication/create_new_user.html")
@@ -113,6 +126,16 @@ def give_new_password(request, id):
         password = generate_password()
         user_data.password = password
         user_data.save()
+        try:
+            send_mail(
+                'Новый пароль доступа в ASCT',
+                'Здравствуйте ' + user_data.first_name + '! \n \n Вам выдан новый пароль доступа в ASCT \n \n Ваш логин: ' + user_data.email + ' \n Ваш пароль: ' + password,
+                getattr(settings, "EMAIL_HOST_USER", None),
+                [user_data.email],
+                fail_silently=False
+            )
+        except:
+            pass
         result = {
             "status": "success",
             "message": "<p>Пользователь " + user_data.get_full_name() + " получил новый пароль для доступа в ASCT: " + password + "</p> <p>Пароль отправлен на электронную почту пользователя: " + user_data.email + "</p>"
