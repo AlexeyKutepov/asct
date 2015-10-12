@@ -68,7 +68,7 @@ def user_settings(request, id):
             user_data.user_type = request.POST["userType"]
         user_data.save()
         result["show_alert_success"] = True
-        request["message"] = "Изменения сохранены"
+        result["message"] = "Изменения сохранены"
     return render(request, "authentication/user_settings.html", result)
 
 
@@ -79,8 +79,11 @@ def create_new_user(request):
         try:
             user_profile_in_db = UserProfile.objects.get(email=email)
             if user_profile_in_db:
-                pass
-                # return HttpResponseRedirect(reverse("authentication_alert", args=["danger", "Пользователь с e-mail адресом "+email+" уже существует!"]))
+                result = {
+                    "status": "danger",
+                    "message": "Пользователь с e-mail адресом "+email+" уже существует!"
+                    }
+                return render(request, "alert.html", result)
         except:
             # Exception does not matter
             pass
@@ -91,6 +94,10 @@ def create_new_user(request):
         if photo and not imghdr.what(photo):
             photo = None
         password = generate_password()
+        if "userType" in request.POST:
+            user_type = request.POST["userType"]
+        else:
+            user_type = UserProfile.PROBATIONER
         user = auth.get_user_model().objects.create_user(
             email=email,
             password=password,
@@ -102,7 +109,7 @@ def create_new_user(request):
             company=request.POST["company"],
             department=request.POST["department"],
             position=request.POST["position"],
-            user_type=request.POST["userType"],
+            user_type=user_type,
             photo=photo
         )
         try:
@@ -115,7 +122,11 @@ def create_new_user(request):
             )
         except:
             pass
-        return HttpResponseRedirect(reverse("index"))
+        result = {
+            "status": "success",
+            "message": "<p>Пользователь " + user.get_full_name() + " успешно добавлен в систему</p> <p>Логин и пароль для доступа в ASCT отправлены на электронную почту пользователя: " + user.email + "</p>"
+        }
+        return render(request, "alert.html", result)
     else:
         return render(request, "authentication/create_new_user.html")
 
@@ -138,7 +149,7 @@ def give_new_password(request, id):
                 }
             return render(request, "alert.html", result)
         password = generate_password()
-        user_data.password = password
+        user_data.set_password(password)
         user_data.save()
         try:
             send_mail(
