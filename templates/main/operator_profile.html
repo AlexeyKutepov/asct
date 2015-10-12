@@ -34,9 +34,16 @@
                 </div>
                 <div class="panel-body user-panel">
                     <table id="tableProbationerList" class="table table-hover">
+                        <thead>
+                            <th>ФИО</th>
+                            <th>Подразделение</th>
+                            <th>Должность</th>
+                        </thead>
                         {% for probationer in probationer_list %}
                         <tr>
                             <td><a href="{% url "user_settings" id=probationer.id %}">{{ probationer.get_full_name }}</a></td>
+                            <td>{{ probationer.department }}</td>
+                            <td>{{ probationer.position }}</td>
                         </tr>
                         {% endfor %}
                     </table>
