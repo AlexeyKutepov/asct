@@ -33,13 +33,21 @@
                     </h4>
                 </div>
                 <div class="panel-body user-panel">
-                    <table class="table table-hover">
+                    <table id="tableProbationerList" class="table table-hover">
                         {% for probationer in probationer_list %}
                         <tr>
                             <td><a href="{% url "user_settings" id=probationer.id %}">{{ probationer.get_full_name }}</a></td>
                         </tr>
                         {% endfor %}
                     </table>
+                </div>
+                <div class="panel-footer input-group custom-search-form">
+                    <input id="inputProbationerSearch" type="text" class="form-control" placeholder="Поиск...">
+                    <span class="input-group-btn">
+                        <button id="buttonProbationerSearch" class="btn btn-default" type="button">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
                 </div>
             </div>
         </div>
@@ -52,4 +60,7 @@
     <div class="row">
         <p>В разработке ...</p>
     </div>
+{% endblock %}
+{% block scripts %}
+    <script src="/static/js/operator_profile.js"></script>
 {% endblock %}
