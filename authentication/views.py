@@ -39,7 +39,14 @@ def logout(request):
 
 @login_required
 def user_settings(request, id):
-    user_data = UserProfile.objects.get(id=id)
+    try:
+        user_data = UserProfile.objects.get(id=id)
+    except:
+        result = {
+            "status": "danger",
+            "message": "Пользователь не найден"
+            }
+        return render(request, "alert.html", result)
     result = {"user_data": user_data}
     if "save" in request.POST:
         if "photo" in request.FILES:
@@ -117,12 +124,19 @@ def create_new_user(request):
 def give_new_password(request, id):
     if request.user.user_type != UserProfile.ADMIN:
         result = {
-            "status": "error",
+            "status": "danger",
             "message": "Доступ запрещён"
             }
         return render(request, "alert.html", result)
     else:
-        user_data = UserProfile.objects.get(id=id)
+        try:
+            user_data = UserProfile.objects.get(id=id)
+        except:
+            result = {
+                "status": "danger",
+                "message": "Пользователь не найден"
+                }
+            return render(request, "alert.html", result)
         password = generate_password()
         user_data.password = password
         user_data.save()
@@ -139,5 +153,31 @@ def give_new_password(request, id):
         result = {
             "status": "success",
             "message": "<p>Пользователь " + user_data.get_full_name() + " получил новый пароль для доступа в ASCT: " + password + "</p> <p>Пароль отправлен на электронную почту пользователя: " + user_data.email + "</p>"
+        }
+        return render(request, "alert.html", result)
+
+
+@login_required
+def delete_user(request, id):
+    if request.user.user_type != UserProfile.ADMIN:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
+    else:
+        try:
+            user_data = UserProfile.objects.get(id=id)
+        except:
+            result = {
+                "status": "danger",
+                "message": "Пользователь не найден"
+                }
+            return render(request, "alert.html", result)
+        full_name = user_data.get_full_name()
+        user_data.delete()
+        result = {
+            "status": "success",
+            "message": "<p>Пользователь " + full_name + " удалён</p>"
         }
         return render(request, "alert.html", result)
