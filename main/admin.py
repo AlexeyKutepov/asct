@@ -4,6 +4,12 @@ from django.contrib.auth.admin import UserAdmin
 from main.models import UserProfile
 
 
+@admin.register(Company)
+class Company(admin.ModelAdmin):
+    list_display = ('name',)
+    list_filter = ('name',)
+
+
 @admin.register(SubThemeResult)
 class SubThemeResult(admin.ModelAdmin):
     list_display = ('result', 'user', 'date', 'sub_theme_exam')

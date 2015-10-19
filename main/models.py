@@ -37,6 +37,9 @@ class UserProfileManager(BaseUserManager):
 class Company(models.Model):
     name = models.TextField()
 
+    def __str__(self):
+        return self.name
+
 
 class UserProfile(AbstractBaseUser, PermissionsMixin):
     """
