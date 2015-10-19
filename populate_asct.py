@@ -7,7 +7,7 @@ import django
 django.setup()
 
 from django.contrib.auth.models import User
-from main.models import UserProfile
+from main.models import UserProfile, Company
 
 
 def populate():
@@ -15,7 +15,43 @@ def populate():
     Populates the database.
     :return:
     """
+    company1 = add_company("company1")
+    company2 = add_company("company2")
+    company3 = add_company("company3")
     add_super_user()
+    add_user(
+        "curator1@mail.ru",
+        "123456",
+        "Николаев",
+        "Пётр",
+        "Иванович",
+        "1990-02-02",
+        UserProfile.MALE,
+        UserProfile.CURATOR,
+        company1
+    )
+    add_user(
+        "curator2@mail.ru",
+        "123456",
+        "Петров",
+        "Никита",
+        "Сергеевич",
+        "1990-03-03",
+        UserProfile.MALE,
+        UserProfile.CURATOR,
+        company2
+    )
+    add_user(
+        "curator3@mail.ru",
+        "123456",
+        "Сидоров",
+        "Виктор",
+        "Павлович",
+        "1990-04-04",
+        UserProfile.MALE,
+        UserProfile.CURATOR,
+        company3
+    )
     add_user(
         "user1@mail.ru",
         "123456",
@@ -24,7 +60,8 @@ def populate():
         "Иванович",
         "1990-02-02",
         UserProfile.MALE,
-        UserProfile.ADMIN
+        UserProfile.ADMIN,
+        company1
     )
     add_user(
         "user2@mail.ru",
@@ -34,7 +71,8 @@ def populate():
         "Петрович",
         "1990-03-03",
         UserProfile.MALE,
-        UserProfile.ADMIN
+        UserProfile.ADMIN,
+        company2
     )
     add_user(
         "user3@mail.ru",
@@ -44,7 +82,8 @@ def populate():
         "Сидорович",
         "1990-04-04",
         UserProfile.MALE,
-        UserProfile.ADMIN
+        UserProfile.ADMIN,
+        company3
     )
     add_user(
         "user4@mail.ru",
@@ -54,7 +93,8 @@ def populate():
         "Васильевич",
         "1990-05-05",
         UserProfile.MALE,
-        UserProfile.OPERATOR
+        UserProfile.OPERATOR,
+        company1
     )
     add_user(
         "user5@mail.ru",
@@ -64,7 +104,8 @@ def populate():
         "Алексеевич",
         "1990-06-06",
         UserProfile.MALE,
-        UserProfile.OPERATOR
+        UserProfile.OPERATOR,
+        company2
     )
     add_user(
         "user6@mail.ru",
@@ -74,7 +115,8 @@ def populate():
         "Викторович",
         "1990-07-07",
         UserProfile.MALE,
-        UserProfile.OPERATOR
+        UserProfile.OPERATOR,
+        company3
     )
     add_user(
         "user7@mail.ru",
@@ -84,7 +126,8 @@ def populate():
         "Аркадьевич",
         "1990-08-08",
         UserProfile.MALE,
-        UserProfile.PROBATIONER
+        UserProfile.PROBATIONER,
+        company1
     )
     add_user(
         "user8@mail.ru",
@@ -94,7 +137,8 @@ def populate():
         "Григорьевич",
         "1990-09-09",
         UserProfile.MALE,
-        UserProfile.PROBATIONER
+        UserProfile.PROBATIONER,
+        company2
     )
     add_user(
         "user9@mail.ru",
@@ -104,8 +148,14 @@ def populate():
         "Никифорович",
         "1990-10-10",
         UserProfile.MALE,
-        UserProfile.PROBATIONER
+        UserProfile.PROBATIONER,
+        company3
     )
+
+
+def add_company(name):
+    company = Company.objects.get_or_create(name=name)[0]
+    return company
 
 
 def add_super_user():
@@ -124,7 +174,7 @@ def add_super_user():
         print("Impossible to create a superuser.")
 
 
-def add_user(email, password, last_name, first_name, middle_name, birthday, gender, user_type):
+def add_user(email, password, last_name, first_name, middle_name, birthday, gender, user_type, company):
     """
     Creates new user into database
     :param email:
@@ -146,9 +196,9 @@ def add_user(email, password, last_name, first_name, middle_name, birthday, gend
         date_of_birth=birthday,
         gender=gender,
         user_type=user_type,
+        company=company,
     )
     return user_profile
-
 
 
 if __name__ == '__main__':

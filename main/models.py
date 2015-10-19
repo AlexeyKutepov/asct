@@ -34,6 +34,10 @@ class UserProfileManager(BaseUserManager):
                                  **extra_fields)
 
 
+class Company(models.Model):
+    name = models.TextField()
+
+
 class UserProfile(AbstractBaseUser, PermissionsMixin):
     """
     The user-profile model
@@ -46,10 +50,12 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         (FEMALE, 'FEMALE'),
     )
 
+    CURATOR = 'CURATOR'
     ADMIN = 'ADMIN'
     OPERATOR = 'OPERATOR'
     PROBATIONER = 'PROBATIONER'
     USER_TYPE = (
+        (CURATOR, 'CURATOR'),
         (ADMIN, 'ADMIN'),
         (OPERATOR, 'OPERATOR'),
         (PROBATIONER, 'PROBATIONER'),
@@ -77,7 +83,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     # The user's profile photo
     photo = models.ImageField(upload_to='profile_photos', blank=True)
     # The company where the user works
-    company = models.CharField(max_length=500, blank=True)
+    company = models.ForeignKey(Company, blank=True, null=True)
     # The department where the user works
     department = models.CharField(max_length=500, blank=True)
     # The user's job
@@ -85,7 +91,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     # The user's registration date
     registration_date = models.DateTimeField(default=timezone.now)
     # user type
-    user_type = models.CharField(max_length=11, choices=USER_TYPE, default=ADMIN)
+    user_type = models.CharField(max_length=11, choices=USER_TYPE, default=CURATOR)
 
     objects = UserProfileManager()
 
