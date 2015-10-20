@@ -1,6 +1,8 @@
 from django.contrib.auth.decorators import login_required
+from django.core.serializers.json import DjangoJSONEncoder
+from django.http import JsonResponse
 from django.shortcuts import render
-from main.models import UserProfile, Company
+from main.models import UserProfile, Company, Department
 
 
 @login_required
@@ -57,7 +59,6 @@ def prepare_probationer_page(request):
     return render(request, "main/probationer_profile.html")
 
 
-
 @login_required
 def index(request):
     if request.user.user_type == UserProfile.CURATOR:
@@ -70,5 +71,23 @@ def index(request):
         return prepare_probationer_page(request)
     else:
         return render(request, "base.html")
+
+
+@login_required
+def get_department_list(request):
+    if "id" in request.POST:
+        company = Company.objects.get(id=request.POST["id"])
+        department_list = Department.objects.filter(company=company)
+        result = {}
+        list = []
+        for department in department_list:
+            list.append({
+                "id": department.id,
+                "name": department.name
+            })
+        result["department_list"] = list
+        return JsonResponse(result)
+    else:
+        return JsonResponse({"department_list": []})
 
 

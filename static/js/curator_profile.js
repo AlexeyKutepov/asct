@@ -52,5 +52,23 @@ $(document).ready(function () {
     $("#buttonProbationerSearch").click(probationerSearch);
     $("#inputProbationerSearch").change(probationerSearch).keyup(probationerSearch);
 
+
+    $("a[name='aCompanyName']").click(function() {
+        $.ajax({
+            type: "POST",
+            url: "/get/department/list/",
+            data: {
+                csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+                id: $( this).attr("property")
+            },
+            success: function(data) {
+                alert("Процесс запущен!");
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                alert("Error: "+errorThrown+xhr.status+xhr.responseText);
+            }
+        });
+    });
+
 });
 

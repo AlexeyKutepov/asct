@@ -41,6 +41,14 @@ class Company(models.Model):
         return self.name
 
 
+class Department(models.Model):
+    name = models.TextField()
+    company = models.ForeignKey(Company)
+
+    def __str__(self):
+        return self.name
+
+
 class UserProfile(AbstractBaseUser, PermissionsMixin):
     """
     The user-profile model
@@ -88,7 +96,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     # The company where the user works
     company = models.ForeignKey(Company, blank=True, null=True)
     # The department where the user works
-    department = models.CharField(max_length=500, blank=True)
+    department = models.ForeignKey(Department, blank=True, null=True)
     # The user's job
     position = models.CharField(max_length=500, blank=True)
     # The user's registration date

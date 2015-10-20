@@ -9,6 +9,11 @@ class Company(admin.ModelAdmin):
     list_display = ('name',)
     list_filter = ('name',)
 
+@admin.register(Department)
+class Department(admin.ModelAdmin):
+    list_display = ('name', 'company')
+    list_filter = ('name', 'company')
+
 
 @admin.register(SubThemeResult)
 class SubThemeResult(admin.ModelAdmin):
