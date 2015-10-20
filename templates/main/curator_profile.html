@@ -15,7 +15,7 @@
                     <h4>Компании</h4>
                 </div>
                 <div class="panel-body user-panel">
-                    <table id="tableCuratorList" class="table table-hover">
+                    <table id="tableCompanyList" class="table table-hover">
                         {% for company in company_list %}
                         <tr>
                             <td><a name="aCompanyName" href="#" property="{{ company.id }}">{{ company.name }}</a></td>
@@ -24,9 +24,9 @@
                     </table>
                 </div>
                 <div class="panel-footer input-group custom-search-form">
-                    <input id="inputCuratorSearch" type="text" class="form-control" placeholder="Поиск...">
+                    <input id="inputCompanySearch" type="text" class="form-control" placeholder="Поиск...">
                     <span class="input-group-btn">
-                        <button id="buttonCuratorSearch" class="btn btn-default" type="button">
+                        <button id="buttonCompanySearch" class="btn btn-default" type="button">
                             <i class="fa fa-search"></i>
                         </button>
                     </span>
@@ -39,18 +39,14 @@
                     <h4>Подразделения</h4>
                 </div>
                 <div class="panel-body user-panel">
-                    <table id="tableCuratorList" class="table table-hover">
-                        {% for curator in curator_list %}
-                        <tr>
-                            <td><a href="{% url "user_settings" id=curator.id %}">{{ curator.get_full_name }}</a></td>
-                        </tr>
-                        {% endfor %}
+                    <table id="tableDepartmentList" class="table table-hover">
+
                     </table>
                 </div>
                 <div class="panel-footer input-group custom-search-form">
-                    <input id="inputCuratorSearch" type="text" class="form-control" placeholder="Поиск...">
+                    <input id="inputDepartmentSearch" type="text" class="form-control" placeholder="Поиск...">
                     <span class="input-group-btn">
-                        <button id="buttonCuratorSearch" class="btn btn-default" type="button">
+                        <button id="buttonDepartmentSearch" class="btn btn-default" type="button">
                             <i class="fa fa-search"></i>
                         </button>
                     </span>

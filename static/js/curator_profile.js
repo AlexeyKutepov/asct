@@ -62,7 +62,15 @@ $(document).ready(function () {
                 id: $( this).attr("property")
             },
             success: function(data) {
-                alert("Процесс запущен!");
+                $("#tableDepartmentList > tbody > tr").each(function() {
+                    $(this).remove();
+                });
+                var departmentList = data["department_list"];
+                var result = "";
+                for (var i = 0; i < departmentList.length; i++) {
+                    result += "<tr><td><a href='#' property='" + departmentList[i]["id"] + "'>" + departmentList[i]["name"] + "</a></td></tr>";
+                }
+                $("#tableDepartmentList").append(result);
             },
             error: function(xhr, textStatus, errorThrown) {
                 alert("Error: "+errorThrown+xhr.status+xhr.responseText);
