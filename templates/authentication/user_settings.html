@@ -113,7 +113,11 @@
                         <label for="selectCompany"><b>Компания</b></label>
                         <p><select id="selectCompany" name="company" class="selectpicker">
                             {% for company in company_list %}
-                             <option>{{ company }}</option>
+                                {% if company == user_data.company %}
+                                    <option value="{{ company.id }}" selected>{{ company }}</option>
+                                {% else %}
+                                    <option value="{{ company.id }}">{{ company }}</option>
+                                {% endif %}
                             {% endfor %}
                         </select>
                     </div>
@@ -122,6 +126,13 @@
                     <div class="form-group">
                         <label for="selectDepartment"><b>Подразделение</b></label>
                         <p><select id="selectDepartment" name="department" class="selectpicker">
+                            {% for department in department_list %}
+                                {% if department == user_data.department %}
+                                    <option value="{{ department.id }}" selected>{{ department }}</option>
+                                {% else %}
+                                    <option value="{{ department.id }}">{{ department }}</option>
+                                {% endif %}
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
