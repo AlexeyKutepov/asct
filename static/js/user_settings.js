@@ -18,3 +18,10 @@ function onPreview(input) {
         reader.readAsDataURL(input.files[0]);
     }
 }
+
+$(document).ready(function () {
+  $('.selectpicker').selectpicker({
+      style: 'btn-default',
+      size: 4
+  });
+});

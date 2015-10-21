@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
 from asct import settings
-from main.models import UserProfile
+from main.models import UserProfile, Company
 import imghdr
 
 
@@ -47,7 +47,8 @@ def user_settings(request, id):
             "message": "Пользователь не найден"
             }
         return render(request, "alert.html", result)
-    result = {"user_data": user_data}
+    company_list = Company.objects.all()
+    result = {"user_data": user_data, "company_list": company_list}
     if "save" in request.POST:
         if "photo" in request.FILES:
             photo = request.FILES["photo"]

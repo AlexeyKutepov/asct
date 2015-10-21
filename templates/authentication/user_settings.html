@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block style %}
+<link href="/static/css/bootstrap-select.min.css" rel="stylesheet">
+{% endblock %}
 {% block dashboard %}
     <div class="row">
         <div class="col-lg-12">
@@ -107,9 +110,12 @@
             <div class="col-lg-4 col-lg-offset-1">
                 <div class="row">
                     <div class="form-group">
-                        <label for="inputCompany">Компания</label>
-                        <input type="text" class="form-control" id="inputCompany" name="company"
-                               placeholder="Компания" value="{{ user_data.company }}">
+                        <label for="selectCompany"><b>Компания</b></label>
+                        <p><select id="selectCompany" name="category" class="selectpicker">
+                            {% for company in company_list %}
+                             <option>{{ company }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
                 <div class="row">
@@ -180,4 +186,5 @@
 {% endblock %}
 {% block scripts %}
     <script src="/static/js/user_settings.js"></script>
+    <script src="/static/js/bootstrap-select.js"></script>
 {% endblock %}
