@@ -68,7 +68,7 @@ $(document).ready(function () {
                 var departmentList = data["department_list"];
                 var result = "";
                 for (var i = 0; i < departmentList.length; i++) {
-                    result += "<tr><td><a href='#' name='aDepartmentName' property='" + departmentList[i]["id"] + "'>" + departmentList[i]["name"] + "</a></td></tr>";
+                    result += "<tr><td><a href=\"#\" name=\"aDepartmentName\" property=\"" + departmentList[i]["id"] + "\">" + departmentList[i]["name"] + "</a></td></tr>";
                 }
                 $("#tableDepartmentList").append(result);
             },
@@ -78,7 +78,8 @@ $(document).ready(function () {
         });
     });
 
-    $("a[name='aDepartmentName']").click(function() {
+
+    $('#tableDepartmentList').on( "click", "a[name='aDepartmentName']", function() {
         $.ajax({
             type: "POST",
             url: "/get/user/list/by/department/",
@@ -93,7 +94,7 @@ $(document).ready(function () {
                 var userList = data["user_list"];
                 var result = "";
                 for (var i = 0; i < userList.length; i++) {
-                    result += "<tr><td><a href='#' property='" + userList[i]["id"] + "'>" + userList[i]["name"] + "</a></td></tr>";
+                    result += "<tr><td><a href=\"#\" property=\"" + userList[i]["id"] + "\">" + userList[i]["name"] + "</a></td></tr>";
                 }
                 $("#tableUserList").append(result);
             },
