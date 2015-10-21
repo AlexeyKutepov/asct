@@ -91,3 +91,20 @@ def get_department_list(request):
         return JsonResponse({"department_list": []})
 
 
+@login_required
+def get_user_list_by_department(request):
+    if "id" in request.POST:
+        department = Department.objects.get(id=request.POST["id"])
+        user_list = UserProfile.objects.filter(department=department)
+        result = {}
+        list = []
+        for user in user_list:
+            list.append({
+                "id": user.id,
+                "name": user.get_full_name()
+            })
+        result["user_list"] = list
+        return JsonResponse(result)
+    else:
+        return JsonResponse({"user_list": []})
+
