@@ -68,9 +68,34 @@ $(document).ready(function () {
                 var departmentList = data["department_list"];
                 var result = "";
                 for (var i = 0; i < departmentList.length; i++) {
-                    result += "<tr><td><a href='#' property='" + departmentList[i]["id"] + "'>" + departmentList[i]["name"] + "</a></td></tr>";
+                    result += "<tr><td><a href='#' name='aDepartmentName' property='" + departmentList[i]["id"] + "'>" + departmentList[i]["name"] + "</a></td></tr>";
                 }
                 $("#tableDepartmentList").append(result);
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                alert("Error: "+errorThrown+xhr.status+xhr.responseText);
+            }
+        });
+    });
+
+    $("a[name='aDepartmentName']").click(function() {
+        $.ajax({
+            type: "POST",
+            url: "/get/user/list/by/department/",
+            data: {
+                csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+                id: $( this).attr("property")
+            },
+            success: function(data) {
+                $("#tableUserList > tbody > tr").each(function() {
+                    $(this).remove();
+                });
+                var userList = data["user_list"];
+                var result = "";
+                for (var i = 0; i < userList.length; i++) {
+                    result += "<tr><td><a href='#' property='" + userList[i]["id"] + "'>" + userList[i]["name"] + "</a></td></tr>";
+                }
+                $("#tableUserList").append(result);
             },
             error: function(xhr, textStatus, errorThrown) {
                 alert("Error: "+errorThrown+xhr.status+xhr.responseText);

@@ -59,18 +59,13 @@
                     <h4>Сотрудники</h4>
                 </div>
                 <div class="panel-body user-panel">
-                    <table id="tableCuratorList" class="table table-hover">
-                        {% for curator in curator_list %}
-                        <tr>
-                            <td><a href="{% url "user_settings" id=curator.id %}">{{ curator.get_full_name }}</a></td>
-                        </tr>
-                        {% endfor %}
+                    <table id="tableUserList" class="table table-hover">
                     </table>
                 </div>
                 <div class="panel-footer input-group custom-search-form">
-                    <input id="inputCuratorSearch" type="text" class="form-control" placeholder="Поиск...">
+                    <input id="inputUserSearch" type="text" class="form-control" placeholder="Поиск...">
                     <span class="input-group-btn">
-                        <button id="buttonCuratorSearch" class="btn btn-default" type="button">
+                        <button id="buttonUserSearch" class="btn btn-default" type="button">
                             <i class="fa fa-search"></i>
                         </button>
                     </span>
