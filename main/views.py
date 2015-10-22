@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
-from django.core.serializers.json import DjangoJSONEncoder
-from django.http import JsonResponse
+from django.core.urlresolvers import reverse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
 from main.models import UserProfile, Company, Department
 
@@ -107,4 +107,13 @@ def get_user_list_by_department(request):
         return JsonResponse(result)
     else:
         return JsonResponse({"user_list": []})
+
+
+@login_required
+def create_new_company(request):
+    if request.user.user_type == UserProfile.CURATOR:
+        return render(request, "main/company_settings.html", {"title": "Новая компания"})
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
 
