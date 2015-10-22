@@ -66,8 +66,12 @@ def user_settings(request, id):
         user_data.middle_name = request.POST["middleName"]
         user_data.date_of_birth = request.POST["dateOfBirth"]
         user_data.gender = request.POST["gender"]
-        user_data.company = request.POST["company"]
-        user_data.department = request.POST["department"]
+        if "company" in request.POST:
+            company = Company.objects.get(id=request.POST["company"][0])
+            user_data.company = company
+        if "department" in request.POST:
+            department = Department.objects.get(id=request.POST["department"][0])
+            user_data.department = department
         user_data.position = request.POST["position"]
         if "userType" in request.POST:
             user_data.user_type = request.POST["userType"]
