@@ -94,7 +94,7 @@ $(document).ready(function () {
                 var userList = data["user_list"];
                 var result = "";
                 for (var i = 0; i < userList.length; i++) {
-                    result += "<tr><td><a href=\"#\" property=\"" + userList[i]["id"] + "\">" + userList[i]["name"] + "</a></td></tr>";
+                    result += "<tr><td><a href=\"/accounts/settings/" + userList[i]["id"] + "\" property=\"" + userList[i]["id"] + "\">" + userList[i]["name"] + "</a></td></tr>";
                 }
                 $("#tableUserList").append(result);
             },
