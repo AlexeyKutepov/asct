@@ -25,26 +25,32 @@ $(document).ready(function () {
         size: 4
     });
 
-    //$.ajax({
-    //    type: "POST",
-    //    url: "/get/department/list/",
-    //    data: {
-    //        csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
-    //        id: $("#selectCompany").val()
-    //    },
-    //    success: function(data) {
-    //        $("#selectDepartment > option").each(function() {
-    //            $(this).remove();
-    //        });
-    //        var departmentList = data["department_list"];
-    //        var result = "";
-    //        for (var i = 0; i < departmentList.length; i++) {
-    //            result += "<option value=\"" + departmentList[i]["id"] + "\">" + departmentList[i]["name"] + "</option>";
-    //        }
-    //        $("#selectDepartment").append(result);
-    //    },
-    //    error: function(xhr, textStatus, errorThrown) {
-    //        alert("Error: "+errorThrown+xhr.status+xhr.responseText);
-    //    }
-    //});
+    $("#selectCompany").change(function() {
+        $.ajax({
+            type: "POST",
+            url: "/get/department/list/",
+            data: {
+                csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+                id: $(this).val()
+            },
+            success: function (data) {
+                $('#selectDepartment')
+                    .find('option')
+                    .remove()
+                    .end()
+                    .selectpicker('refresh')
+                ;
+                var departmentList = data["department_list"];
+                for (var i = 0; i < departmentList.length; i++) {
+                    $('#selectDepartment').append($("<option/>", {
+                        value: departmentList[i]["id"],
+                        text: departmentList[i]["name"]
+                    })).selectpicker('refresh');
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                alert("Error: " + errorThrown + xhr.status + xhr.responseText);
+            }
+        });
+    });
 });
