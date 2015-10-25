@@ -100,6 +100,7 @@ $(document).ready(function () {
                 alert("Error: "+errorThrown+xhr.status+xhr.responseText);
             }
         });
+        return false;
     });
 
 
@@ -126,6 +127,7 @@ $(document).ready(function () {
                 alert("Error: "+errorThrown+xhr.status+xhr.responseText);
             }
         });
+        return false;
     });
 
 });
