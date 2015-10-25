@@ -53,6 +53,30 @@ $(document).ready(function () {
     $("#inputProbationerSearch").change(probationerSearch).keyup(probationerSearch);
 
 
+    $.ajax({
+        type: "POST",
+        url: "/get/journal/list/",
+        data: {
+            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+            id: $( this).attr("property")
+        },
+        success: function(data) {
+            $("#tableJournalList > tbody > tr").each(function() {
+                $(this).remove();
+            });
+            var journalList = data["journal_list"];
+            var result = "";
+            for (var i = 0; i < journalList.length; i++) {
+                result += "<tr><td><a href=\"#\" name=\"aJournal\" property=\"" + journalList[i]["id"] + "\">" + journalList[i]["name"] + "</a></td><td>" + journalList[i]["owner"] + "</td></tr>";
+            }
+            $("#tableJournalList").append(result);
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            alert("Error: "+errorThrown+xhr.status+xhr.responseText);
+        }
+    });
+
+
     $("a[name='aCompanyName']").click(function() {
         $.ajax({
             type: "POST",

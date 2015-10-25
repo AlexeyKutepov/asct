@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
-from main.models import UserProfile, Company, Department
+from main.models import UserProfile, Company, Department, Journal
 
 
 @login_required
@@ -107,6 +107,20 @@ def get_user_list_by_department(request):
         return JsonResponse(result)
     else:
         return JsonResponse({"user_list": []})
+
+
+@login_required
+def get_journal_list(request):
+    journal_list = Journal.objects.all()
+    result_list = []
+    for journal in journal_list:
+        result_list.append({
+            "id": journal.id,
+            "name": journal.name,
+            "owner": journal.owner.get_full_name()
+        })
+    return JsonResponse({"journal_list": result_list})
+
 
 
 @login_required
