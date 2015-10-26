@@ -126,7 +126,23 @@ def get_journal_list(request):
 @login_required
 def create_new_company(request):
     if request.user.user_type == UserProfile.CURATOR:
-        return render(request, "main/company_settings.html", {"title": "Новая компания"})
+        if "company" in request.POST:
+            company_list = Company.objects.filter(name=request.POST["company"])
+            if company_list:
+                result = {
+                    "status": "danger",
+                    "message": "Компания " + request.POST["company"] + " уже существует!"
+                }
+                return render(request, "alert.html", result)
+            else:
+                company = Company.objects.create(name=request.POST["company"])
+                result = {
+                    "status": "success",
+                    "message": "Компания " + request.POST["company"] + " успешно добавлена!"
+                }
+                return render(request, "alert.html", result)
+        else:
+            return render(request, "main/company_settings.html", {"title": "Новая компания"})
     else:
         return HttpResponseRedirect(reverse("index"))
 

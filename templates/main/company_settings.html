@@ -1,8 +1,26 @@
 {% extends "base.html" %}
 {% block dashboard %}
-<div class="row">
-    <div class="col-lg-12">
-        <h3 class="page-header">{{ title }}</h3>
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">{{ title }}</h3>
+        </div>
     </div>
-</div>
+    <form id="formUserSettings" action="{% url "create_new_company" %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="inputCompany">Название компании</label>
+                    <input type="text" class="form-control" id="inputCompany" name="company"
+                           placeholder="Название компании" value="{{ company.name|default:"" }}" required>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-offset-4 col-lg-12">
+                <button id="btnSubmit" type="submit" class="btn btn-success" name="save">Сохранить</button>
+                <a href="{% url "index" %}"><input type="button" class="btn btn-default" value="Отмена"/></a>
+            </div>
+        </div>
+    </form>
 {% endblock %}
