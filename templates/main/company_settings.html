@@ -12,7 +12,26 @@
                 <div class="form-group">
                     <label for="inputCompany">Название компании</label>
                     <input type="text" class="form-control" id="inputCompany" name="company"
-                           placeholder="Название компании" value="{{ company.name|default:"" }}" required>
+                           placeholder="Введите название компании..." value="{{ company.name|default:"" }}" required>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Подразделения
+                    </div>
+                    <div class="panel-body user-panel">
+                        <table id="tableDepartmentList" class="table table-hover">
+                        </table>
+                    </div>
+                    <div class="panel-footer input-group custom-search-form">
+                        <input id="inputDepartment" type="text" class="form-control" placeholder="Введите название подразделения...">
+                        <span class="input-group-btn">
+                            <button id="buttonDepartmentAdd" class="btn btn-success" type="button">
+                                Добавить
+                            </button>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -23,4 +42,7 @@
             </div>
         </div>
     </form>
+{% endblock %}
+{% block scripts %}
+    <script src="/static/js/company_settings.js"></script>
 {% endblock %}
