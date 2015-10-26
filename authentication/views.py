@@ -67,10 +67,10 @@ def user_settings(request, id):
         user_data.date_of_birth = request.POST["dateOfBirth"]
         user_data.gender = request.POST["gender"]
         if "company" in request.POST:
-            company = Company.objects.get(id=request.POST["company"][0])
+            company = Company.objects.get(id=request.POST["company"])
             user_data.company = company
         if "department" in request.POST:
-            department = Department.objects.get(id=request.POST["department"][0])
+            department = Department.objects.get(id=request.POST["department"])
             user_data.department = department
         user_data.position = request.POST["position"]
         if "userType" in request.POST:
@@ -107,6 +107,14 @@ def create_new_user(request):
             user_type = request.POST["userType"]
         else:
             user_type = UserProfile.PROBATIONER
+        if "company" in request.POST:
+            company = Company.objects.get(id=request.POST["company"])
+        else:
+            company = None
+        if "department" in request.POST:
+            department = Department.objects.get(id=request.POST["department"])
+        else:
+            department = None
         user = auth.get_user_model().objects.create_user(
             email=email,
             password=password,
@@ -115,8 +123,8 @@ def create_new_user(request):
             first_name=request.POST["firstName"],
             middle_name=request.POST["middleName"],
             gender=request.POST["gender"],
-            company=request.POST["company"],
-            department=request.POST["department"],
+            company=company,
+            department=department,
             position=request.POST["position"],
             user_type=user_type,
             photo=photo

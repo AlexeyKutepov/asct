@@ -33,7 +33,7 @@
                     <input id="inputPhoto" name="photo" type="file" accept="image/*" onchange="onPreview(this)">
                 {% endif %}
             </div>
-        {% if user.user_type == "ADMIN" %}
+        {% if user.user_type == "CURATOR" %}
             <div class="col-lg-4 col-lg-offset-1">
                 <div class="row">
                     <div class="form-group">
@@ -44,7 +44,22 @@
                 <div class="row">
                     <div class="form-group">
                         <p></p>
-                        <a href="{% url "give_new_password" id=user_data.id %}"><input type="button" class="btn btn-default pull-right" value="Выдать пользователю новый пароль"/></a>
+                        <a href="{% url "give_new_password" id=user_data.id %}"><input type="button" class="btn btn-default pull-right" value="Выдать новый пароль"/></a>
+                    </div>
+                </div>
+            </div>
+        {% elif user.user_type == "ADMIN" and user_data.user_type != "CURATOR" %}
+            <div class="col-lg-4 col-lg-offset-1">
+                <div class="row">
+                    <div class="form-group">
+                        <p></p>
+                        <a href="{% url "delete_user" id=user_data.id %}"><input type="button" class="btn btn-danger pull-right" value="Удалить пользователя"/></a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <p></p>
+                        <a href="{% url "give_new_password" id=user_data.id %}"><input type="button" class="btn btn-default pull-right" value="Выдать новый пароль"/></a>
                     </div>
                 </div>
             </div>
