@@ -5,17 +5,18 @@
 {% block dashboard %}
     <div class="row">
         <div class="col-lg-12">
-            <h3 class="page-header">{{ user_data.get_full_name }} (редактирование профиля)</h3>
+            {% if isCreate %}
+                <h3 class="page-header">Создание нового пользователя</h3>
+            {% else %}
+                <h3 class="page-header">{{ user_data.get_full_name }} (редактирование профиля)</h3>
+            {% endif %}
         </div>
     </div>
-    {% if show_alert_success %}
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="alert alert-success" role="alert">{{ message }}</div>
-        </div>
-    </div>
+    {% if isCreate %}
+        <form id="formCreateNewUser" action="{% url "create_new_user" %}" method="post" enctype="multipart/form-data">
+    {% else %}
+        <form id="formUserSettings" action="{% url "user_settings" id=user_data.id %}" method="post" enctype="multipart/form-data">
     {% endif %}
-    <form id="formUserSettings" action="{% url "user_settings" id=user_data.id %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
         <div class="row">
             <div class="form-group col-lg-4">
@@ -33,7 +34,7 @@
                     <input id="inputPhoto" name="photo" type="file" accept="image/*" onchange="onPreview(this)">
                 {% endif %}
             </div>
-        {% if user.user_type == "CURATOR" %}
+        {% if user.user_type == "CURATOR" and not isCreate %}
             <div class="col-lg-4 col-lg-offset-1">
                 <div class="row">
                     <div class="form-group">
@@ -48,7 +49,7 @@
                     </div>
                 </div>
             </div>
-        {% elif user.user_type == "ADMIN" and user_data.user_type != "CURATOR" %}
+        {% elif user.user_type == "ADMIN" and user_data.user_type != "CURATOR" and not isCreate %}
             <div class="col-lg-4 col-lg-offset-1">
                 <div class="row">
                     <div class="form-group">
@@ -71,28 +72,28 @@
                     <div class="form-group">
                         <label for="inputEmail">* e-mail</label>
                         <input type="email" class="form-control" id="inputEmail" name="email"
-                               placeholder="e-mail" value="{{ user_data.email }}" required>
+                               placeholder="e-mail" value="{{ user_data.email|default:"" }}" required>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group">
                         <label for="inputLastName">* Фамилия</label>
                         <input type="text" class="form-control" id="inputLastName" name="lastName"
-                               placeholder="Фамилия" value="{{ user_data.last_name }}" required>
+                               placeholder="Фамилия" value="{{ user_data.last_name|default:"" }}" required>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group">
                         <label for="inputFirstName">* Имя</label>
                         <input type="text" class="form-control" id="inputFirstName" name="firstName"
-                               placeholder="Имя" value="{{ user_data.first_name }}" required>
+                               placeholder="Имя" value="{{ user_data.first_name|default:"" }}" required>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group">
                         <label for="inputMiddleName">Отчество</label>
                         <input type="text" class="form-control" id="inputMiddleName" name="middleName"
-                               placeholder="Отчество" value="{{ user_data.middle_name }}">
+                               placeholder="Отчество" value="{{ user_data.middle_name|default:"" }}">
                     </div>
                 </div>
                 <div class="row">
@@ -155,7 +156,7 @@
                     <div class="form-group">
                         <label for="inputPosition">Должность</label>
                         <input type="text" class="form-control" id="inputPosition" name="position"
-                               placeholder="Должность" value="{{ user_data.position }}">
+                               placeholder="Должность" value="{{ user_data.position|default:"" }}">
                     </div>
                 </div>
 
@@ -204,7 +205,11 @@
         </div>
         <div class="row">
             <div class="col-lg-offset-4 col-lg-12">
-                <button id="btnSubmit" type="submit" class="btn btn-success" name="save">Сохранить изменения</button>
+                {% if isCreate %}
+                    <button id="btnSubmit" type="submit" class="btn btn-success" name="create">Создать пользователя</button>
+                {% else %}
+                    <button id="btnSubmit" type="submit" class="btn btn-success" name="save">Сохранить изменения</button>
+                {% endif %}
                 <a href="{% url "index" %}"><input type="button" class="btn btn-default" value="Отмена"/></a>
             </div>
         </div>

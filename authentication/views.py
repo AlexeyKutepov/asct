@@ -52,7 +52,11 @@ def user_settings(request, id):
         department_list = Department.objects.filter(company=user_data.company)
     else:
         department_list = []
-    result = {"user_data": user_data, "company_list": company_list, "department_list": department_list}
+    result = {
+        "user_data": user_data,
+        "company_list": company_list,
+        "department_list": department_list
+    }
     if "save" in request.POST:
         if "photo" in request.FILES:
             photo = request.FILES["photo"]
@@ -76,9 +80,26 @@ def user_settings(request, id):
         if "userType" in request.POST:
             user_data.user_type = request.POST["userType"]
         user_data.save()
-        result["show_alert_success"] = True
-        result["message"] = "Изменения сохранены"
-    return render(request, "authentication/user_settings.html", result)
+
+        return render(
+            request,
+            "alert.html",
+            {
+                "status": "success",
+                "message": "Изменения сохранены"
+            }
+        )
+    else:
+        return render(
+            request,
+            "authentication/user_settings.html",
+            {
+                "user_data": user_data,
+                "company_list": company_list,
+                "department_list": department_list,
+                "isCreate": False
+            }
+        )
 
 
 @login_required
@@ -88,11 +109,14 @@ def create_new_user(request):
         try:
             user_profile_in_db = UserProfile.objects.get(email=email)
             if user_profile_in_db:
-                result = {
-                    "status": "danger",
-                    "message": "Пользователь с e-mail адресом "+email+" уже существует!"
+                return render(
+                    request,
+                    "alert.html",
+                    {
+                        "status": "danger",
+                        "message": "Пользователь с e-mail адресом "+email+" уже существует!"
                     }
-                return render(request, "alert.html", result)
+                )
         except:
             # Exception does not matter
             pass
@@ -145,7 +169,20 @@ def create_new_user(request):
         }
         return render(request, "alert.html", result)
     else:
-        return render(request, "authentication/create_new_user.html")
+        company_list = Company.objects.all()
+        if company_list:
+            department_list = Department.objects.filter(company=company_list[0])
+        else:
+            department_list = []
+        return render(
+            request,
+            "authentication/user_settings.html",
+            {
+                "company_list": company_list,
+                "department_list": department_list,
+                "isCreate": True
+            }
+        )
 
 
 @login_required
