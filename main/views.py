@@ -136,6 +136,9 @@ def create_new_company(request):
                 return render(request, "alert.html", result)
             else:
                 company = Company.objects.create(name=request.POST["company"])
+                if "department" in request.POST:
+                    for department in request.POST.getlist("department"):
+                        Department.objects.create(name=department, company=company)
                 result = {
                     "status": "success",
                     "message": "Компания " + request.POST["company"] + " успешно добавлена!"
