@@ -194,6 +194,6 @@ def edit_company_save(request):
     else:
         return HttpResponseRedirect(reverse("index"))
 
-
-
-
+@login_required
+def create_journal(request):
+    return render(request, "main/create_journal.html")

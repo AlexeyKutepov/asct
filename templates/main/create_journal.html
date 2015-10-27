@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block dashboard %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">Создание нового журнала</h3>
+        </div>
+    </div>
+    <form id="formCreateJournal" action="{% url "create_journal" %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+        <div class="row">
+            <div class="col-lg-11">
+                <div class="form-group">
+                    <label for="inputFirstName">* Название журнала</label>
+                    <input type="text" class="form-control" id="inputName" name="name"
+                           placeholder="Название журнала" required>
+                </div>
+            </div>
+            <div class="col-lg-11">
+                <div class="form-group">
+                    <label for="inputDescription">Описание</label>
+                    <textarea id="inputDescription" name="description" class="form-control" rows="5"></textarea>
+                </div>
+            </div>
+            {% if user.user_type == "CURATOR" or user.user_type == "ADMIN" %}
+                 {# todo добавить возможность выбирать ответственного #}
+            {% endif %}
+        </div>
+        <div class="row">
+            <div class="col-lg-offset-5 col-lg-12">
+                <a href="{% url "index" %}"><input type="button" class="btn btn-default" value="Отмена"/></a>
+                <button id="btnSubmit" type="submit" class="btn btn-primary" name="save">Далее ></button>
+
+            </div>
+        </div>
+    </form>
+{% endblock %}
+{% block scripts %}
+
+{% endblock %}
