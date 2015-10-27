@@ -145,8 +145,55 @@ def create_new_company(request):
                 }
                 return render(request, "alert.html", result)
         else:
-            return render(request, "main/company_settings.html", {"title": "Новая компания"})
+            return render(request, "main/company_settings.html", {"isCreate": True, "title": "Новая компания"})
     else:
         return HttpResponseRedirect(reverse("index"))
+
+@login_required
+def edit_company(request, id):
+    try:
+        company = Company.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    department_list = Department.objects.filter(company=company)
+    return render(
+        request,
+        "main/company_settings.html",
+        {
+            "isCreate": False,
+            "title": "Редактирование компании",
+            "company": company,
+            "department_list": department_list
+        }
+    )
+
+@login_required
+def edit_company_save(request):
+    if "save" in request.POST:
+        try:
+            company = Company.objects.get(id=request.POST["companyId"])
+        except:
+            return HttpResponseRedirect(reverse("index"))
+        company.name = request.POST["company"]
+        company.save()
+        if "department" in request.POST:
+            department_list_in_base = Department.objects.filter(company=company)
+            department_names = [d.name for d in department_list_in_base]
+            for department in request.POST.getlist("department"):
+                if department not in department_names:
+                    Department.objects.create(name=department, company=company)
+            for department in department_list_in_base:
+                if department.name not in request.POST.getlist("department"):
+                    department.delete()
+        result = {
+            "status": "success",
+            "message": "Изменения успешно сохранены!"
+        }
+        return render(request, "alert.html", result)
+
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
+
 
 

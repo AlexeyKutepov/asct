@@ -5,11 +5,16 @@
             <h3 class="page-header">{{ title }}</h3>
         </div>
     </div>
+    {% if isCreate %}
     <form id="formUserSettings" action="{% url "create_new_company" %}" method="post" enctype="multipart/form-data">
+    {% else %}
+    <form id="formUserSettings" action="{% url "edit_company_save" %}" method="post" enctype="multipart/form-data">
+    {% endif %}
         {% csrf_token %}
         <div class="row">
             <div class="col-lg-6">
                 <div class="form-group">
+                    <input type="hidden" name="companyId" value="{{ company.id|default:"" }}"/>
                     <label for="inputCompany">Название компании</label>
                     <input type="text" class="form-control" id="inputCompany" name="company"
                            placeholder="Введите название компании..." value="{{ company.name|default:"" }}" required>
@@ -22,6 +27,15 @@
                     </div>
                     <div class="panel-body user-panel">
                         <table id="tableDepartmentList" class="table table-hover">
+                            {% for department in department_list %}
+                            <tr>
+                                <td>{{ department }}<input type="hidden" name="department" value="{{ department }}"/></td>
+                                <td><button name="buttonDelete" type="button" class="btn btn-danger pull-right" title="Удалить подразделение">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
                         </table>
                     </div>
                     <div class="panel-footer input-group custom-search-form">
