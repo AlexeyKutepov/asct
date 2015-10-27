@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
-from main.models import UserProfile, Company, Department, Journal
+from main.models import UserProfile, Company, Department, Journal, Theme
 
 
 @login_required
@@ -208,4 +208,12 @@ def journal_settings(request, id):
         journal = Journal.objects.get(id=id)
     except:
         return HttpResponseRedirect(reverse("index"))
-    return render(request, "main/journal_settings.html", {"journal": journal})
+    theme_list = Theme.objects.filter(journal=journal)
+    return render(
+        request,
+        "main/journal_settings.html",
+        {
+            "journal": journal,
+            "theme_list": theme_list
+        }
+    )
