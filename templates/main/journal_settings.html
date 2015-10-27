@@ -5,6 +5,15 @@
             <h3 class="page-header">{{ journal.name }}</h3>
         </div>
     </div>
+    {% if journal.description %}
+    <div class="row">
+        <div class="col-lg-12">
+            <blockquote>
+              <p>{{ journal.description }}</p>
+            </blockquote>
+        </div>
+    </div>
+    {% endif %}
 {% endblock %}
 {% block scripts %}
 

@@ -201,3 +201,11 @@ def create_journal(request):
         return render(request, "main/journal_settings.html", {"journal": journal})
     else:
         return render(request, "main/create_journal.html")
+
+@login_required
+def journal_settings(request, id):
+    try:
+        journal = Journal.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    return render(request, "main/journal_settings.html", {"journal": journal})
