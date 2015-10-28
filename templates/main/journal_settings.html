@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block dashboard %}
     <form id="formCreateTheme" action="{% url "create_theme" %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
         <div id="modalAddTheme" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalAddTheme">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
