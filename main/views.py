@@ -217,3 +217,11 @@ def journal_settings(request, id):
             "theme_list": theme_list
         }
     )
+
+@login_required
+def create_theme(request):
+    if "save" in request.POST:
+        journal = Journal.objects.create(name=request.POST["name"], description=request.POST["description"], owner=request.user)
+        return render(request, "main/journal_settings.html", {"journal": journal})
+    else:
+        return render(request, "main/create_journal.html")
