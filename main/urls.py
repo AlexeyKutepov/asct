@@ -15,5 +15,6 @@ urlpatterns = patterns('',
         url(r'^edit/company/save/$', views.edit_company_save, name="edit_company_save"),
         url(r'^create/journal/$', views.create_journal, name="create_journal"),
         url(r'^journal/settings/(?P<id>\d+)/$', views.journal_settings, name="journal_settings"),
-        url(r'^create/theme/$', views.create_theme, name="create_theme")
+        url(r'^create/theme/$', views.create_theme, name="create_theme"),
+        url(r'^delete/theme/(?P<id>\d+)/$', views.delete_theme, name="delete_theme"),
 )

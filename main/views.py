@@ -237,3 +237,21 @@ def create_theme(request):
         )
     else:
         return HttpResponseRedirect(reverse("index"))
+
+@login_required
+def delete_theme(request, id):
+    try:
+        theme = Theme.objects.get(id=id)
+        journal = Journal.objects.get(id=theme.journal.id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    theme.delete()
+    theme_list = Theme.objects.filter(journal=journal)
+    return render(
+            request,
+            "main/journal_settings.html",
+            {
+                "journal": journal,
+                "theme_list": theme_list
+            }
+        )
