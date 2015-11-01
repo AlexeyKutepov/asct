@@ -187,7 +187,7 @@ def create_new_user(request):
 
 @login_required
 def give_new_password(request, id):
-    if request.user.user_type != UserProfile.ADMIN:
+    if request.user.user_type != UserProfile.ADMIN and request.user.user_type != UserProfile.CURATOR:
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
@@ -224,7 +224,7 @@ def give_new_password(request, id):
 
 @login_required
 def delete_user(request, id):
-    if request.user.user_type != UserProfile.ADMIN:
+    if request.user.user_type != UserProfile.ADMIN and request.user.user_type != UserProfile.CURATOR:
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
