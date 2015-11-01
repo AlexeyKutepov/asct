@@ -5,6 +5,11 @@
             <h4 class="page-header">{{ theme.name }}</h4>
         </div>
     </div>
+    {% if theme.description %}
+    <blockquote>
+      <p>{{ theme.description }}</p>
+    </blockquote>
+    {% endif %}
     <div class="row">
         <div class="col-lg-12">
             <table id="tableSubThemeList" class="table table-bordered table-hover">
