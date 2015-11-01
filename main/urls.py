@@ -13,6 +13,7 @@ urlpatterns = patterns('',
         url(r'^get/user/list/by/department/$', views.get_user_list_by_department),
         url(r'^get/user/list/by/theme/$', views.get_user_list_by_theme),
         url(r'^get/probationer/list/$', views.get_probationer_list),
+        url(r'^get/theme/list/by/user/$', views.get_theme_list_by_user),
 
 
         url(r'^create/new/company', views.create_new_company, name="create_new_company"),
@@ -25,6 +26,7 @@ urlpatterns = patterns('',
         url(r'^theme/settings/(?P<id>\d+)/$', views.theme_settings, name="theme_settings"),
         url(r'^create/sub/theme/$', views.create_sub_theme, name="create_sub_theme"),
         url(r'^delete/sub/theme/(?P<id>\d+)/$', views.delete_sub_theme, name="delete_sub_theme"),
-        url(r'^/schedule/theme/(?P<id>\d+)/$', views.schedule_theme, name="schedule_theme"),
+        url(r'^schedule/theme/(?P<id>\d+)/$', views.schedule_theme, name="schedule_theme"),
+        url(r'^user/info/(?P<id>\d+)/$', views.user_info, name="user_info"),
 
 )

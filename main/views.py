@@ -334,6 +334,7 @@ def get_user_list_by_theme(request):
         list = []
         for item in scheduled_theme_list:
             list.append({
+                "id": item.user.id,
                 "fio": item.user.get_full_name(),
                 "status": "Назначена",
                 "date_from": item.date_from,
@@ -392,3 +393,38 @@ def get_probationer_list(request):
         return JsonResponse(result)
     else:
         return JsonResponse({"probationer_list": []})
+
+
+@login_required
+def user_info(request, id):
+    try:
+        user_data = UserProfile.objects.get(id=id)
+    except:
+        result = {
+            "status": "danger",
+            "message": "Пользователь не найден"
+            }
+        return render(request, "alert.html", result)
+    return render(request, "main/user_info.html", {"user_data": user_data})
+
+
+@login_required
+def get_theme_list_by_user(request):
+    if "id" in request.POST:
+        user = UserProfile.objects.get(id=request.POST["id"])
+        scheduled_theme_list = ScheduledTheme.objects.filter(user=user)
+        result = {}
+        list = []
+        for item in scheduled_theme_list:
+            list.append({
+                "id": item.theme.id,
+                "name": item.theme.name,
+                "status": "Назначена",
+                "date_from": item.date_from,
+                "date_to": item.date_to,
+                "progress": 50
+            })
+        result["user_statistic_list"] = list
+        return JsonResponse(result)
+    else:
+        return JsonResponse({"user_statistic_list": []})

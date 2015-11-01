@@ -36,7 +36,7 @@
                     <table id="tableAdminList" class="table table-hover">
                         {% for admin in admin_list %}
                         <tr>
-                            <td><a href="{% url "user_settings" id=admin.id %}">{{ admin.get_full_name }}</a></td>
+                            <td><a href="{% url "user_info" id=admin.id %}">{{ admin.get_full_name }}</a></td>
                         </tr>
                         {% endfor %}
                     </table>
@@ -73,7 +73,7 @@
                     <table id="tableOperatorList" class="table table-hover">
                         {% for operator in operator_list %}
                         <tr>
-                            <td><a href="{% url "user_settings" id=operator.id %}">{{ operator.get_full_name }}</a></td>
+                            <td><a href="{% url "user_info" id=operator.id %}">{{ operator.get_full_name }}</a></td>
                         </tr>
                         {% endfor %}
                     </table>
@@ -110,7 +110,7 @@
                     <table id="tableProbationerList" class="table table-hover">
                         {% for probationer in probationer_list %}
                         <tr>
-                            <td><a href="{% url "user_settings" id=probationer.id %}">{{ probationer.get_full_name }}</a></td>
+                            <td><a href="{% url "user_info" id=probationer.id %}">{{ probationer.get_full_name }}</a></td>
                         </tr>
                         {% endfor %}
                     </table>

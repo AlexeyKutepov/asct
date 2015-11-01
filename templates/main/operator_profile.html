@@ -41,7 +41,7 @@
                         </thead>
                         {% for probationer in probationer_list %}
                         <tr>
-                            <td><a href="{% url "user_settings" id=probationer.id %}">{{ probationer.get_full_name }}</a></td>
+                            <td><a href="{% url "user_info" id=probationer.id %}">{{ probationer.get_full_name }}</a></td>
                             <td>{{ probationer.department }}</td>
                             <td>{{ probationer.position }}</td>
                         </tr>

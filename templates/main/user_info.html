@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block dashboard %}
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">Информация о пользователе</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-lg-2">
+            {% if user_data.photo %}
+                <img id="impPreview"
+                     src="{{ MEDIA_URL }}{{ user_data.photo }}"
+                     alt="Photo" width="200" height="auto">
+            {% else %}
+                <img id="impPreview"
+                     data-src="holder.js/200x200/auto/white"
+                     alt="Photo" width="200" height="200">
+            {% endif %}
+        </div>
+        <div class="col-lg-4">
+            <h4><b>ФИО: </b>{{ user_data.get_full_name | default:"" }}</h4>
+            <p><b>Компания: </b>{{ user_data.company | default:"" }}</p>
+            <p><b>Подразделение: </b>{{ user_data.department | default:"" }}</p>
+            <p><b>Должность: </b>{{ user_data.position | default:"" }}</p>
+            {% if user_data.user_type == "CURATOR" %}
+            <p><b>Тип пользователя: </b>Куратор</p>
+            {% elif user_data.user_type == "ADMIN" %}
+            <p><b>Тип пользователя: </b>Администратор</p>
+            {% elif user_data.user_type == "OPERATOR" %}
+            <p><b>Тип пользователя: </b>Оператор</p>
+            {% else %}
+            <p><b>Тип пользователя: </b>Испытуемый</p>
+            {% endif %}
+        </div>
+        <div class="col-lg-6">
+            <a href="{% url "user_settings" id=user_data.id %}"><input type="button" class="btn btn-default pull-right" value="Редактировать профиль пользователя"/></a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <h4 class="page-header">Темы для изучения, назначенные пользователю</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <input id="buttonScheduleTheme" type="button" class="btn btn-default pull-right" value="Назначить тему для изучения" data-toggle="modal" data-target="#modalScheduleTheme"/>
+        </div>
+    </div>
+    <p></p>
+    <div class="row">
+        <div class="col-lg-12">
+            <table id="tableUserStatisticList" class="table table-bordered table-hover">
+                <thead>
+                    <th>Название темы</th>
+                    <th>Статус</th>
+                    <th>Назначена</th>
+                    <th>Срок</th>
+                    <th>Прогресс</th>
+                    <th>Действия</th>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <input id="userId" value="{{ user_data.id }}" hidden>
+{% endblock %}
+{% block scripts %}
+<script src="/static/js/user_info.js"></script>
+{% endblock %}
