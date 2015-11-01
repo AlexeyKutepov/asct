@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+{% block style %}
+    {% if user_data.user_type == "PROBATIONER" %}
+        <link href="/static/css/bootstrap-select.min.css" rel="stylesheet">
+    {% endif %}
+{% endblock %}
 {% block dashboard %}
     {% csrf_token %}
     <div class="row">
@@ -38,39 +43,84 @@
         </div>
     </div>
     {% if user_data.user_type == "PROBATIONER" %}
-    <div class="row">
-        <div class="col-lg-12">
-            <h4 class="page-header">Темы для изучения, назначенные пользователю</h4>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <input id="buttonScheduleTheme" type="button" class="btn btn-default pull-right" value="Назначить тему для изучения" data-toggle="modal" data-target="#modalScheduleTheme"/>
-        </div>
-    </div>
-    <p></p>
-    <div class="row">
-        <div class="col-lg-12">
-            <table id="tableUserStatisticList" class="table table-bordered table-hover">
-                <thead>
-                    <th>Название темы</th>
-                    <th>Статус</th>
-                    <th>Назначена</th>
-                    <th>Срок</th>
-                    <th>Прогресс</th>
-                    <th>Действия</th>
-                </thead>
-                <tbody>
+        <form id="formScheduleTheme" action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+            <div id="modalScheduleTheme" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalScheduleTheme">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Назначить тему</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input id="user" name="user" value="{{ user_data.id }}" hidden>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label for="selectJournal">Журнал</label>
+                                        <p><select id="selectJournal" name="journal" class="selectpicker" data-width="100%" data-live-search="true" required>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label for="selectTheme">Тема</label>
+                                        <p><select id="selectTheme" name="theme" class="selectpicker" data-width="100%" data-live-search="true" required>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label for="inputDateTo"><b>Срок до</b></label>
+                                        <input id="inputDateTo" name="dateTo" type="date" class="form-control" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                            <button type="submit" name="save" class="btn btn-primary">Назначить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
 
-                </tbody>
-            </table>
+        <div class="row">
+            <div class="col-lg-12">
+                <h4 class="page-header">Темы для изучения, назначенные пользователю</h4>
+            </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <input id="buttonScheduleTheme" type="button" class="btn btn-default pull-right" value="Назначить тему для изучения" data-toggle="modal" data-target="#modalScheduleTheme"/>
+            </div>
+        </div>
+        <p></p>
+        <div class="row">
+            <div class="col-lg-12">
+                <table id="tableUserStatisticList" class="table table-bordered table-hover">
+                    <thead>
+                        <th>Название темы</th>
+                        <th>Статус</th>
+                        <th>Назначена</th>
+                        <th>Срок</th>
+                        <th>Прогресс</th>
+                        <th>Действия</th>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <input id="userId" value="{{ user_data.id }}" hidden>
     {% endif %}
-    <input id="userId" value="{{ user_data.id }}" hidden>
 {% endblock %}
 {% block scripts %}
     {% if user_data.user_type == "PROBATIONER" %}
         <script src="/static/js/user_info.js"></script>
+        <script src="/static/js/bootstrap-select.js"></script>
     {% endif %}
 {% endblock %}

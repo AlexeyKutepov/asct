@@ -41,7 +41,19 @@ $(document).ready(function () {
             id: $( this).attr("property")
         },
         success: function(data) {
-
+            $('#selectJournal')
+                .find('option')
+                .remove()
+                .end()
+                .selectpicker('refresh')
+            ;
+            var journalList = data["journal_list"];
+            for (var i = 0; i < journalList.length; i++) {
+                $('#selectJournal').append($("<option/>", {
+                    value: journalList[i]["id"],
+                    text: journalList[i]["name"]
+                })).selectpicker('refresh');
+            }
         },
         error: function(xhr, textStatus, errorThrown) {
             alert("Error: "+errorThrown+xhr.status+xhr.responseText);
