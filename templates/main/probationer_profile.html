@@ -1,4 +1,39 @@
 {% extends "base.html" %}
 {% block dashboard %}
-
+    <div class="row">
+        <div class="col-lg-12">
+            <h4 class="page-header">Назначенные темы</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <table id="tableUserStatisticList" class="table table-bordered table-hover">
+                <thead>
+                <th>Название темы</th>
+                <th>Статус</th>
+                <th>Назначена</th>
+                <th>Срок</th>
+                <th>Прогресс</th>
+                </thead>
+                <tbody>
+                    {% for item in scheduled_theme_list %}
+                        <tr>
+                            <td>{{ item.theme.name }}</td>
+                            <td>Назначена</td>
+                            <td>{{ item.date_from }}</td>
+                            <td>{{ item.date_to }}</td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0"
+                                         aria-valuemax="100" style="width: 50%;">
+                                        <span class="sr-only">50% Complete</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}
