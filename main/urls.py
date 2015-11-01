@@ -31,5 +31,6 @@ urlpatterns = patterns('',
         url(r'^schedule/theme/to/user/(?P<id>\d+)/$', views.schedule_theme_to_user, name="schedule_theme_to_user"),
         url(r'^user/info/(?P<id>\d+)/$', views.user_info, name="user_info"),
         url(r'^delete/journal/(?P<id>\d+)/$', views.delete_journal, name="delete_journal"),
+        url(r'^probationer/theme/settings/(?P<id>\d+)/$', views.probationer_theme_settings, name="probationer_theme_settings"),
 
 )

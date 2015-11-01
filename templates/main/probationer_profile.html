@@ -7,7 +7,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12">
-            <table id="tableUserStatisticList" class="table table-bordered table-hover">
+            <table id="tableThemeList" class="table table-bordered table-hover">
                 <thead>
                 <th>Название темы</th>
                 <th>Статус</th>
@@ -18,7 +18,7 @@
                 <tbody>
                     {% for item in scheduled_theme_list %}
                         <tr>
-                            <td>{{ item.theme.name }}</td>
+                            <td><a href="{% url "probationer_theme_settings" id=item.theme.id %}">{{ item.theme.name }}</a></td>
                             <td>Назначена</td>
                             <td>{{ item.date_from }}</td>
                             <td>{{ item.date_to }}</td>

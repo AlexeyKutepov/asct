@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block dashboard %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h4 class="page-header">{{ theme.name }}</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <table id="tableSubThemeList" class="table table-bordered table-hover">
+                <thead>
+                <th>Название подтемы</th>
+                <th>Описание</th>
+                <th>Статус</th>
+                <th>Учебные материалы</th>
+                <th>Действия</th>
+                </thead>
+                <tbody>
+                    {% for item in sub_theme_list %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.description }}</td>
+                            <td>Назначена</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

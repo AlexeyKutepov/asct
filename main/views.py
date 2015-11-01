@@ -485,3 +485,20 @@ def delete_journal(request, id):
             "message": "Журнал " + name + " успешно удалён!"
         }
     return render(request, "alert.html", result)
+
+
+@login_required
+def probationer_theme_settings(request, id):
+    try:
+        theme = Theme.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    sub_theme_list = SubTheme.objects.filter(parent_theme=theme)
+    return render(
+        request,
+        "main/probationer_theme_settings.html",
+        {
+            "theme": theme,
+            "sub_theme_list": sub_theme_list
+        }
+    )
