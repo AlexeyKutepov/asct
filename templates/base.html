@@ -114,11 +114,14 @@
                         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
+                        {% if user.user_type == "CURATOR" %}
                         <li><a href="{% url "user_settings" id=user.id %}"><i class="fa fa-user fa-fw"></i> Профиль</a>
+                        <li class="divider"></li>
+                        {% endif %}
 {#                        </li>#}
 {#                        <li><a href=""><i class="fa fa-gear fa-fw"></i> Настройки</a>#}
 {#                        </li>#}
-                        <li class="divider"></li>
+
                         <li><a href="{% url "logout" %}"><i class="fa fa-sign-out fa-fw"></i> Выход</a>
                         </li>
                     </ul>
