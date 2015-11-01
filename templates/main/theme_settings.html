@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block style %}
+<link href="/static/css/bootstrap-select.min.css" rel="stylesheet">
+{% endblock %}
 {% block dashboard %}
     <form id="formCreateSubTheme" action="{% url "create_sub_theme" %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
@@ -33,6 +36,41 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
                         <button type="submit" name="save" class="btn btn-primary" value="{{ theme.id }}">Сохранить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <form id="formScheduleTheme" action="{% url "schedule_theme" id=theme.id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+        <div id="modalScheduleTheme" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalScheduleTheme">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Назначить тему</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="selectProbationer">Выберите испытуемого</label>
+                                    <p><select id="selectProbationer" name="user" class="selectpicker" data-width="100%" data-live-search="true" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="inputDateTo"><b>Срок до</b></label>
+                                    <input id="inputDateTo" name="dateTo" type="date" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                        <button type="submit" name="save" class="btn btn-primary">Назначить</button>
                     </div>
                 </div>
             </div>
@@ -119,6 +157,12 @@
     </div>
     <div class="row">
         <div class="col-lg-12">
+            <input id="buttonScheduleTheme" type="button" class="btn btn-default pull-right" value="Назначить" data-toggle="modal" data-target="#modalScheduleTheme"/>
+        </div>
+    </div>
+    <p></p>
+    <div class="row">
+        <div class="col-lg-12">
             <table id="tableUserStatisticList" class="table table-bordered table-hover">
                 <thead>
                     <th>ФИО</th>
@@ -138,4 +182,5 @@
 {% endblock %}
 {% block scripts %}
     <script src="/static/js/theme_settings.js"></script>
+    <script src="/static/js/bootstrap-select.js"></script>
 {% endblock %}

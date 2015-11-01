@@ -343,3 +343,24 @@ def get_user_list_by_theme(request):
         return JsonResponse(result)
     else:
         return JsonResponse({"user_statistic_list": []})
+
+
+def schedule_theme(request, id):
+    return None
+
+
+@login_required
+def get_probationer_list(request):
+    if request.user.user_type == UserProfile.CURATOR:
+        probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER)
+        result = {}
+        list = []
+        for item in probationer_list:
+            list.append({
+                "id": item.id,
+                "name": item.get_full_name()
+            })
+        result["probationer_list"] = list
+        return JsonResponse(result)
+    else:
+        return JsonResponse({"probationer_list": []})
