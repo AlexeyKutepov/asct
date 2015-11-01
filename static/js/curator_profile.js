@@ -13,6 +13,82 @@ $(document).ready(function () {
     $("#buttonUserSearch").click(userSearch);
     $("#inputUserSearch").change(userSearch).keyup(userSearch);
 
+    $("#aShowAllUsers").click(function() {
+        $(this).html("<i class=\"fa fa-check\"></i> Все пользователи");
+        $("#aShowCurators").text("Кураторы");
+        $("#aShowAdmins").text("Администраторы");
+        $("#aShowOperators").text("Операторы");
+        $("#aShowProbationers").text("Испытуемые");
+        $('#tableUserList > tbody > tr').each(function() {
+            $(this).show();
+        });
+        return false;
+    });
+
+    $("#aShowCurators").click(function() {
+        $("#aShowAllUsers").text("Все пользователи");
+        $(this).html("<i class=\"fa fa-check\"></i> Кураторы");
+        $("#aShowAdmins").text("Администраторы");
+        $("#aShowOperators").text("Операторы");
+        $("#aShowProbationers").text("Испытуемые");
+        $('#tableUserList > tbody > tr').each(function() {
+            if($(this).find('input').attr("name") != "tdcurator") {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        });
+        return false;
+    });
+
+    $("#aShowAdmins").click(function() {
+        $("#aShowAllUsers").text("Все пользователи");
+        $("#aShowCurators").text("Кураторы");
+        $(this).html("<i class=\"fa fa-check\"></i> Администраторы");
+        $("#aShowOperators").text("Операторы");
+        $("#aShowProbationers").text("Испытуемые");
+        $('#tableUserList > tbody > tr').each(function() {
+            if($(this).find('input').attr("name") != "tdadmin") {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        });
+        return false;
+    });
+
+    $("#aShowOperators").click(function() {
+        $("#aShowAllUsers").text("Все пользователи");
+        $("#aShowCurators").text("Кураторы");
+        $("#aShowAdmins").text("Администраторы");
+        $(this).html("<i class=\"fa fa-check\"></i> Операторы");
+        $("#aShowProbationers").text("Испытуемые");
+        $('#tableUserList > tbody > tr').each(function() {
+            if($(this).find('input').attr("name") != "tdoperator") {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        });
+        return false;
+    });
+
+    $("#aShowProbationers").click(function() {
+        $("#aShowAllUsers").text("Все пользователи");
+        $("#aShowCurators").text("Кураторы");
+        $("#aShowAdmins").text("Администраторы");
+        $("#aShowOperators").text("Операторы");
+        $(this).html("<i class=\"fa fa-check\"></i> Испытуемые");
+        $('#tableUserList > tbody > tr').each(function() {
+            if($(this).find('input').attr("name") != "tdprobationer") {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        });
+        return false;
+    });
+
 
     $.ajax({
         type: "POST",
