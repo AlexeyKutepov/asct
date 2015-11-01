@@ -41,7 +41,7 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <h3 class="page-header"><a href="{% url "journal_settings" id=theme.journal.id %}">{{ theme.journal.name }}</a > > {{ theme.name }}</h3>
+            <h4 class="page-header"><a href="{% url "journal_settings" id=theme.journal.id %}">{{ theme.journal.name }}</a > > {{ theme.name }}</h4>
         </div>
     </div>
     <div class="row">
@@ -112,7 +112,30 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <h4 class="page-header">Статистика по пользователям</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <table id="tableUserStatisticList" class="table table-bordered table-hover">
+                <thead>
+                    <th>ФИО</th>
+                    <th>Статус</th>
+                    <th>Назначена</th>
+                    <th>Срок</th>
+                    <th>Прогресс</th>
+                    <th>Действия</th>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <input id="themeId" value="{{ theme.id }}" hidden>
 {% endblock %}
 {% block scripts %}
-
+    <script src="/static/js/theme_settings.js"></script>
 {% endblock %}

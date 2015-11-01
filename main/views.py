@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
-from main.models import UserProfile, Company, Department, Journal, Theme, SubTheme
+from main.models import UserProfile, Company, Department, Journal, Theme, SubTheme, ScheduledTheme
 
 
 @login_required
@@ -321,4 +321,25 @@ def delete_sub_theme(request, id):
                 "theme": theme,
                 "sub_theme_list": sub_theme_list
             }
-        )
+    )
+
+
+@login_required
+def get_user_list_by_theme(request):
+    if "id" in request.POST:
+        theme = Theme.objects.get(id=request.POST["id"])
+        scheduled_theme_list = ScheduledTheme.objects.filter(theme=theme)
+        result = {}
+        list = []
+        for item in scheduled_theme_list:
+            list.append({
+                "fio": item.user.get_full_name(),
+                "status": "Назначена",
+                "date_from": item.date_from,
+                "date_to": item.date_to,
+                "progress": 50
+            })
+        result["user_statistic_list"] = list
+        return JsonResponse(result)
+    else:
+        return JsonResponse({"user_statistic_list": []})
