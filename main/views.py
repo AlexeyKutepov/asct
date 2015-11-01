@@ -1,6 +1,7 @@
 from datetime import timezone
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
 from main.models import UserProfile, Company, Department, Journal, Theme, SubTheme, ScheduledTheme, ScheduledSubTheme
@@ -25,16 +26,14 @@ def prepare_curator_page(request):
 
 
 def prepare_admin_page(request):
-    admin_list = UserProfile.objects.filter(user_type=UserProfile.ADMIN, company=request.user.company)
-    operator_list = UserProfile.objects.filter(user_type=UserProfile.OPERATOR, company=request.user.company)
-    probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company)
+    user_list = UserProfile.objects.filter(
+        Q(user_type=UserProfile.OPERATOR, company=request.user.company) | Q(user_type=UserProfile.PROBATIONER, company=request.user.company)
+    )
     return render(
         request,
         "main/admin_profile.html",
         {
-            "admin_list": admin_list,
-            "operator_list": operator_list,
-            "probationer_list": probationer_list,
+            "user_list": user_list,
         }
     )
 
