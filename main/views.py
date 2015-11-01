@@ -12,19 +12,13 @@ def test_page(request):
 
 
 def prepare_curator_page(request):
-    curator_list = UserProfile.objects.filter(user_type=UserProfile.CURATOR)
-    admin_list = UserProfile.objects.filter(user_type=UserProfile.ADMIN)
-    operator_list = UserProfile.objects.filter(user_type=UserProfile.OPERATOR)
-    probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER)
+    user_list = UserProfile.objects.all()
     company_list = Company.objects.all()
     return render(
         request,
         "main/curator_profile.html",
         {
-            "curator_list": curator_list,
-            "admin_list": admin_list,
-            "operator_list": operator_list,
-            "probationer_list": probationer_list,
+            "user_list": user_list,
             "company_list": company_list
         }
     )
