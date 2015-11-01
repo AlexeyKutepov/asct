@@ -476,3 +476,18 @@ def get_theme_list_by_journal(request):
         return JsonResponse(result)
     else:
         return JsonResponse({"theme_list": []})
+
+
+@login_required
+def delete_journal(request, id):
+    try:
+        journal = Journal.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    name = journal.name
+    journal.delete()
+    result = {
+            "status": "success",
+            "message": "Журнал " + name + " успешно удалён!"
+        }
+    return render(request, "alert.html", result)
