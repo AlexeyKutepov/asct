@@ -89,7 +89,7 @@
                     Список подтем
                     <div class="btn-group pull-right">
                         <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                            Действия <i class="fa fa-chevron-down"></i>
+                            Меню <i class="fa fa-chevron-down"></i>
                         </button>
                         <ul class="dropdown-menu slidedown">
                             <li>
@@ -102,9 +102,17 @@
                 </div>
                 <div class="panel-body user-panel">
                     <table id="tableThemeList" class="table table-hover">
+                        <thead>
+                            <th>Название подтемы</th>
+                            <th>Описание</th>
+                            <th>Учебные материалы</th>
+                            <th width="20px">Действия</th>
+                        </thead>
                         {% for sub_theme in sub_theme_list %}
                             <tr>
                                 <td>{{ sub_theme.name }}</td>
+                                <td>{{ sub_theme.description }}</td>
+                                <td></td>
                                 <td>
                                     <form action="{% url "delete_sub_theme" id=sub_theme.id %}" method="post">
                                         {% csrf_token %}
