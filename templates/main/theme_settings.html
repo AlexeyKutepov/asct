@@ -1,21 +1,21 @@
 {% extends "base.html" %}
 {% block dashboard %}
-    <form id="formCreateTheme" action="{% url "create_theme" %}" method="post" enctype="multipart/form-data">
+    <form id="formCreateSubTheme" action="{% url "create_sub_theme" %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-        <div id="modalAddTheme" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalAddTheme">
+        <div id="modalAddSubTheme" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalAddSubTheme">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Создание новой темы</h4>
+                        <h4 class="modal-title" id="myModalLabel">Создание новой подтемы</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label for="inputThemeName">Введите название темы</label>
-                                    <input type="text" class="form-control" id="inputThemeName" name="themeName" placeholder="Название темы" >
+                                    <label for="inputSubThemeName">Введите название подтемы</label>
+                                    <input type="text" class="form-control" id="inputSubThemeName" name="subThemeName" placeholder="Название подтемы" >
                               </div>
                             </div>
                         </div>
@@ -32,7 +32,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                        <button type="submit" name="save" class="btn btn-primary" value="{{ journal.id }}">Сохранить</button>
+                        <button type="submit" name="save" class="btn btn-primary" value="{{ theme.id }}">Сохранить</button>
                     </div>
                 </div>
             </div>
@@ -41,31 +41,22 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <h3 class="page-header">{{ journal.name }}</h3>
+            <h3 class="page-header"><a href="{% url "journal_settings" id=theme.journal.id %}">{{ theme.journal.name }}</a > > {{ theme.name }}</h3>
         </div>
     </div>
-{#    {% if journal.description %}#}
-{#    <div class="row">#}
-{#        <div class="col-lg-12">#}
-{#            <blockquote>#}
-{#              <p>{{ journal.description }}</p>#}
-{#            </blockquote>#}
-{#        </div>#}
-{#    </div>#}
-{#    {% endif %}#}
     <div class="row">
         <div class="col-lg-12">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    Список тем
+                    Список подтем
                     <div class="btn-group pull-right">
                         <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
                             Действия <i class="fa fa-chevron-down"></i>
                         </button>
                         <ul class="dropdown-menu slidedown">
                             <li>
-                                <a href="" data-toggle="modal" data-target="#modalAddTheme">
-                                    <i class="fa fa-plus fa-fw"></i> Добавить тему
+                                <a href="" data-toggle="modal" data-target="#modalAddSubTheme">
+                                    <i class="fa fa-plus fa-fw"></i> Добавить подтему
                                 </a>
                             </li>
                         </ul>
@@ -73,11 +64,11 @@
                 </div>
                 <div class="panel-body user-panel">
                     <table id="tableThemeList" class="table table-hover">
-                        {% for theme in theme_list %}
+                        {% for sub_theme in sub_theme_list %}
                             <tr>
-                                <td><a href="{% url "theme_settings" id=theme.id %}">{{ theme.name }}</a></td>
+                                <td>{{ sub_theme.name }}</td>
                                 <td>
-                                    <form action="{% url "delete_theme" id=theme.id %}" method="post">
+                                    <form action="{% url "delete_sub_theme" id=sub_theme.id %}" method="post">
                                         {% csrf_token %}
                                         <!-- Modal dialog delete -->
                                         <div class="modal fade" id="modalDelete{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -86,10 +77,10 @@
                                                     <div class="modal-header">
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                                                 aria-hidden="true">&times;</span></button>
-                                                        <h4 class="modal-title" id="myModalLabel">Удаление темы</h4>
+                                                        <h4 class="modal-title" id="myModalLabel">Удаление подтемы</h4>
                                                     </div>
                                                     <div class="modal-body">
-                                                        Вы действительно хотите удалить тему "{{ theme.name }}"?
+                                                        Вы действительно хотите удалить подтему "{{ sub_theme.name }}"?
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-primary" data-dismiss="modal">Нет</button>
@@ -102,7 +93,7 @@
 
                                     <button id="btnDel{{ forloop.counter }}" type="button" data-toggle="modal"
                                             data-target="#modalDelete{{ forloop.counter }}" class="btn btn-danger pull-right"
-                                            title="Удалить тему">
+                                            title="Удалить подтему">
                                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                     </button>
                                 </td>

@@ -17,4 +17,7 @@ urlpatterns = patterns('',
         url(r'^journal/settings/(?P<id>\d+)/$', views.journal_settings, name="journal_settings"),
         url(r'^create/theme/$', views.create_theme, name="create_theme"),
         url(r'^delete/theme/(?P<id>\d+)/$', views.delete_theme, name="delete_theme"),
+        url(r'^theme/settings/(?P<id>\d+)/$', views.theme_settings, name="theme_settings"),
+        url(r'^create/sub/theme/$', views.create_sub_theme, name="create_sub_theme"),
+        url(r'^delete/sub/theme/(?P<id>\d+)/$', views.delete_sub_theme, name="delete_sub_theme"),
 )

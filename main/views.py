@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
-from main.models import UserProfile, Company, Department, Journal, Theme
+from main.models import UserProfile, Company, Department, Journal, Theme, SubTheme
 
 
 @login_required
@@ -122,7 +122,6 @@ def get_journal_list(request):
     return JsonResponse({"journal_list": result_list})
 
 
-
 @login_required
 def create_new_company(request):
     if request.user.user_type == UserProfile.CURATOR:
@@ -149,6 +148,7 @@ def create_new_company(request):
     else:
         return HttpResponseRedirect(reverse("index"))
 
+
 @login_required
 def edit_company(request, id):
     try:
@@ -166,6 +166,7 @@ def edit_company(request, id):
             "department_list": department_list
         }
     )
+
 
 @login_required
 def edit_company_save(request):
@@ -194,6 +195,7 @@ def edit_company_save(request):
     else:
         return HttpResponseRedirect(reverse("index"))
 
+
 @login_required
 def create_journal(request):
     if "save" in request.POST:
@@ -201,6 +203,7 @@ def create_journal(request):
         return render(request, "main/journal_settings.html", {"journal": journal})
     else:
         return render(request, "main/create_journal.html")
+
 
 @login_required
 def journal_settings(request, id):
@@ -217,6 +220,7 @@ def journal_settings(request, id):
             "theme_list": theme_list
         }
     )
+
 
 @login_required
 def create_theme(request):
@@ -238,6 +242,7 @@ def create_theme(request):
     else:
         return HttpResponseRedirect(reverse("index"))
 
+
 @login_required
 def delete_theme(request, id):
     try:
@@ -253,5 +258,67 @@ def delete_theme(request, id):
             {
                 "journal": journal,
                 "theme_list": theme_list
+            }
+        )
+
+
+@login_required
+def theme_settings(request, id):
+    try:
+        theme = Theme.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    sub_theme_list = SubTheme.objects.filter(parent_theme=theme)
+    return render(
+        request,
+        "main/theme_settings.html",
+        {
+            "theme": theme,
+            "sub_theme_list": sub_theme_list
+        }
+    )
+
+
+@login_required
+def create_sub_theme(request):
+    if "save" in request.POST:
+        try:
+            theme = Theme.objects.get(id=request.POST["save"])
+        except:
+            return HttpResponseRedirect(reverse("index"))
+        sub_theme = SubTheme.objects.create(
+            name=request.POST["subThemeName"],
+            description=request.POST["description"],
+            owner=request.user,
+            parent_theme=theme
+        )
+        sub_theme_list = SubTheme.objects.filter(parent_theme=theme)
+        return render(
+            request,
+            "main/theme_settings.html",
+            {
+                "theme": theme,
+                "sub_theme_list": sub_theme_list
+            }
+        )
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
+
+@login_required
+def delete_sub_theme(request, id):
+    try:
+        sub_theme = SubTheme.objects.get(id=id)
+        theme = Theme.objects.get(id=sub_theme.parent_theme.id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    sub_theme.delete()
+    sub_theme_list = SubTheme.objects.filter(parent_theme=theme)
+    return render(
+            request,
+            "main/theme_settings.html",
+            {
+                "theme": theme,
+                "sub_theme_list": sub_theme_list
             }
         )
