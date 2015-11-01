@@ -133,7 +133,7 @@
                             <td><a name="aCompanyName" href="#" property="{{ company.id }}">{{ company.name }}</a></td>
                             <td>
                                 <a href="{% url "edit_company" company.id %}">
-                                    <button class="btn btn-warning pull-right" name="edit" title="Редактировать компанию">
+                                    <button class="btn btn-primary pull-right" name="edit" title="Редактировать компанию">
                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                                     </button>
                                 </a>
@@ -178,13 +178,13 @@
                     Сотрудники
                 </div>
                 <div class="panel-body user-panel">
-                    <table id="tableUserList" class="table table-hover">
+                    <table id="tableProfileList" class="table table-hover">
                     </table>
                 </div>
                 <div class="panel-footer input-group custom-search-form">
-                    <input id="inputUserSearch" type="text" class="form-control" placeholder="Поиск...">
+                    <input id="inputProfileSearch" type="text" class="form-control" placeholder="Поиск...">
                     <span class="input-group-btn">
-                        <button id="buttonUserSearch" class="btn btn-default" type="button">
+                        <button id="buttonProfileSearch" class="btn btn-default" type="button">
                             <i class="fa fa-search"></i>
                         </button>
                     </span>

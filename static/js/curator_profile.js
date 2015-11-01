@@ -13,6 +13,58 @@ $(document).ready(function () {
     $("#buttonUserSearch").click(userSearch);
     $("#inputUserSearch").change(userSearch).keyup(userSearch);
 
+    var journalSearch = function() {
+        $('#tableJournalList > tbody > tr').each(function() {
+            if(($(this).find('a').html()).indexOf($("#inputJournalSearch").val())) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        });
+    };
+
+    $("#buttonJournalSearch").click(journalSearch);
+    $("#inputJournalSearch").change(journalSearch).keyup(journalSearch);
+
+    var companySearch = function() {
+        $('#tableCompanyList > tbody > tr').each(function() {
+            if(($(this).find('a').html()).indexOf($("#inputCompanySearch").val())) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        });
+    };
+
+    $("#buttonCompanySearch").click(companySearch);
+    $("#inputCompanySearch").change(companySearch).keyup(companySearch);
+
+    var departmentSearch = function() {
+        $('#tableDepartmentList > tbody > tr').each(function() {
+            if(($(this).find('a').html()).indexOf($("#inputDepartmentSearch").val())) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        });
+    };
+
+    $("#buttonDepartmentSearch").click(departmentSearch);
+    $("#inputDepartmentSearch").change(departmentSearch).keyup(departmentSearch);
+
+    var profilesSearch = function() {
+        $('#tableProfileList > tbody > tr').each(function() {
+            if(($(this).find('a').html()).indexOf($("#inputProfileSearch").val())) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        });
+    };
+
+    $("#buttonProfileSearch").click(profilesSearch);
+    $("#inputProfileSearch").change(profilesSearch).keyup(profilesSearch);
+
     $("#aShowAllUsers").click(function() {
         $(this).html("<i class=\"fa fa-check\"></i> Все пользователи");
         $("#aShowCurators").text("Кураторы");
@@ -150,7 +202,7 @@ $(document).ready(function () {
                 id: $( this).attr("property")
             },
             success: function(data) {
-                $("#tableUserList > tbody > tr").each(function() {
+                $("#tableProfileList > tbody > tr").each(function() {
                     $(this).remove();
                 });
                 var userList = data["user_list"];
@@ -158,7 +210,7 @@ $(document).ready(function () {
                 for (var i = 0; i < userList.length; i++) {
                     result += "<tr><td><a href=\"/accounts/settings/" + userList[i]["id"] + "\" property=\"" + userList[i]["id"] + "\">" + userList[i]["name"] + "</a></td></tr>";
                 }
-                $("#tableUserList").append(result);
+                $("#tableProfileList").append(result);
             },
             error: function(xhr, textStatus, errorThrown) {
                 alert("Error: "+errorThrown+xhr.status+xhr.responseText);
