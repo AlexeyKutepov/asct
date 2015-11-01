@@ -347,6 +347,7 @@ def get_user_list_by_theme(request):
         return JsonResponse({"user_statistic_list": []})
 
 
+@login_required
 def schedule_theme(request, id):
     if "save" in request.POST:
         try:
@@ -373,6 +374,35 @@ def schedule_theme(request, id):
                 "theme": theme,
                 "sub_theme_list": sub_theme_list
             }
+        )
+    else:
+        return HttpResponseRedirect(reverse("index"))
+
+
+@login_required
+def schedule_theme_to_user(request, id):
+    if "save" in request.POST:
+        try:
+            theme = Theme.objects.get(id=id)
+            user = UserProfile.objects.get(id=request.POST["user"])
+        except:
+            return HttpResponseRedirect(reverse("index"))
+        ScheduledTheme.objects.create(
+            date_to=request.POST["dateTo"],
+            user=user,
+            theme=theme
+        )
+        sub_theme_list = SubTheme.objects.filter(parent_theme=theme)
+        for item in sub_theme_list:
+            ScheduledSubTheme.objects.create(
+                date_to=request.POST["dateTo"],
+                user=user,
+                sub_theme=item
+            )
+        return render(
+            request,
+            "main/user_info.html",
+            {"user_data": user}
         )
     else:
         return HttpResponseRedirect(reverse("index"))
@@ -428,3 +458,21 @@ def get_theme_list_by_user(request):
         return JsonResponse(result)
     else:
         return JsonResponse({"user_statistic_list": []})
+
+
+@login_required
+def get_theme_list_by_journal(request):
+    if "id" in request.POST:
+        journal = Journal.objects.get(id=request.POST["id"])
+        theme_list = Theme.objects.filter(journal=journal)
+        result = {}
+        list = []
+        for item in theme_list:
+            list.append({
+                "id": item.id,
+                "name": item.name,
+            })
+        result["theme_list"] = list
+        return JsonResponse(result)
+    else:
+        return JsonResponse({"theme_list": []})

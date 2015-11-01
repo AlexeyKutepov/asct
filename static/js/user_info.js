@@ -37,8 +37,7 @@ $(document).ready(function () {
         type: "POST",
         url: "/get/journal/list/",
         data: {
-            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
-            id: $( this).attr("property")
+            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value
         },
         success: function(data) {
             $('#selectJournal')
@@ -54,10 +53,43 @@ $(document).ready(function () {
                     text: journalList[i]["name"]
                 })).selectpicker('refresh');
             }
+            $("#selectJournal").trigger( "change" );
         },
         error: function(xhr, textStatus, errorThrown) {
             alert("Error: "+errorThrown+xhr.status+xhr.responseText);
         }
+    });
+
+    $("#selectJournal").change(function() {
+        $.ajax({
+            type: "POST",
+            url: "/get/theme/list/by/journal/",
+            data: {
+                csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+                id: $(this).val()
+            },
+            success: function (data) {
+                $('#selectTheme')
+                    .find('option')
+                    .remove()
+                    .end()
+                    .selectpicker('refresh')
+                ;
+                var themeList = data["theme_list"];
+                for (var i = 0; i < themeList.length; i++) {
+                    $('#selectTheme').append($("<option/>", {
+                        value: themeList[i]["id"],
+                        text: themeList[i]["name"]
+                    })).selectpicker('refresh');
+                }
+                if (themeList.length > 0) {
+                    $("#formScheduleTheme").attr('action', '/schedule/theme/to/user/' + themeList[0]["id"] + '/');
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                alert("Error: " + errorThrown + xhr.status + xhr.responseText);
+            }
+        });
     });
 
 });
