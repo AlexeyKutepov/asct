@@ -33,31 +33,20 @@ $(document).ready(function () {
         }
     });
 
-    //$.ajax({
-    //    type: "POST",
-    //    url: "/get/probationer/list/",
-    //    data: {
-    //        csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value
-    //    },
-    //    success: function(data) {
-    //        $('#selectProbationer')
-    //            .find('option')
-    //            .remove()
-    //            .end()
-    //            .selectpicker('refresh')
-    //        ;
-    //        var probationerList = data["probationer_list"];
-    //        for (var i = 0; i < probationerList.length; i++) {
-    //            $('#selectProbationer').append($("<option/>", {
-    //                value: probationerList[i]["id"],
-    //                text: probationerList[i]["name"]
-    //            })).selectpicker('refresh');
-    //        }
-    //    },
-    //    error: function(xhr, textStatus, errorThrown) {
-    //        alert("Error: "+errorThrown+xhr.status+xhr.responseText);
-    //    }
-    //});
+    $.ajax({
+        type: "POST",
+        url: "/get/journal/list/",
+        data: {
+            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+            id: $( this).attr("property")
+        },
+        success: function(data) {
+
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            alert("Error: "+errorThrown+xhr.status+xhr.responseText);
+        }
+    });
 
 });
 

@@ -37,6 +37,7 @@
             <a href="{% url "user_settings" id=user_data.id %}"><input type="button" class="btn btn-default pull-right" value="Редактировать профиль пользователя"/></a>
         </div>
     </div>
+    {% if user_data.user_type == "PROBATIONER" %}
     <div class="row">
         <div class="col-lg-12">
             <h4 class="page-header">Темы для изучения, назначенные пользователю</h4>
@@ -65,8 +66,11 @@
             </table>
         </div>
     </div>
+    {% endif %}
     <input id="userId" value="{{ user_data.id }}" hidden>
 {% endblock %}
 {% block scripts %}
-<script src="/static/js/user_info.js"></script>
+    {% if user_data.user_type == "PROBATIONER" %}
+        <script src="/static/js/user_info.js"></script>
+    {% endif %}
 {% endblock %}
