@@ -23,9 +23,10 @@ $(document).ready(function () {
                         "<td>" +
                             "<div class=\"progress\"><div class=\"progress-bar\" role=\"progressbar\" aria-valuenow=\"" + userStatisticList[i]["progress"] + "\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width: " + userStatisticList[i]["progress"] + "%;\"><span class=\"sr-only\">" + userStatisticList[i]["progress"] + "% Complete</span></div></div>" +
                         "</td>" +
+                        "<td></td>" +
                     "</tr>";
             }
-            $("#tableJournalList").append(result);
+            $("#tableUserStatisticList").append(result);
         },
         error: function(xhr, textStatus, errorThrown) {
             alert("Error: "+errorThrown+xhr.status+xhr.responseText);

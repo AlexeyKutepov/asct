@@ -1,8 +1,9 @@
+from datetime import timezone
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
-from main.models import UserProfile, Company, Department, Journal, Theme, SubTheme, ScheduledTheme
+from main.models import UserProfile, Company, Department, Journal, Theme, SubTheme, ScheduledTheme, ScheduledSubTheme
 
 
 @login_required
@@ -346,7 +347,34 @@ def get_user_list_by_theme(request):
 
 
 def schedule_theme(request, id):
-    return None
+    if "save" in request.POST:
+        try:
+            theme = Theme.objects.get(id=id)
+            user = UserProfile.objects.get(id=request.POST["user"])
+        except:
+            return HttpResponseRedirect(reverse("index"))
+        ScheduledTheme.objects.create(
+            date_to=request.POST["dateTo"],
+            user=user,
+            theme=theme
+        )
+        sub_theme_list = SubTheme.objects.filter(parent_theme=theme)
+        for item in sub_theme_list:
+            ScheduledSubTheme.objects.create(
+                date_to=request.POST["dateTo"],
+                user=user,
+                sub_theme=item
+            )
+        return render(
+            request,
+            "main/theme_settings.html",
+            {
+                "theme": theme,
+                "sub_theme_list": sub_theme_list
+            }
+        )
+    else:
+        return HttpResponseRedirect(reverse("index"))
 
 
 @login_required
