@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="form-group col-lg-2">
+        <div class="form-group col-lg-3">
             {% if user_data.photo %}
                 <img id="impPreview"
                      src="{{ MEDIA_URL }}{{ user_data.photo }}"
@@ -38,7 +38,7 @@
             <p><b>Тип пользователя: </b>Испытуемый</p>
             {% endif %}
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-5">
             <a href="{% url "user_settings" id=user_data.id %}"><input type="button" class="btn btn-default pull-right" value="Редактировать профиль пользователя"/></a>
         </div>
     </div>
