@@ -327,13 +327,22 @@ def get_user_list_by_theme(request):
         result = {}
         list = []
         for item in scheduled_theme_list:
+            if item.status == ScheduledTheme.ASSIGNED:
+                progress = 0
+                status = "Назначена"
+            elif item.status == ScheduledTheme.COMPLETED:
+                progress = 100
+                status = "Тема изучена"
+            else:
+                progress = 50
+                status = "Изучение"
             list.append({
                 "id": item.user.id,
                 "fio": item.user.get_full_name(),
-                "status": "Назначена",
+                "status": status,
                 "date_from": item.date_from,
                 "date_to": item.date_to,
-                "progress": 50
+                "progress": progress
             })
         result["user_statistic_list"] = list
         return JsonResponse(result)
@@ -440,13 +449,22 @@ def get_theme_list_by_user(request):
         result = {}
         list = []
         for item in scheduled_theme_list:
+            if item.status == ScheduledTheme.ASSIGNED:
+                progress = 0
+                status = "Назначена"
+            elif item.status == ScheduledTheme.COMPLETED:
+                progress = 100
+                status = "Тема изучена"
+            else:
+                progress = 50
+                status = "Изучение"
             list.append({
                 "id": item.theme.id,
                 "name": item.theme.name,
-                "status": "Назначена",
+                "status": status,
                 "date_from": item.date_from,
                 "date_to": item.date_to,
-                "progress": 50
+                "progress": progress
             })
         result["user_statistic_list"] = list
         return JsonResponse(result)
