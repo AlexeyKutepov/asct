@@ -490,15 +490,37 @@ def delete_journal(request, id):
 @login_required
 def probationer_theme_settings(request, id):
     try:
-        theme = Theme.objects.get(id=id)
+        scheduled_theme = ScheduledTheme.objects.get(id=id)
     except:
         return HttpResponseRedirect(reverse("index"))
-    sub_theme_list = SubTheme.objects.filter(parent_theme=theme)
+    sub_theme_list = SubTheme.objects.filter(parent_theme=scheduled_theme.theme)
     return render(
         request,
         "main/probationer_theme_settings.html",
         {
-            "theme": theme,
+            "scheduled_theme": scheduled_theme,
             "sub_theme_list": sub_theme_list
         }
     )
+
+
+@login_required
+def theme_in_work(request, id):
+    try:
+        scheduled_theme = ScheduledTheme.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    scheduled_theme.status = ScheduledTheme.IN_WORK
+    scheduled_theme.save()
+    return HttpResponseRedirect(reverse("probationer_theme_settings", args=[id,]))
+
+
+@login_required
+def theme_completed(request, id):
+    try:
+        scheduled_theme = ScheduledTheme.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    scheduled_theme.status = ScheduledTheme.COMPLETED
+    scheduled_theme.save()
+    return HttpResponseRedirect(reverse("probationer_theme_settings", args=[id,]))

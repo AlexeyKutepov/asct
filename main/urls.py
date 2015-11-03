@@ -32,5 +32,7 @@ urlpatterns = patterns('',
         url(r'^user/info/(?P<id>\d+)/$', views.user_info, name="user_info"),
         url(r'^delete/journal/(?P<id>\d+)/$', views.delete_journal, name="delete_journal"),
         url(r'^probationer/theme/settings/(?P<id>\d+)/$', views.probationer_theme_settings, name="probationer_theme_settings"),
+        url(r'^theme/in/work/(?P<id>\d+)/$', views.theme_in_work, name="theme_in_work"),
+        url(r'^theme/completed/(?P<id>\d+)/$', views.theme_completed, name="theme_completed"),
 
 )

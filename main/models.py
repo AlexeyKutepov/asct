@@ -156,10 +156,20 @@ class Theme(models.Model):
 
 
 class ScheduledTheme(models.Model):
+    ASSIGNED = 'ASSIGNED'
+    IN_WORK = 'IN_WORK'
+    COMPLETED = 'COMPLETED'
+    STATUS = (
+        (ASSIGNED, 'ASSIGNED'),
+        (IN_WORK, 'IN_WORK'),
+        (COMPLETED, 'COMPLETED'),
+    )
     # Start date
     date_from = models.DateTimeField(default=timezone.now)
     # End date
     date_to = models.DateTimeField(default=timezone.now)
+    # Status
+    status = models.CharField(max_length=10, choices=STATUS, default=ASSIGNED)
     # User
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     #Theme
@@ -189,10 +199,20 @@ class ThemeResult(models.Model):
 
 
 class SubTheme(models.Model):
+    ASSIGNED = 'ASSIGNED'
+    IN_WORK = 'IN_WORK'
+    COMPLETED = 'COMPLETED'
+    STATUS = (
+        (ASSIGNED, 'ASSIGNED'),
+        (IN_WORK, 'IN_WORK'),
+        (COMPLETED, 'COMPLETED'),
+    )
     # The name of theme
     name = models.CharField(max_length=500)
     # The description of theme
     description = models.TextField(blank=True)
+    # Status
+    status = models.CharField(max_length=10, choices=STATUS, default=ASSIGNED)
     # The owner of theme
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
     # The parent theme to study
