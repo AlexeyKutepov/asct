@@ -55,11 +55,9 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="{% url "index" %}"><b>ASCT
-                {% if user.user_type == "ADMIN" or user.user_type == "OPERATOR" or user.user_type == "PROBATIONER" %}
                     {% if user.company %}
                         ({{ user.company }})
                     {% endif %}
-                {% endif %}
                 </b></a>
             </div>
             <!-- /.navbar-header -->
