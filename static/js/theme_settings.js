@@ -61,3 +61,20 @@ $(document).ready(function () {
 
 });
 
+function downloadFile(id) {
+    $.ajax({
+        type: "POST",
+        url: "/download/file/",
+        data: {
+            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+            id: id
+        },
+        success: function(data) {
+            return data;
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            console.log("Error: "+errorThrown+xhr.status+xhr.responseText);
+        }
+    });
+}
+

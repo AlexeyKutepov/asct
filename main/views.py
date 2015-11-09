@@ -1,9 +1,11 @@
 from datetime import timezone
+from wsgiref.util import FileWrapper
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
+from django.utils.encoding import smart_str
 from main.models import UserProfile, Company, Department, Journal, Theme, SubTheme, ScheduledTheme, ScheduledSubTheme, \
     File
 
@@ -261,7 +263,7 @@ def theme_settings(request, id):
             file = File.objects.get(sub_theme=sub_theme)
         except:
             continue
-        file_dict[sub_theme.id] = file
+        file_dict[sub_theme.id] = file.id
     return render(
         request,
         "main/theme_settings.html",
@@ -533,3 +535,11 @@ def upload_file_to_sub_theme(request):
         return HttpResponseRedirect(reverse("theme_settings", args=[sub_theme.parent_theme.id,]))
     else:
         return HttpResponseRedirect(reverse("index"))
+
+
+@login_required
+def download_file(request, id):
+    uploaded_file = File.objects.get(pk=id)
+    response = HttpResponse(FileWrapper(uploaded_file.file), content_type='application/zip')
+    response['Content-Disposition'] = 'attachment; filename=' + uploaded_file.file.name
+    return response
