@@ -4,7 +4,8 @@ from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
-from main.models import UserProfile, Company, Department, Journal, Theme, SubTheme, ScheduledTheme, ScheduledSubTheme
+from main.models import UserProfile, Company, Department, Journal, Theme, SubTheme, ScheduledTheme, ScheduledSubTheme, \
+    File
 
 
 @login_required
@@ -505,3 +506,22 @@ def theme_completed(request, id):
     scheduled_theme.status = ScheduledTheme.COMPLETED
     scheduled_theme.save()
     return HttpResponseRedirect(reverse("probationer_theme_settings", args=[id,]))
+
+
+@login_required
+def upload_file_to_sub_theme(request):
+    if "subThemeId" in request.POST:
+        try:
+            sub_theme = SubTheme.objects.get(id=request.POST["subThemeId"])
+        except:
+            return HttpResponseRedirect(reverse("index"))
+        if "file" in request.FILES:
+            uploaded_file = request.FILES["file"]
+            file = File.objects.create(
+                file=uploaded_file,
+                sub_theme=sub_theme
+            )
+
+        return HttpResponseRedirect(reverse("theme_settings", args=[sub_theme.parent_theme.id,]))
+    else:
+        return HttpResponseRedirect(reverse("index"))

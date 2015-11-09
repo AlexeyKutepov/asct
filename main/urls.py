@@ -34,5 +34,6 @@ urlpatterns = patterns('',
         url(r'^probationer/theme/settings/(?P<id>\d+)/$', views.probationer_theme_settings, name="probationer_theme_settings"),
         url(r'^theme/in/work/(?P<id>\d+)/$', views.theme_in_work, name="theme_in_work"),
         url(r'^theme/completed/(?P<id>\d+)/$', views.theme_completed, name="theme_completed"),
+        url(r'^upload/file/to/sub/theme/$', views.upload_file_to_sub_theme, name="upload_file_to_sub_theme")
 
 )

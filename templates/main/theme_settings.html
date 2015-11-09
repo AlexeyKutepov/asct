@@ -112,7 +112,13 @@
                             <tr>
                                 <td>{{ sub_theme.name }}</td>
                                 <td>{{ sub_theme.description }}</td>
-                                <td></td>
+                                <td>
+                                    <form id="formUploadFile{{ sub_theme.id }}" enctype="multipart/form-data" action="{% url "upload_file_to_sub_theme" %}" method="post">
+                                        {% csrf_token %}
+                                        <input name="file" type="file" onchange="document.getElementById('formUploadFile{{ sub_theme.id }}').submit();">
+                                        <input name="subThemeId" type="text" value="{{ sub_theme.id }}" hidden>
+                                    </form>
+                                </td>
                                 <td>
                                     <form action="{% url "delete_sub_theme" id=sub_theme.id %}" method="post">
                                         {% csrf_token %}
