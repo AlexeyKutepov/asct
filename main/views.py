@@ -539,7 +539,28 @@ def upload_file_to_sub_theme(request):
 
 @login_required
 def download_file(request, id):
-    uploaded_file = File.objects.get(pk=id)
+    try:
+        uploaded_file = File.objects.get(pk=id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
     response = HttpResponse(FileWrapper(uploaded_file.file), content_type='application/zip')
     response['Content-Disposition'] = 'attachment; filename=' + uploaded_file.file.name
     return response
+
+
+@login_required
+def delete_file(request, id):
+    try:
+        uploaded_file = File.objects.get(pk=id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    uploaded_file.delete()
+    if "subThemeId" in request.POST:
+        try:
+            sub_theme = SubTheme.objects.get(id=request.POST["subThemeId"])
+        except:
+            return HttpResponseRedirect(reverse("index"))
+    else:
+        return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("theme_settings", args=[sub_theme.parent_theme.id,]))
+

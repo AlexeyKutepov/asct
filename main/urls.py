@@ -35,6 +35,7 @@ urlpatterns = patterns('',
         url(r'^theme/in/work/(?P<id>\d+)/$', views.theme_in_work, name="theme_in_work"),
         url(r'^theme/completed/(?P<id>\d+)/$', views.theme_completed, name="theme_completed"),
         url(r'^upload/file/to/sub/theme/$', views.upload_file_to_sub_theme, name="upload_file_to_sub_theme"),
-        url(r'^download/file/(?P<id>\d+)/$', views.download_file, name="download_file")
+        url(r'^download/file/(?P<id>\d+)/$', views.download_file, name="download_file"),
+        url(r'^delete/file/(?P<id>\d+)/$', views.delete_file, name="delete_file")
 
 )
