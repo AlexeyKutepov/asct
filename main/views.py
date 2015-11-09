@@ -195,7 +195,7 @@ def edit_company_save(request):
 def create_journal(request):
     if "save" in request.POST:
         journal = Journal.objects.create(name=request.POST["name"], description=request.POST["description"], owner=request.user)
-        return render(request, "main/journal_settings.html", {"journal": journal})
+        return HttpResponseRedirect(reverse("journal_settings", args=[journal.id, ]))
     else:
         return render(request, "main/create_journal.html")
 
@@ -224,16 +224,13 @@ def create_theme(request):
             journal = Journal.objects.get(id=request.POST["save"])
         except:
             return HttpResponseRedirect(reverse("index"))
-        theme = Theme.objects.create(name=request.POST["themeName"], description=request.POST["description"], owner=request.user, journal=journal)
-        theme_list = Theme.objects.filter(journal=journal)
-        return render(
-            request,
-            "main/journal_settings.html",
-            {
-                "journal": journal,
-                "theme_list": theme_list
-            }
+        theme = Theme.objects.create(
+            name=request.POST["themeName"],
+            description=request.POST["description"],
+            owner=request.user,
+            journal=journal
         )
+        return HttpResponseRedirect(reverse("journal_settings", args=[journal.id,]))
     else:
         return HttpResponseRedirect(reverse("index"))
 
@@ -246,15 +243,8 @@ def delete_theme(request, id):
     except:
         return HttpResponseRedirect(reverse("index"))
     theme.delete()
-    theme_list = Theme.objects.filter(journal=journal)
-    return render(
-            request,
-            "main/journal_settings.html",
-            {
-                "journal": journal,
-                "theme_list": theme_list
-            }
-        )
+    return HttpResponseRedirect(reverse("journal_settings", args=[journal.id,]))
+
 
 
 @login_required
@@ -287,15 +277,7 @@ def create_sub_theme(request):
             owner=request.user,
             parent_theme=theme
         )
-        sub_theme_list = SubTheme.objects.filter(parent_theme=theme)
-        return render(
-            request,
-            "main/theme_settings.html",
-            {
-                "theme": theme,
-                "sub_theme_list": sub_theme_list
-            }
-        )
+        return HttpResponseRedirect(reverse("theme_settings", args=[theme.id,]))
     else:
         return HttpResponseRedirect(reverse("index"))
 
@@ -308,15 +290,7 @@ def delete_sub_theme(request, id):
     except:
         return HttpResponseRedirect(reverse("index"))
     sub_theme.delete()
-    sub_theme_list = SubTheme.objects.filter(parent_theme=theme)
-    return render(
-            request,
-            "main/theme_settings.html",
-            {
-                "theme": theme,
-                "sub_theme_list": sub_theme_list
-            }
-    )
+    return HttpResponseRedirect(reverse("theme_settings", args=[theme.id,]))
 
 
 @login_required
@@ -370,14 +344,7 @@ def schedule_theme(request, id):
                 user=user,
                 sub_theme=item
             )
-        return render(
-            request,
-            "main/theme_settings.html",
-            {
-                "theme": theme,
-                "sub_theme_list": sub_theme_list
-            }
-        )
+        return HttpResponseRedirect(reverse("theme_settings", args=[theme.id,]))
     else:
         return HttpResponseRedirect(reverse("index"))
 
@@ -402,11 +369,7 @@ def schedule_theme_to_user(request, id):
                 user=user,
                 sub_theme=item
             )
-        return render(
-            request,
-            "main/user_info.html",
-            {"user_data": user}
-        )
+        return HttpResponseRedirect(reverse("user_info", args=[user.id,]))
     else:
         return HttpResponseRedirect(reverse("index"))
 
