@@ -54,7 +54,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{% url "index" %}"><b>ASCT</b></a>
+                <a class="navbar-brand" href="{% url "index" %}"><b>ASCT
+                {% if user.user_type == "ADMIN" or user.user_type == "OPERATOR" or user.user_type == "PROBATIONER" %}
+                    {% if user.company %}
+                        ({{ user.company }})
+                    {% endif %}
+                {% endif %}
+                </b></a>
             </div>
             <!-- /.navbar-header -->
             <ul class="nav navbar-top-links navbar-right">
