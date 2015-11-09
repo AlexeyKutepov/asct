@@ -45,7 +45,7 @@ $(document).ready(function () {
             $("#tableJournalList").append(result);
         },
         error: function(xhr, textStatus, errorThrown) {
-            alert("Error: "+errorThrown+xhr.status+xhr.responseText);
+            console.log("Error: "+errorThrown+xhr.status+xhr.responseText);
         }
     });
 
