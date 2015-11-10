@@ -32,8 +32,8 @@
                             {% elif item.status == 'COMPLETED' %}
                             <td>Изучена</td>
                             {% endif %}
-                            <td>{{ item.date_from }}</td>
-                            <td>{{ item.date_to }}</td>
+                            <td>{{ item.date_from|date:"d.m.Y" }}</td>
+                            <td>{{ item.date_to|date:"d.m.Y" }}</td>
                             <td>
                                 {% if item.status == 'ASSIGNED' %}
                                     <div class="progress">
