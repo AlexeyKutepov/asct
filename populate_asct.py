@@ -7,7 +7,8 @@ import django
 django.setup()
 
 from django.contrib.auth.models import User
-from main.models import UserProfile, Company, Department
+from main.models import UserProfile, Company, Department, Theme, Journal, SubTheme
+
 
 def populate():
     """
@@ -24,7 +25,7 @@ def populate():
     department5 = add_department(company3, "Подразделение Д")
     department6 = add_department(company3, "Подразделение Е")
 
-    add_super_user(company1, department1)
+    super_user = add_super_user(company1, department1)
     add_user(
         "curator1@mail.ru",
         "123456",
@@ -182,14 +183,183 @@ def populate():
         "Менеджер"
     )
 
+    journal1 = add_journal(
+        "Производственное обучение",
+        "",
+        super_user
+    )
+
+    theme1 = add_theme(
+        "Выживание на предприятии",
+        "",
+        super_user,
+        journal1
+    )
+    sub_theme1 = add_sub_theme(
+        "Охрана труда",
+        "",
+        super_user,
+        theme1
+    )
+    sub_theme2 = add_sub_theme(
+        "Пожарная безопасность",
+        "",
+        super_user,
+        theme1
+    )
+    sub_theme3 = add_sub_theme(
+        "Санитария на производстве",
+        "",
+        super_user,
+        theme1
+    )
+    sub_theme4 = add_sub_theme(
+        "Безопасность жизнедеятельности на предприятии",
+        "",
+        super_user,
+        theme1
+    )
+    sub_theme5 = add_sub_theme(
+        "Первая медицинская помощь",
+        "",
+        super_user,
+        theme1
+    )
+
+    theme2 = add_theme(
+        "Ознакомление с подраделением",
+        "",
+        super_user,
+        journal1
+    )
+    sub_theme6 = add_sub_theme(
+        "Режим и график",
+        "",
+        super_user,
+        theme2
+    )
+    sub_theme7 = add_sub_theme(
+        "Кто чем занимается и за что отвечает",
+        "",
+        super_user,
+        theme2
+    )
+    sub_theme8 = add_sub_theme(
+        "Сюзерены и вассалы",
+        "",
+        super_user,
+        theme2
+    )
+    sub_theme9 = add_sub_theme(
+        "Делопроизводство и документооборот",
+        "",
+        super_user,
+        theme2
+    )
+
+    theme3 = add_theme(
+        "Услуги и виды обслуживания в оделе",
+        "",
+        super_user,
+        journal1
+    )
+    sub_theme10 = add_sub_theme(
+        "Что полезное мы делаем для общества, и за что нам платят деньги",
+        "",
+        super_user,
+        theme3
+    )
+    sub_theme11 = add_sub_theme(
+        "Наши конференц-возможности",
+        "",
+        super_user,
+        theme3
+    )
+    sub_theme12 = add_sub_theme(
+        "Деловые мероприятия",
+        "",
+        super_user,
+        theme3
+    )
+    sub_theme13 = add_sub_theme(
+        "Торжественные мероприятия",
+        "",
+        super_user,
+        theme3
+    )
+
+    theme4 = add_theme(
+        "Стандартыне процедуры обслуживания",
+        "",
+        super_user,
+        journal1
+    )
+    sub_theme14 = add_sub_theme(
+        "Жизненный цикл мероприятия",
+        "",
+        super_user,
+        theme4
+    )
+    sub_theme15 = add_sub_theme(
+        "Помоги закачику купить",
+        "",
+        super_user,
+        theme4
+    )
+    sub_theme16 = add_sub_theme(
+        "Организуй меропритие",
+        "",
+        super_user,
+        theme4
+    )
+    sub_theme17 = add_sub_theme(
+        "Проведи мероприятие",
+        "",
+        super_user,
+        theme4
+    )
+
+
+
+
 
 def add_company(name):
     company = Company.objects.get_or_create(name=name)[0]
     return company
 
+
 def add_department(company, name):
     department = Department.objects.get_or_create(company=company, name=name)[0]
     return department
+
+
+def add_journal(name, description, owner):
+    journal = Journal.objects.get_or_create(
+        name=name,
+        description=description,
+        owner=owner
+    )[0]
+    return journal
+
+
+def add_theme(name, description, owner, journal):
+    theme = Theme.objects.get_or_create(
+        name=name,
+        description=description,
+        owner=owner,
+        journal=journal
+    )[0]
+    return theme
+
+
+def add_sub_theme(name, description, owner, parent_theme):
+    sub_theme = SubTheme.objects.get_or_create(
+        name=name,
+        description=description,
+        owner=owner,
+        parent_theme=parent_theme
+    )[0]
+    return sub_theme
 
 
 def add_super_user(company, department):
