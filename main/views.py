@@ -486,12 +486,20 @@ def probationer_theme_settings(request, id):
     except:
         return HttpResponseRedirect(reverse("index"))
     sub_theme_list = SubTheme.objects.filter(parent_theme=scheduled_theme.theme)
+    file_dict = {}
+    for sub_theme in sub_theme_list:
+        try:
+            file = File.objects.get(sub_theme=sub_theme)
+        except:
+            continue
+        file_dict[sub_theme.id] = file.id
     return render(
         request,
         "main/probationer_theme_settings.html",
         {
             "scheduled_theme": scheduled_theme,
-            "sub_theme_list": sub_theme_list
+            "sub_theme_list": sub_theme_list,
+            "file_dict": file_dict
         }
     )
 

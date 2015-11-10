@@ -53,7 +53,23 @@
                             <td>{{ item.name }}</td>
                             <td>{{ item.description }}</td>
                             <td>Назначена</td>
-                            <td></td>
+                            <td>
+                                {% load poll_extras %}
+                                {% if item.id in file_dict %}
+                                    <form id="formDownloadFile{{ forloop.counter }}" action="{% url "download_file" id=file_dict|get_item:item.id %}" method="post">
+                                    {% csrf_token %}
+                                    </form>
+                                    <button id="btnDownloadFile{{ forloop.counter }}" type="button" class="btn btn-primary"
+                                            title="Скачать учебные материалы" onclick="document.getElementById('formDownloadFile{{ forloop.counter }}').submit();">
+                                        <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                                    </button>
+                                {% else %}
+                                    <button id="btnDownloadFile{{ forloop.counter }}" type="button" class="btn btn-primary"
+                                            title="Скачать учебные материалы" disabled>
+                                        <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                                    </button>
+                                {% endif %}
+                            </td>
                             <td></td>
                         </tr>
                     {% endfor %}
