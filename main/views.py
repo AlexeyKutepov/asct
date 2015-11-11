@@ -428,13 +428,10 @@ def get_theme_list_by_user(request):
         list = []
         for item in scheduled_theme_list:
             if item.status == ScheduledTheme.ASSIGNED:
-                progress = 0
                 status = "Назначена"
             elif item.status == ScheduledTheme.COMPLETED:
-                progress = 100
                 status = "Тема изучена"
             else:
-                progress = 50
                 status = "Изучение"
             list.append({
                 "id": item.theme.id,
@@ -442,7 +439,7 @@ def get_theme_list_by_user(request):
                 "status": status,
                 "date_from": item.date_from,
                 "date_to": item.date_to,
-                "progress": progress
+                "progress": item.progress
             })
         result["user_statistic_list"] = list
         return JsonResponse(result)
