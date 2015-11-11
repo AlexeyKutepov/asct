@@ -257,6 +257,7 @@ def theme_settings(request, id):
     except:
         return HttpResponseRedirect(reverse("index"))
     sub_theme_list = SubTheme.objects.filter(parent_theme=theme)
+    scheduled_theme_list = ScheduledTheme.objects.filter(theme=theme)
     file_dict = {}
     for sub_theme in sub_theme_list:
         try:
@@ -270,7 +271,8 @@ def theme_settings(request, id):
         {
             "theme": theme,
             "sub_theme_list": sub_theme_list,
-            "file_dict": file_dict
+            "file_dict": file_dict,
+            "scheduled_theme_list":scheduled_theme_list
         }
     )
 
@@ -572,3 +574,13 @@ def delete_file(request, id):
         return HttpResponseRedirect(reverse("index"))
     return HttpResponseRedirect(reverse("theme_settings", args=[sub_theme.parent_theme.id,]))
 
+
+@login_required
+def cancel_theme(request, id):
+    try:
+        scheduled_theme = ScheduledTheme.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    theme_id = scheduled_theme.theme.id
+    scheduled_theme.delete()
+    return HttpResponseRedirect(reverse("theme_settings", args=[theme_id,]))

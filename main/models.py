@@ -174,6 +174,8 @@ class ScheduledTheme(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     #Theme
     theme = models.ForeignKey(Theme)
+    # Progress
+    progress = models.IntegerField(default=0)
 
 
 class ThemeExam(models.Model):
