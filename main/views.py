@@ -584,3 +584,18 @@ def cancel_theme(request, id):
     theme_id = scheduled_theme.theme.id
     scheduled_theme.delete()
     return HttpResponseRedirect(reverse("theme_settings", args=[theme_id,]))
+
+
+@login_required
+def edit_theme(request, id):
+    try:
+        theme = Theme.objects.get(id=id)
+        journal = Journal.objects.get(id=theme.journal.id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    if "themeName" in request.POST:
+        theme.name = request.POST["themeName"]
+    if "description" in request.POST:
+        theme.description = request.POST["description"]
+    theme.save()
+    return HttpResponseRedirect(reverse("journal_settings", args=[journal.id,]))

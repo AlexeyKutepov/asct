@@ -66,15 +66,6 @@
             <h3 class="page-header">{{ journal.name }}</h3>
         </div>
     </div>
-{#    {% if journal.description %}#}
-{#    <div class="row">#}
-{#        <div class="col-lg-12">#}
-{#            <blockquote>#}
-{#              <p>{{ journal.description }}</p>#}
-{#            </blockquote>#}
-{#        </div>#}
-{#    </div>#}
-{#    {% endif %}#}
     <div class="row">
         <div class="col-lg-12">
             <input id="buttonDeleteJournal" type="button" class="btn btn-danger pull-right" value="Удалить журнал" data-toggle="modal" data-target="#modalDeleteJournal"/>
@@ -104,7 +95,7 @@
                         <thead>
                             <th>Название темы</th>
                             <th>Описание</th>
-                            <th width="20px">Действия</th>
+                            <th width="110px">Действия</th>
                         </thead>
                         {% for theme in theme_list %}
                             <tr>
@@ -134,8 +125,52 @@
                                         </div>
                                     </form>
 
+                                    <form id="formEditTheme{{ forloop.counter }}" action="{% url "edit_theme" id=theme.id %}" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                        <div id="modalEditTheme{{ forloop.counter }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalAddTheme">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                                aria-hidden="true">&times;</span></button>
+                                                        <h4 class="modal-title" id="myModalLabel">Редактирование темы</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="inputThemeName">Название темы</label>
+                                                                    <input type="text" class="form-control" id="inputThemeName" name="themeName" placeholder="Название темы" value="{{ theme.name }}" >
+                                                              </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <div class="form-group">
+                                                                    <label for="inputDescription">Описание</label>
+                                                                    <textarea id="inputDescription" name="description" class="form-control" rows="5">{{ theme.description }}</textarea>
+                                                                </div>
+                                                              </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                                                        <button type="submit" name="save" class="btn btn-primary">Сохранить</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                    <button id="btnEdit{{ forloop.counter }}" type="button" data-toggle="modal"
+                                            data-target="#modalEditTheme{{ forloop.counter }}" class="btn btn-primary"
+                                            title="Редактировать тему">
+                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                    </button>
                                     <button id="btnDel{{ forloop.counter }}" type="button" data-toggle="modal"
-                                            data-target="#modalDelete{{ forloop.counter }}" class="btn btn-danger pull-right"
+                                            data-target="#modalDelete{{ forloop.counter }}" class="btn btn-danger"
                                             title="Удалить тему">
                                         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                     </button>
