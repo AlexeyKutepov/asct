@@ -230,6 +230,9 @@ class ScheduledSubTheme(models.Model):
     sub_theme = models.ForeignKey(SubTheme)
     # Status
     status = models.CharField(max_length=10, choices=STATUS, default=ASSIGNED)
+    # Parent
+    scheduled_theme = models.ForeignKey(ScheduledTheme)
+
 
 
 class SubThemeExam(models.Model):

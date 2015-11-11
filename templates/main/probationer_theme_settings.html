@@ -65,7 +65,7 @@
                             </td>
                             <td>
                                 {% load poll_extras %}
-                                {% if item.sub_theme.id in file_dict and scheduled_theme.status != 'ASSIGNED' and scheduled_theme.status != 'COMPLETED' %}
+                                {% if item.sub_theme.id in file_dict and scheduled_theme.status != 'ASSIGNED' and scheduled_theme.status != 'COMPLETED' and item.status != 'ASSIGNED' and item.status != 'COMPLETED' %}
                                     <form id="formDownloadFile{{ forloop.counter }}" action="{% url "download_file" id=file_dict|get_item:item.sub_theme.id %}" method="post">
                                     {% csrf_token %}
                                     </form>
@@ -81,7 +81,7 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% if scheduled_theme.status != 'ASSIGNED' and scheduled_theme.status != 'COMPLETED' %}
+                                {% if scheduled_theme.status == 'IN_WORK' %}
                                     {% if item.status == 'ASSIGNED' %}
                                         <a href="{% url "sub_theme_in_work" id=item.id %}">
                                         <button id="btnStartSubTheme{{ forloop.counter }}" type="button" class="btn btn-success"
@@ -90,16 +90,23 @@
                                         </button>
                                         </a>
                                     {% elif item.status == 'IN_WORK' %}
+                                        <a href="{% url "sub_theme_completed" id=item.id %}">
                                         <button id="btnStartSubTheme{{ forloop.counter }}" type="button" class="btn btn-success"
                                                 title="Завершить изучение">
                                             <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span>
                                         </button>
+                                        </a>
                                     {% else %}
                                         <button id="btnStartSubTheme{{ forloop.counter }}" type="button" class="btn btn-success"
                                                 title="Изучение завершено" disabled>
                                             <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span>
                                         </button>
                                     {% endif %}
+                                {% elif scheduled_theme.status == 'COMPLETED' %}
+                                    <button id="btnStartSubTheme{{ forloop.counter }}" type="button" class="btn btn-success"
+                                            title="Изучение завершено" disabled>
+                                        <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                    </button>
                                 {% else %}
                                     <button id="btnStartSubTheme{{ forloop.counter }}" type="button" class="btn btn-success"
                                             title="Начать изучение подтемы" disabled>

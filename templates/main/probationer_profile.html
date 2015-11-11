@@ -35,27 +35,20 @@
                             <td>{{ item.date_from|date:"d.m.Y" }}</td>
                             <td>{{ item.date_to|date:"d.m.Y" }}</td>
                             <td>
-                                {% if item.status == 'ASSIGNED' %}
+                                {% if item.status != 'COMPLETED' %}
                                     <div class="progress">
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0"
-                                             aria-valuemax="100" style="width: 0%;">
-                                            <span class="sr-only">0% Complete</span>
+                                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ item.progress }}" aria-valuemin="0"
+                                             aria-valuemax="100" style="width: {{ item.progress }}%;">
+                                            <span class="sr-only">{{ item.progress }}% Complete</span>
                                         </div>
                                     </div>
-                                {% elif item.status == 'IN_WORK' %}
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0"
-                                         aria-valuemax="100" style="width: 50%;">
-                                        <span class="sr-only">50% Complete</span>
+                                {% else %}
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0"
+                                             aria-valuemax="100" style="width: 100%;">
+                                            <span class="sr-only">100% Complete</span>
+                                        </div>
                                     </div>
-                                </div>
-                                {% elif item.status == 'COMPLETED' %}
-                                <div class="progress">
-                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0"
-                                         aria-valuemax="100" style="width: 100%;">
-                                        <span class="sr-only">100% Complete</span>
-                                    </div>
-                                </div>
                                 {% endif %}
                             </td>
                         </tr>
