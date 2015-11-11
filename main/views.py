@@ -599,3 +599,18 @@ def edit_theme(request, id):
         theme.description = request.POST["description"]
     theme.save()
     return HttpResponseRedirect(reverse("journal_settings", args=[journal.id,]))
+
+
+@login_required
+def edit_sub_theme(request, id):
+    try:
+        sub_theme = SubTheme.objects.get(id=id)
+        theme = Theme.objects.get(id=sub_theme.parent_theme.id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    if "subThemeName" in request.POST:
+        sub_theme.name = request.POST["subThemeName"]
+    if "description" in request.POST:
+        sub_theme.description = request.POST["description"]
+    sub_theme.save()
+    return HttpResponseRedirect(reverse("theme_settings", args=[theme.id,]))
