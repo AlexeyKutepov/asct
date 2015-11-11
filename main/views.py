@@ -502,6 +502,7 @@ def probationer_theme_settings(request, id):
     except:
         return HttpResponseRedirect(reverse("index"))
     sub_theme_list = SubTheme.objects.filter(parent_theme=scheduled_theme.theme)
+    scheduled_sub_theme_list = ScheduledSubTheme.objects.filter(sub_theme__in=sub_theme_list, user=request.user)
     file_dict = {}
     for sub_theme in sub_theme_list:
         try:
@@ -514,7 +515,7 @@ def probationer_theme_settings(request, id):
         "main/probationer_theme_settings.html",
         {
             "scheduled_theme": scheduled_theme,
-            "sub_theme_list": sub_theme_list,
+            "scheduled_sub_theme_list": scheduled_sub_theme_list,
             "file_dict": file_dict
         }
     )
@@ -540,6 +541,20 @@ def theme_completed(request, id):
     scheduled_theme.status = ScheduledTheme.COMPLETED
     scheduled_theme.save()
     return HttpResponseRedirect(reverse("probationer_theme_settings", args=[id,]))
+
+
+@login_required
+def sub_theme_in_work(request, id):
+    try:
+        scheduled_sub_theme = ScheduledSubTheme.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    parent_scheduled_theme_id = ScheduledTheme.objects.filter(theme=scheduled_sub_theme.sub_theme.parent_theme, user=request.user)
+    if len(parent_scheduled_theme_id) == 0:
+        return HttpResponseRedirect(reverse("index"))
+    scheduled_sub_theme.status = ScheduledTheme.IN_WORK
+    scheduled_sub_theme.save()
+    return HttpResponseRedirect(reverse("probationer_theme_settings", args=[parent_scheduled_theme_id[0].id,]))
 
 
 @login_required
