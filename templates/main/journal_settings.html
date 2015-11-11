@@ -60,6 +60,44 @@
             </div>
         </div>
     </form>
+    <form id="formEditJournal" action="{% url "edit_journal" id=journal.id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+        <div id="modalEditJournal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalAddTheme">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Редактирование журнала</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label>Название журнала</label>
+                                    <input type="text" class="form-control" name="name" placeholder="Название журнала" value="{{ journal.name }}" >
+                              </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                    <label>Описание</label>
+                                    <textarea name="description" class="form-control" rows="5">{{ journal.description }}</textarea>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                        <button type="submit" name="save" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 
     <div class="row">
         <div class="col-lg-12">
@@ -68,10 +106,22 @@
     </div>
     <div class="row">
         <div class="col-lg-12">
-            <input id="buttonDeleteJournal" type="button" class="btn btn-danger pull-right" value="Удалить журнал" data-toggle="modal" data-target="#modalDeleteJournal"/>
+            <div class="pull-right">
+                <input id="buttonEditJournal" type="button" class="btn btn-primary" value="Редактировать журнал" data-toggle="modal" data-target="#modalEditJournal"/>
+                <input id="buttonDeleteJournal" type="button" class="btn btn-danger" value="Удалить журнал" data-toggle="modal" data-target="#modalDeleteJournal"/>
+            </div>
         </div>
     </div>
     <p></p>
+    {% if journal.description %}
+        <div class="row">
+            <div class="col-lg-12">
+                <blockquote>
+                  <p>{{ journal.description }}</p>
+                </blockquote>
+            </div>
+        </div>
+    {% endif %}
     <div class="row">
         <div class="col-lg-12">
             <div class="panel panel-primary">
@@ -139,8 +189,8 @@
                                                         <div class="row">
                                                             <div class="col-lg-12">
                                                                 <div class="form-group">
-                                                                    <label for="inputThemeName">Название темы</label>
-                                                                    <input type="text" class="form-control" id="inputThemeName" name="themeName" placeholder="Название темы" value="{{ theme.name }}" >
+                                                                    <label>Название темы</label>
+                                                                    <input type="text" class="form-control" name="themeName" placeholder="Название темы" value="{{ theme.name }}" >
                                                               </div>
                                                             </div>
                                                         </div>
@@ -148,8 +198,8 @@
                                                             <div class="col-lg-12">
                                                                 <div class="form-group">
                                                                     <div class="form-group">
-                                                                    <label for="inputDescription">Описание</label>
-                                                                    <textarea id="inputDescription" name="description" class="form-control" rows="5">{{ theme.description }}</textarea>
+                                                                    <label>Описание</label>
+                                                                    <textarea name="description" class="form-control" rows="5">{{ theme.description }}</textarea>
                                                                 </div>
                                                               </div>
                                                             </div>

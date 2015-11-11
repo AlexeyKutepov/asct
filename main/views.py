@@ -467,6 +467,20 @@ def get_theme_list_by_journal(request):
 
 
 @login_required
+def edit_journal(request, id):
+    try:
+        journal = Journal.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    if "name" in request.POST:
+        journal.name = request.POST["name"]
+    if "description" in request.POST:
+        journal.description = request.POST["description"]
+    journal.save()
+    return HttpResponseRedirect(reverse("journal_settings", args=[journal.id,]))
+
+
+@login_required
 def delete_journal(request, id):
     try:
         journal = Journal.objects.get(id=id)
@@ -614,3 +628,5 @@ def edit_sub_theme(request, id):
         sub_theme.description = request.POST["description"]
     sub_theme.save()
     return HttpResponseRedirect(reverse("theme_settings", args=[theme.id,]))
+
+
