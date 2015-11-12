@@ -189,6 +189,15 @@ def edit_company_save(request):
                         item.department = None
                         item.save()
                     department.delete()
+        else:
+            department_list_in_base = Department.objects.filter(company=company)
+            for department in department_list_in_base:
+                # ВАЖНЫЙ МОМЕНТ: перед удалением департамента нужно почистить юзеров от него, иначе они будут удалены
+                    user_list = UserProfile.objects.filter(department=department)
+                    for item in user_list:
+                        item.department = None
+                        item.save()
+                    department.delete()
         result = {
             "status": "success",
             "message": "Изменения успешно сохранены!"
