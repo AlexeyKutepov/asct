@@ -83,7 +83,7 @@ $(document).ready(function () {
                     })).selectpicker('refresh');
                 }
                 if (themeList.length > 0) {
-                    $("#formScheduleTheme").attr('action', '/schedule/theme/to/user/' + themeList[0]["id"] + '/');
+                    $("#formScheduleTheme").attr('action', '/schedule/theme/to/user/');
                 }
             },
             error: function (xhr, textStatus, errorThrown) {

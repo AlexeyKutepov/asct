@@ -398,10 +398,10 @@ def schedule_theme(request, id):
 
 
 @login_required
-def schedule_theme_to_user(request, id):
+def schedule_theme_to_user(request):
     if "save" in request.POST:
         try:
-            theme = Theme.objects.get(id=id)
+            theme = Theme.objects.get(id=request.POST["theme"])
             user = UserProfile.objects.get(id=request.POST["user"])
         except:
             return HttpResponseRedirect(reverse("index"))
