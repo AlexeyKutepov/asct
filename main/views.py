@@ -445,6 +445,17 @@ def get_probationer_list(request):
             })
         result["probationer_list"] = list
         return JsonResponse(result)
+    elif request.user.user_type == UserProfile.ADMIN or request.user.user_type == UserProfile.OPERATOR:
+        probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company)
+        result = {}
+        list = []
+        for item in probationer_list:
+            list.append({
+                "id": item.id,
+                "name": item.get_full_name()
+            })
+        result["probationer_list"] = list
+        return JsonResponse(result)
     else:
         return JsonResponse({"probationer_list": []})
 
