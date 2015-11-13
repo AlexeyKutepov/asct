@@ -450,7 +450,15 @@ def user_info(request, id):
             "message": "Пользователь не найден"
             }
         return render(request, "alert.html", result)
-    return render(request, "main/user_info.html", {"user_data": user_data})
+    scheduled_theme_list = ScheduledTheme.objects.filter(user=user_data)
+    return render(
+        request,
+        "main/user_info.html",
+        {
+            "user_data": user_data,
+            "scheduled_theme_list": scheduled_theme_list
+        }
+    )
 
 
 @login_required
@@ -661,9 +669,8 @@ def cancel_theme(request, id):
         scheduled_theme = ScheduledTheme.objects.get(id=id)
     except:
         return HttpResponseRedirect(reverse("index"))
-    theme_id = scheduled_theme.theme.id
     scheduled_theme.delete()
-    return HttpResponseRedirect(reverse("theme_settings", args=[theme_id,]))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
