@@ -5,7 +5,6 @@ from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
-from django.utils.encoding import smart_str
 from main.models import UserProfile, Company, Department, Journal, Theme, SubTheme, ScheduledTheme, ScheduledSubTheme, \
     File
 
@@ -286,12 +285,22 @@ def delete_theme(request, id):
 
 @login_required
 def theme_settings(request, id):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
     try:
         theme = Theme.objects.get(id=id)
     except:
         return HttpResponseRedirect(reverse("index"))
     sub_theme_list = SubTheme.objects.filter(parent_theme=theme)
-    scheduled_theme_list = ScheduledTheme.objects.filter(theme=theme)
+    if request.user.user_type == UserProfile.CURATOR:
+        scheduled_theme_list = ScheduledTheme.objects.filter(theme=theme)
+    else:
+        user_list = UserProfile.objects.filter(company=request.user.company)
+        scheduled_theme_list = ScheduledTheme.objects.filter(theme=theme, user__in=user_list)
     file_dict = {}
     for sub_theme in sub_theme_list:
         try:
@@ -306,7 +315,7 @@ def theme_settings(request, id):
             "theme": theme,
             "sub_theme_list": sub_theme_list,
             "file_dict": file_dict,
-            "scheduled_theme_list":scheduled_theme_list
+            "scheduled_theme_list": scheduled_theme_list
         }
     )
 
