@@ -209,6 +209,26 @@ def edit_company_save(request):
 
 
 @login_required
+def delete_company(request, id):
+    try:
+        company = Company.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    name = company.name
+    user_list = UserProfile.objects.filter(company=company)
+    for item in user_list:
+        item.company = None
+        item.department = None
+        item.save()
+    company.delete()
+    result = {
+            "status": "success",
+            "message": "Компания \"" + name + "\" удалена!"
+        }
+    return render(request, "alert.html", result)
+
+
+@login_required
 def create_journal(request):
     if "save" in request.POST:
         journal = Journal.objects.create(name=request.POST["name"], description=request.POST["description"], owner=request.user)
@@ -674,6 +694,4 @@ def edit_sub_theme(request, id):
         sub_theme.description = request.POST["description"]
     sub_theme.save()
     return HttpResponseRedirect(reverse("theme_settings", args=[theme.id,]))
-
-
 
