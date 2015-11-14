@@ -304,7 +304,7 @@ def theme_settings(request, id):
     file_dict = {}
     for sub_theme in sub_theme_list:
         try:
-            file = File.objects.get(sub_theme=sub_theme)
+            file = File.objects.filter(sub_theme=sub_theme)[0]
         except:
             continue
         file_dict[sub_theme.id] = file.id
