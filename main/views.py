@@ -567,7 +567,7 @@ def probationer_theme_settings(request, id):
     file_dict = {}
     for sub_theme in sub_theme_list:
         try:
-            file = File.objects.get(sub_theme=sub_theme)
+            file = File.objects.filter(sub_theme=sub_theme)[0]
         except:
             continue
         file_dict[sub_theme.id] = file.id
@@ -643,12 +643,14 @@ def upload_file_to_sub_theme(request):
             sub_theme = SubTheme.objects.get(id=request.POST["subThemeId"])
         except:
             return HttpResponseRedirect(reverse("index"))
-        if "file" in request.FILES:
-            uploaded_file = request.FILES["file"]
-            file = File.objects.create(
-                file=uploaded_file,
-                sub_theme=sub_theme
-            )
+        file = File.objects.filter(sub_theme=sub_theme)
+        if len(file) == 0:
+            if "file" in request.FILES:
+                uploaded_file = request.FILES["file"]
+                file = File.objects.create(
+                    file=uploaded_file,
+                    sub_theme=sub_theme
+                )
 
         return HttpResponseRedirect(reverse("theme_settings", args=[sub_theme.parent_theme.id,]))
     else:
@@ -671,15 +673,15 @@ def delete_file(request, id):
     try:
         uploaded_file = File.objects.get(pk=id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     uploaded_file.delete()
     if "subThemeId" in request.POST:
         try:
             sub_theme = SubTheme.objects.get(id=request.POST["subThemeId"])
         except:
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     return HttpResponseRedirect(reverse("theme_settings", args=[sub_theme.parent_theme.id,]))
 
 
