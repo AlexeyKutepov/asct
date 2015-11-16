@@ -149,11 +149,21 @@ def create_new_company(request):
         else:
             return render(request, "main/company_settings.html", {"isCreate": True, "title": "Новая компания"})
     else:
-        return HttpResponseRedirect(reverse("index"))
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
 
 
 @login_required
 def edit_company(request, id):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
     try:
         company = Company.objects.get(id=id)
     except:
@@ -173,6 +183,12 @@ def edit_company(request, id):
 
 @login_required
 def edit_company_save(request):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
     if "save" in request.POST:
         try:
             company = Company.objects.get(id=request.POST["companyId"])
@@ -215,6 +231,12 @@ def edit_company_save(request):
 
 @login_required
 def delete_company(request, id):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
     try:
         company = Company.objects.get(id=id)
     except:
@@ -235,15 +257,43 @@ def delete_company(request, id):
 
 @login_required
 def create_journal(request):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
     if "save" in request.POST:
-        journal = Journal.objects.create(name=request.POST["name"], description=request.POST["description"], owner=request.user)
+        if "company" in request.POST:
+            try:
+                company = Company.objects.get(id=request.POST["company"])
+            except:
+                company = request.user.company
+        else:
+            company = request.user.company
+        journal = Journal.objects.create(
+            name=request.POST["name"],
+            description=request.POST["description"],
+            owner=request.user,
+            company=company
+        )
         return HttpResponseRedirect(reverse("journal_settings", args=[journal.id, ]))
     else:
-        return render(request, "main/create_journal.html")
+        if request.user.user_type == UserProfile.CURATOR:
+            company_list = Company.objects.all()
+        else:
+            company_list = []
+        return render(request, "main/create_journal.html", {"company_list": company_list})
 
 
 @login_required
 def journal_settings(request, id):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
     try:
         journal = Journal.objects.get(id=id)
     except:
