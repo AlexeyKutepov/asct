@@ -111,10 +111,11 @@ def get_journal_list(request):
     journal_list = Journal.objects.all()
     result_list = []
     for journal in journal_list:
+        company = journal.company.name if journal.company else ""
         result_list.append({
             "id": journal.id,
             "name": journal.name,
-            "owner": journal.owner.get_full_name()
+            "company": company
         })
     return JsonResponse({"journal_list": result_list})
 

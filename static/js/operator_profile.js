@@ -40,7 +40,7 @@ $(document).ready(function () {
             var journalList = data["journal_list"];
             var result = "";
             for (var i = 0; i < journalList.length; i++) {
-                result += "<tr><td><a href=\"journal/settings/" + journalList[i]["id"] + "/\" name=\"aJournal\" property=\"" + journalList[i]["id"] + "\">" + journalList[i]["name"] + "</a></td><td>" + journalList[i]["owner"] + "</td></tr>";
+                result += "<tr><td><a href=\"journal/settings/" + journalList[i]["id"] + "/\" name=\"aJournal\" property=\"" + journalList[i]["id"] + "\">" + journalList[i]["name"] + "</a></td><td>" + journalList[i]["company"] + "</td></tr>";
             }
             $("#tableJournalList").append(result);
         },

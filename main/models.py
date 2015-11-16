@@ -142,6 +142,9 @@ class Journal(models.Model):
     description = models.TextField(blank=True)
     # The owner of journal
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
+    # Company
+    company = models.ForeignKey(Company, blank=True, null=True)
+
 
 
 class Theme(models.Model):
