@@ -108,7 +108,12 @@ def get_user_list_by_department(request):
 
 @login_required
 def get_journal_list(request):
-    journal_list = Journal.objects.all()
+    if request.user.user_type == UserProfile.CURATOR:
+        journal_list = Journal.objects.all()
+    elif request.user.user_type == UserProfile.ADMIN or request.user.user_type == UserProfile.OPERATOR:
+        journal_list = Journal.objects.filter(Q(company=request.user.company) | Q(company=None))
+    else:
+        journal_list = []
     result_list = []
     for journal in journal_list:
         company = journal.company.name if journal.company else ""
