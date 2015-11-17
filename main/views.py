@@ -287,6 +287,32 @@ def create_journal(request):
 
 
 @login_required
+def edit_journal(request, id):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
+    try:
+        journal = Journal.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    if "name" in request.POST:
+        journal.name = request.POST["name"]
+    if "description" in request.POST:
+        journal.description = request.POST["description"]
+    if "company" in request.POST:
+        try:
+            company = Company.objects.get(id=request.POST["company"])
+            journal.company = company
+        except:
+            pass
+    journal.save()
+    return HttpResponseRedirect(reverse("journal_settings", args=[journal.id,]))
+
+
+@login_required
 def journal_settings(request, id):
     if request.user.user_type == UserProfile.PROBATIONER:
         result = {
@@ -299,18 +325,29 @@ def journal_settings(request, id):
     except:
         return HttpResponseRedirect(reverse("index"))
     theme_list = Theme.objects.filter(journal=journal)
+    if request.user.user_type == UserProfile.CURATOR:
+        company_list = Company.objects.all()
+    else:
+        company_list = []
     return render(
         request,
         "main/journal_settings.html",
         {
             "journal": journal,
-            "theme_list": theme_list
+            "theme_list": theme_list,
+            "company_list": company_list
         }
     )
 
 
 @login_required
 def create_theme(request):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
     if "save" in request.POST:
         try:
             journal = Journal.objects.get(id=request.POST["save"])
@@ -329,6 +366,12 @@ def create_theme(request):
 
 @login_required
 def delete_theme(request, id):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
     try:
         theme = Theme.objects.get(id=id)
         journal = Journal.objects.get(id=theme.journal.id)
@@ -378,6 +421,12 @@ def theme_settings(request, id):
 
 @login_required
 def create_sub_theme(request):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
     if "save" in request.POST:
         try:
             theme = Theme.objects.get(id=request.POST["save"])
@@ -396,6 +445,12 @@ def create_sub_theme(request):
 
 @login_required
 def delete_sub_theme(request, id):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
     try:
         sub_theme = SubTheme.objects.get(id=id)
         theme = Theme.objects.get(id=sub_theme.parent_theme.id)
@@ -438,6 +493,12 @@ def get_user_list_by_theme(request):
 
 @login_required
 def schedule_theme(request, id):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
     if "save" in request.POST:
         try:
             theme = Theme.objects.get(id=id)
@@ -464,6 +525,12 @@ def schedule_theme(request, id):
 
 @login_required
 def schedule_theme_to_user(request):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
     if "save" in request.POST:
         try:
             theme = Theme.objects.get(id=request.POST["theme"])
@@ -518,6 +585,12 @@ def get_probationer_list(request):
 
 @login_required
 def user_info(request, id):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
     try:
         user_data = UserProfile.objects.get(id=id)
     except:
@@ -584,21 +657,13 @@ def get_theme_list_by_journal(request):
 
 
 @login_required
-def edit_journal(request, id):
-    try:
-        journal = Journal.objects.get(id=id)
-    except:
-        return HttpResponseRedirect(reverse("index"))
-    if "name" in request.POST:
-        journal.name = request.POST["name"]
-    if "description" in request.POST:
-        journal.description = request.POST["description"]
-    journal.save()
-    return HttpResponseRedirect(reverse("journal_settings", args=[journal.id,]))
-
-
-@login_required
 def delete_journal(request, id):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
     try:
         journal = Journal.objects.get(id=id)
     except:
