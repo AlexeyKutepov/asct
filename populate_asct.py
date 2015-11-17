@@ -7,7 +7,7 @@ import django
 django.setup()
 
 from django.contrib.auth.models import User
-from main.models import UserProfile, Company, Department, Theme, Journal, SubTheme
+from main.models import UserProfile, Company, Department, Theme, Journal, SubTheme, Position
 
 
 def populate():
@@ -16,54 +16,65 @@ def populate():
     :return:
     """
     company1 = add_company("Premier Hotels and Resorts")
+    company2 = add_company("Гостиница \"Премьер Палас\"")
+    company3 = add_company("Гостиница \"Русь\"")
+
     department1 = add_department(company1, "Администрация")
     department2 = add_department(company1, "Отдел управления персоналом")
-    add_department(company1, "Отдел стандартизации и качества")
-    add_department(company1, "Центральный отдел продаж")
-    company2 = add_company("Гостиница \"Премьер Палас\"")
-    department3 = add_department(company2, "Отдел бронирования")
-    department4 = add_department(company2, "Отдел продаж")
-    add_department(company2, "Служба приема и размещения")
-    add_department(company2, "Служба гостиничного хозяйства")
-    add_department(company2, "Отдел мероприятий")
-    add_department(company2, "Ресторан")
-    add_department(company2, "Служба безопасности")
-    add_department(company2, "Отдел управления персоналом")
-    company3 = add_company("Гостиница \"Русь\"")
-    department5 = add_department(company3, "Отдел бронирования")
-    department6 = add_department(company3, "Отдел продаж")
-    add_department(company3, "Служба приема и размещения")
-    add_department(company3, "Служба гостиничного хозяйства")
-    add_department(company3, "Отдел мероприятий")
-    add_department(company3, "Ресторан")
-    add_department(company3, "Служба безопасности")
-    add_department(company3, "Отдел управления персоналом")
-    super_user = add_super_user(company1, department1)
+    department3 = add_department(company1, "Отдел стандартизации и качества")
+    department4 = add_department(company1, "Центральный отдел продаж")
+
+    department5 = add_department(company2, "Отдел бронирования")
+    department6 = add_department(company2, "Отдел продаж")
+    department7 = add_department(company2, "Служба приема и размещения")
+    department8 = add_department(company2, "Служба гостиничного хозяйства")
+    department9 = add_department(company2, "Отдел мероприятий")
+    department10 = add_department(company2, "Ресторан")
+    department11 = add_department(company2, "Служба безопасности")
+    department12 = add_department(company2, "Отдел управления персоналом")
+
+    department13 = add_department(company3, "Отдел бронирования")
+    department14 = add_department(company3, "Отдел продаж")
+    department15 = add_department(company3, "Служба приема и размещения")
+    department16 = add_department(company3, "Служба гостиничного хозяйства")
+    department17 = add_department(company3, "Отдел мероприятий")
+    department18 = add_department(company3, "Ресторан")
+    department19 = add_department(company3, "Служба безопасности")
+    department20 = add_department(company3, "Отдел управления персоналом")
+
+    position1 = add_position("Специалист по обучению")
+    position2 = add_position("Начальник отдела")
+    position3 = add_position("Заместитель начальника отедла")
+    position4 = add_position("Начальник отдела стандартизации и качества")
+    position5 = add_position("Менеджер")
+    position6 = add_position("Разработчик")
+
+    super_user = add_super_user(company1, department1, position6)
     add_user(
         "curator1@mail.ru",
         "123456",
-        "Николаев",
-        "Пётр",
-        "Иванович",
+        "Бондарь",
+        "Татьяна",
+        "Батьковна",
         "1990-02-02",
-        UserProfile.MALE,
+        UserProfile.FEMALE,
         UserProfile.CURATOR,
         company1,
-        department1,
-        "Менеджер"
+        department2,
+        position1
     )
     add_user(
         "curator2@mail.ru",
         "123456",
-        "Петров",
-        "Никита",
-        "Сергеевич",
+        "Секисова",
+        "Валерия",
+        "Батьковна",
         "1990-03-03",
-        UserProfile.MALE,
+        UserProfile.FEMALE,
         UserProfile.CURATOR,
-        company2,
-        department3,
-        "Менеджер"
+        company1,
+        department4,
+        position2
     )
     add_user(
         "curator3@mail.ru",
@@ -75,34 +86,34 @@ def populate():
         UserProfile.MALE,
         UserProfile.CURATOR,
         company3,
-        department5,
-        "Менеджер"
+        department13,
+        position2
     )
     add_user(
         "user1@mail.ru",
         "123456",
-        "Иванов",
-        "Иван",
-        "Иванович",
+        "Худык",
+        "Леся",
+        "Батьковна",
         "1990-02-02",
-        UserProfile.MALE,
+        UserProfile.FEMALE,
         UserProfile.ADMIN,
-        company1,
-        department2,
-        "Менеджер"
+        company2,
+        department12,
+        position1
     )
     add_user(
         "user2@mail.ru",
         "123456",
-        "Петров",
-        "Пётр",
-        "Петрович",
+        "Нечеса",
+        "Ольга",
+        "Батьковна",
         "1990-03-03",
-        UserProfile.MALE,
+        UserProfile.FEMALE,
         UserProfile.ADMIN,
-        company2,
-        department4,
-        "Менеджер"
+        company3,
+        department13,
+        position1
     )
     add_user(
         "user3@mail.ru",
@@ -114,47 +125,47 @@ def populate():
         UserProfile.MALE,
         UserProfile.ADMIN,
         company3,
-        department6,
-        "Менеджер"
+        department14,
+        position1
     )
     add_user(
         "user4@mail.ru",
         "123456",
-        "Васильев",
-        "Василий",
-        "Васильевич",
+        "Метельский",
+        "Алексей",
+        "Анатольевич",
         "1990-05-05",
         UserProfile.MALE,
         UserProfile.OPERATOR,
-        company1,
-        department1,
-        "Менеджер"
+        company2,
+        department6,
+        position2
     )
     add_user(
         "user5@mail.ru",
         "123456",
-        "Алексеев",
-        "Алексей",
-        "Алексеевич",
+        "Бородина",
+        "Марина",
+        "Викторовна",
         "1990-06-06",
-        UserProfile.MALE,
+        UserProfile.FEMALE,
         UserProfile.OPERATOR,
-        company2,
-        department3,
-        "Менеджер"
+        company3,
+        department15,
+        position2
     )
     add_user(
         "user6@mail.ru",
         "123456",
-        "Викторов",
-        "Виктор",
-        "Викторович",
+        "Авдеенко",
+        "Алексей",
+        "Батькович",
         "1990-07-07",
         UserProfile.MALE,
         UserProfile.OPERATOR,
-        company3,
-        department5,
-        "Менеджер"
+        company2,
+        department7,
+        position3
     )
     add_user(
         "user7@mail.ru",
@@ -167,7 +178,7 @@ def populate():
         UserProfile.PROBATIONER,
         company1,
         department2,
-        "Менеджер"
+        position5
     )
     add_user(
         "user8@mail.ru",
@@ -180,7 +191,7 @@ def populate():
         UserProfile.PROBATIONER,
         company2,
         department4,
-        "Менеджер"
+        position5
     )
     add_user(
         "user9@mail.ru",
@@ -193,13 +204,14 @@ def populate():
         UserProfile.PROBATIONER,
         company3,
         department6,
-        "Менеджер"
+        position5
     )
 
     journal1 = add_journal(
         "Производственное обучение",
         "",
-        super_user
+        super_user,
+        company1
     )
 
     theme1 = add_theme(
@@ -333,9 +345,6 @@ def populate():
     )
 
 
-
-
-
 def add_company(name):
     company = Company.objects.get_or_create(name=name)[0]
     return company
@@ -346,11 +355,17 @@ def add_department(company, name):
     return department
 
 
-def add_journal(name, description, owner):
+def add_position(name):
+    position = Position.objects.get_or_create(name=name)[0]
+    return position
+
+
+def add_journal(name, description, owner, company):
     journal = Journal.objects.get_or_create(
         name=name,
         description=description,
-        owner=owner
+        owner=owner,
+        company=company
     )[0]
     return journal
 
@@ -375,7 +390,7 @@ def add_sub_theme(name, description, owner, parent_theme):
     return sub_theme
 
 
-def add_super_user(company, department):
+def add_super_user(company, department, position):
     """
     Creates a superuser
     :return:
@@ -392,7 +407,7 @@ def add_super_user(company, department):
             user_type=UserProfile.CURATOR,
             company=company,
             department=department,
-            position="Разработчик"
+            position=position
         )
         return user
     except:

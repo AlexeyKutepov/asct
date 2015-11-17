@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
 from asct import settings
-from main.models import UserProfile, Company, Department
+from main.models import UserProfile, Company, Department, Position
 import imghdr
 
 
@@ -48,6 +48,7 @@ def user_settings(request, id):
             }
         return render(request, "alert.html", result)
     company_list = Company.objects.all()
+    position_list = Position.objects.all()
     if user_data.company:
         department_list = Department.objects.filter(company=user_data.company)
     else:
@@ -76,7 +77,9 @@ def user_settings(request, id):
         if "department" in request.POST:
             department = Department.objects.get(id=request.POST["department"])
             user_data.department = department
-        user_data.position = request.POST["position"]
+        if "position" in request.POST:
+            position = Position.objects.get(id=request.POST["position"])
+            user_data.position = position
         if "userType" in request.POST:
             user_data.user_type = request.POST["userType"]
         user_data.save()
@@ -97,6 +100,7 @@ def user_settings(request, id):
                 "user_data": user_data,
                 "company_list": company_list,
                 "department_list": department_list,
+                "position_list": position_list,
                 "isCreate": False
             }
         )
@@ -139,6 +143,10 @@ def create_new_user(request):
             department = Department.objects.get(id=request.POST["department"])
         else:
             department = None
+        if "position" in request.POST:
+            position = Position.objects.get(id=request.POST["position"])
+        else:
+            position = None
         user = auth.get_user_model().objects.create_user(
             email=email,
             password=password,
@@ -149,7 +157,7 @@ def create_new_user(request):
             gender=request.POST["gender"],
             company=company,
             department=department,
-            position=request.POST["position"],
+            position=position,
             user_type=user_type,
             photo=photo
         )
@@ -174,12 +182,14 @@ def create_new_user(request):
             department_list = Department.objects.filter(company=company_list[0])
         else:
             department_list = []
+        position_list = Position.objects.all()
         return render(
             request,
             "authentication/user_settings.html",
             {
                 "company_list": company_list,
                 "department_list": department_list,
+                "position_list": position_list,
                 "isCreate": True
             }
         )

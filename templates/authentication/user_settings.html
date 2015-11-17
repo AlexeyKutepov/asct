@@ -135,7 +135,7 @@
                                     <option value="{{ company.id }}">{{ company }}</option>
                                 {% endif %}
                             {% endfor %}
-                        </select>
+                        </select></p>
                     </div>
                 </div>
                 <div class="row">
@@ -149,17 +149,24 @@
                                     <option value="{{ department.id }}">{{ department }}</option>
                                 {% endif %}
                             {% endfor %}
-                        </select>
+                        </select></p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group">
-                        <label for="inputPosition">Должность</label>
-                        <input type="text" class="form-control" id="inputPosition" name="position"
-                               placeholder="Должность" value="{{ user_data.position|default:"" }}">
+                        <label for="selectPosition"><b>Должность</b></label>
+                        <p><select id="selectPosition" name="position" class="selectpicker">
+                            {% for position in position_list %}
+                                {% if position == user_data.position %}
+                                    <option value="{{ position.id }}" selected>{{ position }}</option>
+                                {% else %}
+                                    <option value="{{ position.id }}">{{ position }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select></p>
                     </div>
                 </div>
-
+            <p></p>
                 {% if user.user_type == "CURATOR" %}
                     <label class="control-label" for="divGender">Тип пользователя:</label>
                     {% if user_data.user_type == "CURATOR" %}
