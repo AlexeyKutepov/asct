@@ -116,6 +116,43 @@
         </div>
     </form>
 
+    {% if user.user_type == "CURATOR" %}
+    <form id="formCloneJournal" action="{% url "clone_journal" id=journal.id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+        <div id="modalCloneJournal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalCloneJournal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Дублирование журнала</h4>
+                    </div>
+                        <div class="modal-body">
+                        {% if user.user_type == "CURATOR" %}
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label><b>Выберите компанию для копии журнала</b></label>
+                                    <p><select name="company" class="selectpicker">
+                                        {% for company in company_list %}
+                                            <option value="{{ company.id }}">{{ company.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                        <button type="submit" name="save" class="btn btn-primary">Дублировать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    {% endif %}
+
     <div class="row">
         <div class="col-lg-12">
             <h3 class="page-header">{{ journal.name }} {% if journal.company %}({{ journal.company }}){% endif %}</h3>
@@ -125,6 +162,9 @@
         <div class="col-lg-12">
             <div class="pull-right">
                 <input id="buttonEditJournal" type="button" class="btn btn-primary" value="Редактировать журнал" data-toggle="modal" data-target="#modalEditJournal"/>
+                {% if user.user_type == "CURATOR" %}
+                <input id="buttonCloneJournal" type="button" class="btn btn-primary" value="Дублировать журнал" data-toggle="modal" data-target="#modalCloneJournal"/>
+                {% endif %}
                 <input id="buttonDeleteJournal" type="button" class="btn btn-danger" value="Удалить журнал" data-toggle="modal" data-target="#modalDeleteJournal"/>
             </div>
         </div>

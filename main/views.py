@@ -313,6 +313,54 @@ def edit_journal(request, id):
 
 
 @login_required
+def clone_journal(request, id):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+        }
+        return render(request, "alert.html", result)
+    try:
+        journal = Journal.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    if "company" in request.POST:
+        try:
+            company = Company.objects.get(id=request.POST["company"])
+        except:
+            company = request.user.company
+    else:
+        company = request.user.company
+    cloned_journal = Journal.objects.create(
+        name=journal.name,
+        description=journal.description,
+        owner=request.user,
+        company=company
+    )
+    theme_list = Theme.objects.filter(journal=journal)
+    for theme in theme_list:
+        cloned_theme = Theme.objects.create(
+            name=theme.name,
+            description=theme.description,
+            owner=request.user,
+            journal=cloned_journal
+        )
+        sub_theme_list = SubTheme.objects.filter(parent_theme=theme)
+        for sub_theme in sub_theme_list:
+            cloned_sub_theme = SubTheme.objects.create(
+                name=sub_theme.name,
+                description=sub_theme.description,
+                owner=request.user,
+                parent_theme=cloned_theme
+            )
+    result = {
+        "status": "success",
+        "message": "Журнал \"" + journal.name + "\" дублирован для компании \"" + company.name + "\""
+    }
+    return render(request, "alert.html", result)
+
+
+@login_required
 def journal_settings(request, id):
     if request.user.user_type == UserProfile.PROBATIONER:
         result = {
