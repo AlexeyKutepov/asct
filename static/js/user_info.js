@@ -48,9 +48,13 @@ $(document).ready(function () {
             ;
             var journalList = data["journal_list"];
             for (var i = 0; i < journalList.length; i++) {
+                var companyName = "";
+                if (journalList[i]["company"]) {
+                    companyName = " (" + journalList[i]["company"] + ")";
+                }
                 $('#selectJournal').append($("<option/>", {
                     value: journalList[i]["id"],
-                    text: journalList[i]["name"]
+                    text: journalList[i]["name"] + companyName
                 })).selectpicker('refresh');
             }
             $("#selectJournal").trigger( "change" );
