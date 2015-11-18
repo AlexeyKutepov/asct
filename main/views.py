@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from main.models import UserProfile, Company, Department, Journal, Theme, SubTheme, ScheduledTheme, ScheduledSubTheme, \
-    File
+    File, Position
 
 
 @login_required
@@ -17,12 +17,14 @@ def test_page(request):
 def prepare_curator_page(request):
     user_list = UserProfile.objects.all()
     company_list = Company.objects.all()
+    position_list = Position.objects.all()
     return render(
         request,
         "main/curator_profile.html",
         {
             "user_list": user_list,
-            "company_list": company_list
+            "company_list": company_list,
+            "position_list": position_list
         }
     )
 
@@ -893,3 +895,9 @@ def edit_sub_theme(request, id):
     sub_theme.save()
     return HttpResponseRedirect(reverse("theme_settings", args=[theme.id,]))
 
+
+@login_required
+def add_position(request):
+    if "name" in request.POST:
+        position = Position.objects.create(name=request.POST["name"])
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

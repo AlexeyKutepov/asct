@@ -2,3 +2,8 @@
     max-height: 250px;
     overflow: auto;
 }
+
+.fixed-panel {
+    height: 250px;
+    overflow: auto;
+}

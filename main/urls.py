@@ -44,6 +44,7 @@ urlpatterns = patterns('',
         url(r'^upload/file/to/sub/theme/$', views.upload_file_to_sub_theme, name="upload_file_to_sub_theme"),
         url(r'^download/file/(?P<id>\d+)/$', views.download_file, name="download_file"),
         url(r'^delete/file/(?P<id>\d+)/$', views.delete_file, name="delete_file"),
-        url(r'^cancel/theme/(?P<id>\d+)/$', views.cancel_theme, name="cancel_theme")
+        url(r'^cancel/theme/(?P<id>\d+)/$', views.cancel_theme, name="cancel_theme"),
+        url(r'^add/position/$', views.add_position, name="add_position")
 
 )
