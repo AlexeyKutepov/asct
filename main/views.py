@@ -901,3 +901,17 @@ def add_position(request):
     if "name" in request.POST:
         position = Position.objects.create(name=request.POST["name"])
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
+def delete_position(request, id):
+    try:
+        position = Position.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    user_list = UserProfile.objects.filter(position=position)
+    for user in user_list:
+        user.position = None
+        user.save()
+    position.delete()
+    return HttpResponseRedirect(reverse("index"))
