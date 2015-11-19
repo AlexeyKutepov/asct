@@ -76,6 +76,56 @@
             </div>
         </div>
     </form>
+    <form id="formScheduleExam" action="{% url "schedule_theme" id=theme.id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+        <div id="modalScheduleExam" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalScheduleExam">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Назначить зачёт по теме</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="selectExamProbationer">Выберите испытуемого</label>
+                                    <p><select id="selectExamProbationer" name="user" class="selectpicker" data-width="100%" data-live-search="true" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="inputExamDate"><b>Дата и время проведения зачёта</b></label>
+                                    <input id="inputExamDate" name="datetime" type="datetime-local" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="selectExaminer">Выберите экзаменатора</label>
+                                    <p><select id="selectExaminer" name="examiner" class="selectpicker" data-width="100%" data-live-search="true" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="inputExamPlace"><b>Укажите место проведения зачёта</b></label>
+                                    <input id="inputExamPlace" name="place" type="text" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                        <button type="submit" name="save" class="btn btn-primary">Назначить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 
     <div class="row">
         <div class="col-lg-12">
@@ -376,7 +426,29 @@
         </div>
     </div>
     <div id="divExam" hidden>
+        <div class="row">
+            <div class="col-lg-12">
+                <input id="buttonScheduleExam" type="button" class="btn btn-default pull-right" value="Назначить зачёт" data-toggle="modal" data-target="#modalScheduleExam"/>
+            </div>
+        </div>
+        <p></p>
+        <div class="row">
+            <div class="col-lg-12">
+                <table id="tableUserStatisticList" class="table table-bordered table-hover">
+                    <thead>
+                        <th>ФИО</th>
+                        <th>Дата и время</th>
+                        <th>Место</th>
+                        <th>Экзаменатор</th>
+                        <th>Результат</th>
+                        <th>Действия</th>
+                    </thead>
+                    <tbody>
 
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     <input id="themeId" value="{{ theme.id }}" hidden>
 {% endblock %}
