@@ -13,6 +13,7 @@ urlpatterns = patterns('',
         url(r'^get/user/list/by/department/$', views.get_user_list_by_department),
         url(r'^get/user/list/by/theme/$', views.get_user_list_by_theme),
         url(r'^get/probationer/list/$', views.get_probationer_list),
+        url(r'^get/examiner/list/$', views.get_examiner_list),
         url(r'^get/theme/list/by/user/$', views.get_theme_list_by_user),
         url(r'^get/theme/list/by/journal/$', views.get_theme_list_by_journal),
 

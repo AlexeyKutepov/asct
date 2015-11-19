@@ -37,10 +37,17 @@ $(document).ready(function () {
         type: "POST",
         url: "/get/probationer/list/",
         data: {
-            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value
+            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+            themeId: document.getElementById('themeId').value
         },
         success: function(data) {
             $('#selectProbationer')
+                .find('option')
+                .remove()
+                .end()
+                .selectpicker('refresh')
+            ;
+            $('#selectExamProbationer')
                 .find('option')
                 .remove()
                 .end()
@@ -51,6 +58,37 @@ $(document).ready(function () {
                 $('#selectProbationer').append($("<option/>", {
                     value: probationerList[i]["id"],
                     text: probationerList[i]["name"]
+                })).selectpicker('refresh');
+                $('#selectExamProbationer').append($("<option/>", {
+                    value: probationerList[i]["id"],
+                    text: probationerList[i]["name"]
+                })).selectpicker('refresh');
+            }
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            console.log("Error: "+errorThrown+xhr.status+xhr.responseText);
+        }
+    });
+
+    $.ajax({
+        type: "POST",
+        url: "/get/examiner/list/",
+        data: {
+            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+            themeId: document.getElementById('themeId').value
+        },
+        success: function(data) {
+            $('#selectExaminer')
+                .find('option')
+                .remove()
+                .end()
+                .selectpicker('refresh')
+            ;
+            var examinerList = data["examiner_list"];
+            for (var i = 0; i < examinerList.length; i++) {
+                $('#selectExaminer').append($("<option/>", {
+                    value: examinerList[i]["id"],
+                    text: examinerList[i]["name"]
                 })).selectpicker('refresh');
             }
         },

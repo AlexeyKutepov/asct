@@ -607,19 +607,15 @@ def schedule_theme_to_user(request):
 
 @login_required
 def get_probationer_list(request):
-    if request.user.user_type == UserProfile.CURATOR:
-        probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER)
-        result = {}
-        list = []
-        for item in probationer_list:
-            list.append({
-                "id": item.id,
-                "name": item.get_full_name()
-            })
-        result["probationer_list"] = list
-        return JsonResponse(result)
-    elif request.user.user_type == UserProfile.ADMIN or request.user.user_type == UserProfile.OPERATOR:
-        probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company)
+    if request.user.user_type != UserProfile.PROBATIONER and "themeId" in request.POST:
+        try:
+            theme = Theme.objects.get(id=request.POST["themeId"])
+        except:
+            theme = None
+        if theme:
+            probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=theme.journal.company)
+        else:
+            probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER)
         result = {}
         list = []
         for item in probationer_list:
@@ -631,6 +627,30 @@ def get_probationer_list(request):
         return JsonResponse(result)
     else:
         return JsonResponse({"probationer_list": []})
+
+
+@login_required
+def get_examiner_list(request):
+    if request.user.user_type != UserProfile.PROBATIONER and "themeId" in request.POST:
+        try:
+            theme = Theme.objects.get(id=request.POST["themeId"])
+        except:
+            theme = None
+        if theme:
+            examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER), company=theme.journal.company)
+        else:
+            examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER))
+        result = {}
+        list = []
+        for item in examiner_list:
+            list.append({
+                "id": item.id,
+                "name": item.get_full_name()
+            })
+        result["examiner_list"] = list
+        return JsonResponse(result)
+    else:
+        return JsonResponse({"examiner_list": []})
 
 
 @login_required
@@ -915,3 +935,4 @@ def delete_position(request, id):
         user.save()
     position.delete()
     return HttpResponseRedirect(reverse("index"))
+
