@@ -189,25 +189,18 @@ class ScheduledTheme(models.Model):
 
 
 class ThemeExam(models.Model):
-    # The name of exam
-    name = models.CharField(max_length=500)
-    # The description of exam
-    description = models.TextField(blank=True)
     # The owner of exam
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='themeexam_users')
+    # The owner of exam
+    examiner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='themeexam_examiners')
     # Theme
-    theme = models.ForeignKey(Theme, blank=True, null=True)
-
-
-class ThemeResult(models.Model):
+    theme = models.ForeignKey(Theme)
+    # Date of exam
+    datetime = models.DateTimeField()
+    # Place
+    place = models.TextField(blank=True, null=True)
     # The result
-    result = models.FloatField(default=0)
-    # The owner of exam
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    # Date of result
-    date = models.DateTimeField(blank=True, null=True)
-    # Theme exam
-    theme_exam = models.ForeignKey(ThemeExam, blank=True, null=True)
+    result = models.FloatField(blank=True, null=True)
 
 
 class SubTheme(models.Model):
@@ -242,29 +235,6 @@ class ScheduledSubTheme(models.Model):
     status = models.CharField(max_length=10, choices=STATUS, default=ASSIGNED)
     # Parent
     scheduled_theme = models.ForeignKey(ScheduledTheme)
-
-
-
-class SubThemeExam(models.Model):
-    # The name of exam
-    name = models.CharField(max_length=500)
-    # The description of exam
-    description = models.TextField(blank=True)
-    # The owner of exam
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
-    # The exam
-    sub_theme = models.ForeignKey(SubTheme, blank=True, null=True)
-
-
-class SubThemeResult(models.Model):
-    # The result
-    result = models.FloatField(default=0)
-    # The owner of exam
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    # Date of result
-    date = models.DateTimeField(blank=True, null=True)
-    # Sub theme exam
-    sub_theme_exam = models.ForeignKey(SubThemeExam)
 
 
 class File(models.Model):

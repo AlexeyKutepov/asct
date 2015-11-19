@@ -15,18 +15,6 @@ class Department(admin.ModelAdmin):
     list_filter = ('name', 'company')
 
 
-@admin.register(SubThemeResult)
-class SubThemeResult(admin.ModelAdmin):
-    list_display = ('result', 'user', 'date', 'sub_theme_exam')
-    list_filter = ('result', 'user', 'date', 'sub_theme_exam')
-
-
-@admin.register(SubThemeExam)
-class SubThemeExam(admin.ModelAdmin):
-    list_display = ('name', 'description', 'owner', 'sub_theme')
-    list_filter = ('name', 'description', 'owner', 'sub_theme')
-
-
 @admin.register(ScheduledSubTheme)
 class ScheduledSubTheme(admin.ModelAdmin):
     list_display = ('date_from', 'date_to', 'user', 'sub_theme')
@@ -39,16 +27,10 @@ class SubTheme(admin.ModelAdmin):
     list_filter = ('name', 'description', 'owner', 'parent_theme')
 
 
-@admin.register(ThemeResult)
-class ThemeResult(admin.ModelAdmin):
-    list_display = ('result', 'user', 'date', 'theme_exam')
-    list_filter = ('result', 'user', 'date', 'theme_exam')
-
-
 @admin.register(ThemeExam)
 class ThemeExam(admin.ModelAdmin):
-    list_display = ('name', 'description', 'owner', 'theme')
-    list_filter = ('name', 'description', 'owner', 'theme')
+    list_display = ('user', 'examiner', 'theme', 'datetime', 'place', 'result')
+    list_filter = ('user', 'examiner', 'theme', 'datetime', 'place', 'result')
 
 
 @admin.register(ScheduledTheme)

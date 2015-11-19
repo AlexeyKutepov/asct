@@ -76,7 +76,7 @@
             </div>
         </div>
     </form>
-    <form id="formScheduleExam" action="{% url "schedule_theme" id=theme.id %}" method="post" enctype="multipart/form-data">
+    <form id="formScheduleExam" action="{% url "schedule_exam" id=theme.id %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
         <div id="modalScheduleExam" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalScheduleExam">
             <div class="modal-dialog modal-lg">

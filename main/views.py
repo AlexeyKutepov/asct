@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from main.models import UserProfile, Company, Department, Journal, Theme, SubTheme, ScheduledTheme, ScheduledSubTheme, \
-    File, Position
+    File, Position, ThemeExam
 
 
 @login_required
@@ -603,6 +603,31 @@ def schedule_theme_to_user(request):
         return HttpResponseRedirect(reverse("user_info", args=[user.id,]))
     else:
         return HttpResponseRedirect(reverse("index"))
+
+
+@login_required
+def schedule_exam(request, id):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
+    if "save" in request.POST:
+        try:
+            theme = Theme.objects.get(id=id)
+            user = UserProfile.objects.get(id=request.POST["user"])
+            examiner = UserProfile.objects.get(id=request.POST["examiner"])
+        except:
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        theme_exam = ThemeExam.objects.create(
+            user=user,
+            examiner=examiner,
+            theme=theme,
+            datetime=request.POST["datetime"],
+            place=request.POST["place"],
+        )
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
