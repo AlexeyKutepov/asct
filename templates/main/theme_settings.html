@@ -286,84 +286,97 @@
             <h4 class="page-header">Статистика по пользователям</h4>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <input id="buttonScheduleTheme" type="button" class="btn btn-default pull-right" value="Назначить" data-toggle="modal" data-target="#modalScheduleTheme"/>
-        </div>
-    </div>
+
+    <ul class="nav nav-tabs">
+        <li id="liStudy" role="presentation" class="active"><a id="aStudy" href="#">Изучение темы</a>
+        </li>
+        <li id="liExam" role="presentation"><a id="aExam" href="#">Зачёты</a>
+        </li>
+    </ul>
     <p></p>
-    <div class="row">
-        <div class="col-lg-12">
-            <table id="tableUserStatisticList" class="table table-bordered table-hover">
-                <thead>
-                    <th>ФИО</th>
-                    <th>Статус</th>
-                    <th>Назначена</th>
-                    <th>Срок</th>
-                    <th>Прогресс</th>
-                    <th>Действия</th>
-                </thead>
-                <tbody>
-                {% for item in scheduled_theme_list %}
-                    {% if item.status == 'ASSIGNED' %}
-                        <tr>
-                        {% elif item.status == 'IN_WORK' %}
-                        <tr class="info">
-                        {% elif item.status == 'COMPLETED' %}
-                        <tr class="success">
-                    {% endif %}
-                        <td><a href="/user/info/{{ item.user.id }}/">{{ item.user.get_full_name }}</a></td>
+    <div id="divStudy">
+        <div class="row">
+            <div class="col-lg-12">
+                <input id="buttonScheduleTheme" type="button" class="btn btn-default pull-right" value="Назначить" data-toggle="modal" data-target="#modalScheduleTheme"/>
+            </div>
+        </div>
+        <p></p>
+        <div class="row">
+            <div class="col-lg-12">
+                <table id="tableUserStatisticList" class="table table-bordered table-hover">
+                    <thead>
+                        <th>ФИО</th>
+                        <th>Статус</th>
+                        <th>Назначена</th>
+                        <th>Срок</th>
+                        <th>Прогресс</th>
+                        <th>Действия</th>
+                    </thead>
+                    <tbody>
+                    {% for item in scheduled_theme_list %}
                         {% if item.status == 'ASSIGNED' %}
-                        <td>Назначена</td>
-                        {% elif item.status == 'IN_WORK' %}
-                        <td>Изучение</td>
-                        {% elif item.status == 'COMPLETED' %}
-                        <td>Изучена</td>
+                            <tr>
+                            {% elif item.status == 'IN_WORK' %}
+                            <tr class="info">
+                            {% elif item.status == 'COMPLETED' %}
+                            <tr class="success">
                         {% endif %}
-                        <td>{{ item.date_from|date:"d.m.Y" }}</td>
-                        <td>{{ item.date_to|date:"d.m.Y" }}</td>
-                        <td>
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="{{ item.progress }}"
-                                     aria-valuemin="0" aria-valuemax="100" style="width: {{ item.progress }}%;">
-                                    <span class="sr-only">{{ item.progress }}% Complete</span>
+                            <td><a href="/user/info/{{ item.user.id }}/">{{ item.user.get_full_name }}</a></td>
+                            {% if item.status == 'ASSIGNED' %}
+                            <td>Назначена</td>
+                            {% elif item.status == 'IN_WORK' %}
+                            <td>Изучение</td>
+                            {% elif item.status == 'COMPLETED' %}
+                            <td>Изучена</td>
+                            {% endif %}
+                            <td>{{ item.date_from|date:"d.m.Y" }}</td>
+                            <td>{{ item.date_to|date:"d.m.Y" }}</td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ item.progress }}"
+                                         aria-valuemin="0" aria-valuemax="100" style="width: {{ item.progress }}%;">
+                                        <span class="sr-only">{{ item.progress }}% Complete</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td>
-                        <form action="{% url "cancel_theme" id=item.id %}" method="post">
-                            {% csrf_token %}
-                            <!-- Modal dialog delete -->
-                            <div class="modal fade" id="modalCancel{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                                    aria-hidden="true">&times;</span></button>
-                                            <h4 class="modal-title" id="myModalLabel">Отмена назначения темы</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                            Отменить тему "{{ theme.name }}" для пользователя {{ item.user.get_full_name }}?
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-primary" data-dismiss="modal">Нет</button>
-                                            <button type="submit" name="delete" class="btn btn-default">Да</button>
+                            </td>
+                            <td>
+                            <form action="{% url "cancel_theme" id=item.id %}" method="post">
+                                {% csrf_token %}
+                                <!-- Modal dialog delete -->
+                                <div class="modal fade" id="modalCancel{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                        aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">Отмена назначения темы</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                Отменить тему "{{ theme.name }}" для пользователя {{ item.user.get_full_name }}?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal">Нет</button>
+                                                <button type="submit" name="delete" class="btn btn-default">Да</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </form>
-                        <button id="btnDel{{ forloop.counter }}" type="button" data-toggle="modal"
-                                data-target="#modalCancel{{ forloop.counter }}" class="btn btn-danger"
-                                title="Отменить тему">
-                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                        </button>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                            </form>
+                            <button id="btnDel{{ forloop.counter }}" type="button" data-toggle="modal"
+                                    data-target="#modalCancel{{ forloop.counter }}" class="btn btn-danger"
+                                    title="Отменить тему">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
+    </div>
+    <div id="divExam" hidden>
+
     </div>
     <input id="themeId" value="{{ theme.id }}" hidden>
 {% endblock %}
