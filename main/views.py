@@ -963,3 +963,13 @@ def delete_position(request, id):
     position.delete()
     return HttpResponseRedirect(reverse("index"))
 
+
+@login_required
+def set_result(request, id):
+    try:
+        exam = ThemeExam.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    exam.result = request.POST["result"]
+    exam.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

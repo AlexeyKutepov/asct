@@ -451,7 +451,42 @@
                             <td>{{ exam.place }}</td>
                             <td><a href="/user/info/{{ exam.examiner.id }}/">{{ exam.examiner.get_full_name }}</a></td>
                             <td>{{ exam.result|default:"" }}</td>
-                            <td></td>
+                            <td>
+                                {% if user == exam.examiner %}
+                                    <form action="{% url "set_result" id=exam.id %}" method="post">
+                                        {% csrf_token %}
+                                        <!-- Modal dialog delete -->
+                                        <div class="modal fade" id="modalSetResult{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                                aria-hidden="true">&times;</span></button>
+                                                        <h4 class="modal-title" id="myModalLabel">Поставить оценку</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <label>Оценка</label>
+                                                        <input type="number" class="form-control" name="result" value="{{ exam.result }}" min="0" max="100" step="0.01">
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Нет</button>
+                                                        <button type="submit" name="ok" class="btn btn-primary">Да</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <button id="btnSetResult{{ forloop.counter }}" type="button" data-toggle="modal"
+                                        data-target="#modalSetResult{{ forloop.counter }}" class="btn btn-success"
+                                        title="Поставить оценку">
+                                    <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                                {% else %}
+                                    <button type="button" class="btn btn-success"
+                                        title="Поставить оценку" disabled>
+                                    <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                                {% endif %}
+                            </button>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
