@@ -444,7 +444,16 @@
                         <th>Действия</th>
                     </thead>
                     <tbody>
-
+                        {% for exam in exam_list %}
+                        <tr>
+                            <td><a href="/user/info/{{ exam.user.id }}/">{{ exam.user.get_full_name }}</a></td>
+                            <td>{{ exam.datetime|date:"d.m.Y H:i" }}</td>
+                            <td>{{ exam.place }}</td>
+                            <td><a href="/user/info/{{ exam.examiner.id }}/">{{ exam.examiner.get_full_name }}</a></td>
+                            <td>{{ exam.result|default:"" }}</td>
+                            <td></td>
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>

@@ -450,6 +450,7 @@ def theme_settings(request, id):
     else:
         user_list = UserProfile.objects.filter(company=request.user.company)
         scheduled_theme_list = ScheduledTheme.objects.filter(theme=theme, user__in=user_list)
+    exam_list = ThemeExam.objects.filter(theme=theme)
     file_dict = {}
     for sub_theme in sub_theme_list:
         try:
@@ -464,7 +465,8 @@ def theme_settings(request, id):
             "theme": theme,
             "sub_theme_list": sub_theme_list,
             "file_dict": file_dict,
-            "scheduled_theme_list": scheduled_theme_list
+            "scheduled_theme_list": scheduled_theme_list,
+            "exam_list": exam_list
         }
     )
 
