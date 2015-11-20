@@ -49,5 +49,7 @@ urlpatterns = patterns('',
         url(r'^cancel/theme/(?P<id>\d+)/$', views.cancel_theme, name="cancel_theme"),
         url(r'^add/position/$', views.add_position, name="add_position"),
         url(r'^delete/position/(?P<id>\d+)/$', views.delete_position, name="delete_position"),
-        url(r'^set/result/(?P<id>\d+)/$', views.set_result, name="set_result")
+        url(r'^set/result/(?P<id>\d+)/$', views.set_result, name="set_result"),
+        url(r'^cancel/exam/(?P<id>\d+)/$', views.cancel_exam, name="cancel_exam")
+
 )

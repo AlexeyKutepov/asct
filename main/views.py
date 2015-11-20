@@ -973,3 +973,13 @@ def set_result(request, id):
     exam.result = request.POST["result"]
     exam.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
+def cancel_exam(request, id):
+    try:
+        exam = ThemeExam.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    exam.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
