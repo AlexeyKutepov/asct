@@ -51,10 +51,17 @@ $(document).ready(function () {
         type: "POST",
         url: "/get/journal/list/",
         data: {
-            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value
+            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+            userId: document.getElementById('userId').value
         },
         success: function(data) {
             $('#selectJournal')
+                .find('option')
+                .remove()
+                .end()
+                .selectpicker('refresh')
+            ;
+            $('#selectExamJournal')
                 .find('option')
                 .remove()
                 .end()
@@ -70,8 +77,13 @@ $(document).ready(function () {
                     value: journalList[i]["id"],
                     text: journalList[i]["name"] + companyName
                 })).selectpicker('refresh');
+                $('#selectExamJournal').append($("<option/>", {
+                    value: journalList[i]["id"],
+                    text: journalList[i]["name"] + companyName
+                })).selectpicker('refresh');
             }
             $("#selectJournal").trigger( "change" );
+            $("#selectExamJournal").trigger( "change" );
         },
         error: function(xhr, textStatus, errorThrown) {
             console.log("Error: "+errorThrown+xhr.status+xhr.responseText);
@@ -109,5 +121,72 @@ $(document).ready(function () {
             }
         });
     });
+
+    $("#selectExamJournal").change(function() {
+        $.ajax({
+            type: "POST",
+            url: "/get/theme/list/by/journal/",
+            data: {
+                csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+                id: $(this).val()
+            },
+            success: function (data) {
+                $('#selectExamTheme')
+                    .find('option')
+                    .remove()
+                    .end()
+                    .selectpicker('refresh')
+                ;
+                var themeList = data["theme_list"];
+                for (var i = 0; i < themeList.length; i++) {
+                    $('#selectExamTheme').append($("<option/>", {
+                        value: themeList[i]["id"],
+                        text: themeList[i]["name"]
+                    })).selectpicker('refresh');
+                }
+                if (themeList.length > 0) {
+                    $("#formScheduleTheme").attr('action', '/schedule/theme/to/user/');
+                }
+                $("#selectExamTheme").trigger( "change" );
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Error: " + errorThrown + xhr.status + xhr.responseText);
+            }
+        });
+    });
+
+    $("#selectExamTheme").change(function() {
+        var themeId =  $(this).val();
+        $.ajax({
+            type: "POST",
+            url: "/get/examiner/list/",
+            data: {
+                csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+                themeId: themeId
+            },
+            success: function(data) {
+                $('#selectExaminer')
+                    .find('option')
+                    .remove()
+                    .end()
+                    .selectpicker('refresh')
+                ;
+                var examinerList = data["examiner_list"];
+                for (var i = 0; i < examinerList.length; i++) {
+                    $('#selectExaminer').append($("<option/>", {
+                        value: examinerList[i]["id"],
+                        text: examinerList[i]["name"]
+                    })).selectpicker('refresh');
+                }
+
+                $("#formScheduleExam").attr('action', '/schedule/exam/'+themeId+'/' );
+
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                console.log("Error: "+errorThrown+xhr.status+xhr.responseText);
+            }
+        });
+    });
+
 });
 
