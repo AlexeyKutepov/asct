@@ -446,10 +446,10 @@
                     <tbody>
                         {% for exam in exam_list %}
                         <tr>
-                            <td><a href="/user/info/{{ exam.user.id }}/">{{ exam.user.get_full_name }}</a></td>
+                            <td><a href="{% url "user_info" id=exam.user.id %}">{{ exam.user.get_full_name }}</a></td>
                             <td>{{ exam.datetime|date:"d.m.Y H:i" }}</td>
                             <td>{{ exam.place }}</td>
-                            <td><a href="/user/info/{{ exam.examiner.id }}/">{{ exam.examiner.get_full_name }}</a></td>
+                            <td><a href="{% url "user_info" id=exam.examiner.id %}/">{{ exam.examiner.get_full_name }}</a></td>
                             <td>{{ exam.result|default:"" }}</td>
                             <td>
                                 <form action="{% url "cancel_exam" id=exam.id %}" method="post">
@@ -514,7 +514,6 @@
                                         title="Отменить зачёт">
                                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                 </button>
-
                             </td>
                         </tr>
                         {% endfor %}
