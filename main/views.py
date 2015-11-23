@@ -1,4 +1,5 @@
 from datetime import timezone
+import imghdr
 from wsgiref.util import FileWrapper
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
@@ -891,8 +892,9 @@ def download_file(request, id):
     try:
         uploaded_file = File.objects.get(pk=id)
     except:
-        return HttpResponseRedirect(reverse("index"))
-    response = HttpResponse(FileWrapper(uploaded_file.file), content_type='application/zip')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    type = imghdr.what(uploaded_file.file.file.name)
+    response = HttpResponse(FileWrapper(uploaded_file.file), content_type='application/'+type)
     response['Content-Disposition'] = 'attachment; filename=' + uploaded_file.file.name
     return response
 
