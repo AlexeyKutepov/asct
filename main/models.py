@@ -196,7 +196,7 @@ class ThemeExam(models.Model):
     # Theme
     theme = models.ForeignKey(Theme)
     # Date of exam
-    datetime = models.DateTimeField()
+    datetime = models.DateTimeField(default=timezone.now)
     # Place
     place = models.TextField(blank=True, null=True)
     # The result
