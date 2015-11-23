@@ -56,7 +56,15 @@ def prepare_operator_page(request):
 
 def prepare_probationer_page(request):
     scheduled_theme_list = ScheduledTheme.objects.filter(user=request.user)
-    return render(request, "main/probationer_profile.html", {"scheduled_theme_list": scheduled_theme_list})
+    exam_list = ThemeExam.objects.filter(user=request.user)
+    return render(
+        request,
+        "main/probationer_profile.html",
+        {
+            "scheduled_theme_list": scheduled_theme_list,
+            "exam_list": exam_list
+        }
+    )
 
 
 @login_required
