@@ -110,12 +110,19 @@ def get_user_list_by_department(request):
 
 @login_required
 def get_journal_list(request):
-    try:
-        user = UserProfile.objects.get(id=request.POST["userId"])
-    except:
-        user = None
-    if user and request.user.user_type != UserProfile.PROBATIONER:
-        journal_list = Journal.objects.filter(company=user.company)
+    if "userId" in request.POST:
+        try:
+            user = UserProfile.objects.get(id=request.POST["userId"])
+        except:
+            user = None
+        if user and request.user.user_type != UserProfile.PROBATIONER:
+            journal_list = Journal.objects.filter(company=user.company)
+        else:
+            journal_list = []
+    elif request.user.user_type == UserProfile.CURATOR:
+        journal_list = Journal.objects.all()
+    elif request.user.user_type != UserProfile.PROBATIONER:
+        journal_list = Journal.objects.filter(company=request.user.company)
     else:
         journal_list = []
     result_list = []

@@ -68,8 +68,7 @@ $(document).ready(function () {
         type: "POST",
         url: "/get/journal/list/",
         data: {
-            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
-            id: $( this).attr("property")
+            csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value
         },
         success: function(data) {
             $("#tableJournalList > tbody > tr").each(function() {
