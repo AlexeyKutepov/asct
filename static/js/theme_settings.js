@@ -33,6 +33,16 @@ $(document).ready(function () {
 //        }
 //    });
 
+    if (supports_html5_storage) {
+        var tab = window.localStorage.getItem("tab");
+        if (tab == "exam") {
+            $("#liStudy").removeClass( "active" );
+            $("#liExam").addClass( "active" );
+            $("#divStudy").hide();
+            $("#divExam").show();
+        }
+    }
+
     $.ajax({
         type: "POST",
         url: "/get/probationer/list/",
@@ -102,6 +112,7 @@ $(document).ready(function () {
         $("#liExam").removeClass( "active" );
         $("#divStudy").show();
         $("#divExam").hide();
+        window.localStorage.setItem("tab", "study")
     });
 
     $("#aExam").click(function() {
@@ -109,9 +120,18 @@ $(document).ready(function () {
         $("#liExam").addClass( "active" );
         $("#divStudy").hide();
         $("#divExam").show();
+        window.localStorage.setItem("tab", "exam")
     });
 
 });
+
+function supports_html5_storage() {
+  try {
+    return 'localStorage' in window && window['localStorage'] !== null;
+} catch (e) {
+    return false;
+  }
+}
 
 function downloadFile(id) {
     $.ajax({
