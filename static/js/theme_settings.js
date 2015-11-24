@@ -125,6 +125,10 @@ $(document).ready(function () {
 
 });
 
+/**
+ * Проверяем доступность локального хранилища
+ * @returns {boolean}
+ */
 function supports_html5_storage() {
   try {
     return 'localStorage' in window && window['localStorage'] !== null;

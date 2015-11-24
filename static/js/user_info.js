@@ -33,11 +33,22 @@ $(document).ready(function () {
 //        }
 //    });
 
+    if (supports_html5_storage) {
+        var tab = window.localStorage.getItem("tab");
+        if (tab == "exam") {
+            $("#liStudy").removeClass( "active" );
+            $("#liExam").addClass( "active" );
+            $("#divStudy").hide();
+            $("#divExam").show();
+        }
+    }
+
     $("#aStudy").click(function() {
         $("#liStudy").addClass( "active" );
         $("#liExam").removeClass( "active" );
         $("#divStudy").show();
         $("#divExam").hide();
+        window.localStorage.setItem("tab", "study")
     });
 
     $("#aExam").click(function() {
@@ -45,6 +56,7 @@ $(document).ready(function () {
         $("#liExam").addClass( "active" );
         $("#divStudy").hide();
         $("#divExam").show();
+        window.localStorage.setItem("tab", "exam")
     });
 
     $.ajax({
@@ -189,4 +201,16 @@ $(document).ready(function () {
     });
 
 });
+
+/**
+ * Проверяем доступность локального хранилища
+ * @returns {boolean}
+ */
+function supports_html5_storage() {
+  try {
+    return 'localStorage' in window && window['localStorage'] !== null;
+} catch (e) {
+    return false;
+  }
+}
 
