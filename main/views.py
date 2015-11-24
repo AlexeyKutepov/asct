@@ -2,10 +2,13 @@ from datetime import timezone
 import imghdr
 from wsgiref.util import FileWrapper
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
+from django.utils import formats
+from asct import settings
 from main.models import UserProfile, Company, Department, Journal, Theme, SubTheme, ScheduledTheme, ScheduledSubTheme, \
     File, Position, ThemeExam
 
@@ -588,6 +591,16 @@ def schedule_theme(request, id):
                 sub_theme=item,
                 scheduled_theme=scheduled_theme
             )
+        try:
+            send_mail(
+                'Вам назначена тема в ASCT',
+                'Здравствуйте ' + user.first_name + '! \n \n Вам назначена тема для изучения: \"' + theme.name + '\" \n\n Срок до ' + request.POST["dateTo"],
+                getattr(settings, "EMAIL_HOST_USER", None),
+                [user.email],
+                fail_silently=False
+            )
+        except:
+            pass
         return HttpResponseRedirect(reverse("theme_settings", args=[theme.id,]))
     else:
         return HttpResponseRedirect(reverse("index"))
@@ -620,6 +633,16 @@ def schedule_theme_to_user(request):
                 sub_theme=item,
                 scheduled_theme=scheduled_theme
             )
+        try:
+            send_mail(
+                'Вам назначена тема в ASCT',
+                'Здравствуйте ' + user.first_name + '! \n \n Вам назначена тема для изучения: \"' + theme.name + '\" \n\n Срок до ' + request.POST["dateTo"],
+                getattr(settings, "EMAIL_HOST_USER", None),
+                [user.email],
+                fail_silently=False
+            )
+        except:
+            pass
         return HttpResponseRedirect(reverse("user_info", args=[user.id,]))
     else:
         return HttpResponseRedirect(reverse("index"))
@@ -647,6 +670,20 @@ def schedule_exam(request, id):
             datetime=request.POST["datetime"],
             place=request.POST["place"],
         )
+        try:
+            send_mail(
+                'Вам назначен зачёт в ASCT',
+                'Здравствуйте ' + user.first_name + '! \n \n Вам назначен зачёт по теме: \"' + theme.name
+                + '\" \n\n Дата и время проведения зачёта: ' + theme_exam.datetime.replace('T', ' ')
+                + ' \n\n Место проведения зачёта: ' + request.POST["place"]
+                + ' \n\n Экзаменатор: ' + examiner.get_full_name()
+                ,
+                getattr(settings, "EMAIL_HOST_USER", None),
+                [user.email],
+                fail_silently=False
+            )
+        except:
+            pass
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
