@@ -164,59 +164,59 @@ $(document).ready(function () {
         }
     });
 
+    /**
+     * Сортировка таблиц
+     */
 
-//    $("a[name='aCompanyName']").click(function() {
-//        $.ajax({
-//            type: "POST",
-//            url: "/get/department/list/",
-//            data: {
-//                csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
-//                id: $( this).attr("property")
-//            },
-//            success: function(data) {
-//                $("#tableDepartmentList > tbody > tr").each(function() {
-//                    $(this).remove();
-//                });
-//                var departmentList = data["department_list"];
-//                var result = "";
-//                for (var i = 0; i < departmentList.length; i++) {
-//                    result += "<tr><td><a href=\"#\" name=\"aDepartmentName\" property=\"" + departmentList[i]["id"] + "\">" + departmentList[i]["name"] + "</a></td></tr>";
-//                }
-//                $("#tableDepartmentList").append(result);
-//            },
-//            error: function(xhr, textStatus, errorThrown) {
-//                console.log("Error: "+errorThrown+xhr.status+xhr.responseText);
-//            }
-//        });
-//        return false;
-//    });
-//
-//
-//    $('#tableDepartmentList').on( "click", "a[name='aDepartmentName']", function() {
-//        $.ajax({
-//            type: "POST",
-//            url: "/get/user/list/by/department/",
-//            data: {
-//                csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
-//                id: $( this).attr("property")
-//            },
-//            success: function(data) {
-//                $("#tableProfileList > tbody > tr").each(function() {
-//                    $(this).remove();
-//                });
-//                var userList = data["user_list"];
-//                var result = "";
-//                for (var i = 0; i < userList.length; i++) {
-//                    result += "<tr><td><a href=\"/user/info/" + userList[i]["id"] + "\" property=\"" + userList[i]["id"] + "\">" + userList[i]["name"] + "</a></td></tr>";
-//                }
-//                $("#tableProfileList").append(result);
-//            },
-//            error: function(xhr, textStatus, errorThrown) {
-//                console.log("Error: "+errorThrown+xhr.status+xhr.responseText);
-//            }
-//        });
-//        return false;
-//    });
+    var tableJournalList = $("#tableJournalList");
+
+    $('#thJournalName, #thJournalCompany')
+        .wrapInner('<span title="sort this column"/>')
+        .each(function(){
+        var th = $(this),
+            thIndex = th.index(),
+            inverse = false;
+        th.click(function(){
+            tableJournalList.find('td').filter(function(){
+                return $(this).index() === thIndex;
+            }).sortElements(function(a, b){
+                if( $.text([a]) == $.text([b]) )
+                    return 0;
+                return $.text([a]) > $.text([b]) ?
+                    inverse ? -1 : 1
+                    : inverse ? 1 : -1;
+            }, function(){
+                // parentNode is the element we want to move
+                return this.parentNode;
+            });
+            inverse = !inverse;
+        });
+    });
+
+    var tableUserList = $("#tableUserList");
+
+    $('#thUserName, #thUserPosition, #thUserCompany, #thUserType')
+        .wrapInner('<span title="sort this column"/>')
+        .each(function(){
+        var th = $(this),
+            thIndex = th.index(),
+            inverse = false;
+        th.click(function(){
+            tableUserList.find('td').filter(function(){
+                return $(this).index() === thIndex;
+            }).sortElements(function(a, b){
+                if( $.text([a]) == $.text([b]) )
+                    return 0;
+                return $.text([a]) > $.text([b]) ?
+                    inverse ? -1 : 1
+                    : inverse ? 1 : -1;
+            }, function(){
+                // parentNode is the element we want to move
+                return this.parentNode;
+            });
+            inverse = !inverse;
+        });
+    });
 
 });
 

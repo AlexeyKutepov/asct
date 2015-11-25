@@ -1,9 +1,9 @@
 .user-panel {
-    max-height: 250px;
+    max-height: 300px;
     overflow: auto;
 }
 
 .fixed-panel {
-    height: 250px;
+    height: 300px;
     overflow: auto;
 }
