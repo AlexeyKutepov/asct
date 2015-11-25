@@ -27,8 +27,8 @@
                 <div class="panel-body user-panel">
                     <table id="tableJournalList" class="table table-hover">
                         <thead>
-                            <th>Название журнала</th>
-                            <th>Компания</th>
+                            <th id="thJournalName">Название журнала <span class="glyphicon glyphicon-sort pull-right" aria-hidden="true"></span></th>
+                            <th id="thJournalCompany">Компания <span class="glyphicon glyphicon-sort pull-right" aria-hidden="true"></span></th>
                         </thead>
                     </table>
                 </div>
@@ -52,7 +52,7 @@
         <div class="col-lg-12">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h4>Испытуемые
+                    Испытуемые
                     <div class="btn-group pull-right">
                         <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
                             Действия <i class="fa fa-chevron-down"></i>
@@ -65,14 +65,13 @@
                             </li>
                         </ul>
                     </div>
-                    </h4>
                 </div>
                 <div class="panel-body user-panel">
                     <table id="tableProbationerList" class="table table-hover">
                         <thead>
-                            <th>ФИО</th>
-                            <th>Подразделение</th>
-                            <th>Должность</th>
+                            <th id="thUserName">ФИО <span class="glyphicon glyphicon-sort pull-right" aria-hidden="true"></span></th>
+                            <th id="thUserDepartment">Подразделение <span class="glyphicon glyphicon-sort pull-right" aria-hidden="true"></span></th>
+                            <th id="thUserPosition">Должность <span class="glyphicon glyphicon-sort pull-right" aria-hidden="true"></span></th>
                         </thead>
                         {% for probationer in probationer_list %}
                         <tr>
@@ -96,5 +95,6 @@
     </div>
 {% endblock %}
 {% block scripts %}
+    <script src="/static/js/sort-elements.js"></script>
     <script src="/static/js/operator_profile.js"></script>
 {% endblock %}
