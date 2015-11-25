@@ -39,6 +39,19 @@ $(document).ready(function () {
     $("#buttonCompanySearch").click(companySearch);
     $("#inputCompanySearch").change(companySearch).keyup(companySearch);
 
+    var positiontSearch = function() {
+        $('#tablePositionList > tbody > tr').each(function() {
+            if(($(this).find("td:first").html()).indexOf($("#inputPositionSearch").val())) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        });
+    };
+
+    $("#buttonPositionSearch").click(positiontSearch);
+    $("#inputPositionSearch").change(positiontSearch).keyup(positiontSearch);
+
     var departmentSearch = function() {
         $('#tableDepartmentList > tbody > tr').each(function() {
             if(($(this).find('a').html()).indexOf($("#inputDepartmentSearch").val())) {
