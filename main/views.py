@@ -1,5 +1,5 @@
 from datetime import timezone
-import imghdr
+from mimetypes import MimeTypes
 from wsgiref.util import FileWrapper
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
@@ -938,8 +938,9 @@ def download_file(request, id):
         uploaded_file = File.objects.get(pk=id)
     except:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    type = imghdr.what(uploaded_file.file.file.name)
-    response = HttpResponse(FileWrapper(uploaded_file.file), content_type='application/'+type)
+    mime = MimeTypes()
+    mime_type = mime.guess_type(uploaded_file.file.file.name)
+    response = HttpResponse(FileWrapper(uploaded_file.file), content_type=mime_type[0])
     response['Content-Disposition'] = 'attachment; filename=' + uploaded_file.file.name
     return response
 
