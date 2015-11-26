@@ -171,6 +171,7 @@
                     <table id="tableUserStatisticList" class="table table-bordered table-hover">
                         <thead>
                             <th>Название темы</th>
+                            <th>Журнал</th>
                             <th>Статус</th>
                             <th>Назначена</th>
                             <th>Срок</th>
@@ -185,8 +186,9 @@
                                 <tr class="info">
                                 {% elif item.status == 'COMPLETED' %}
                                 <tr class="success">
-                            {% endif %}
+                                {% endif %}
                                     <td><a href="{% url "theme_settings" id=item.theme.id %}">{{ item.theme.name }}</a></td>
+                                    <td><a href="{% url "journal_settings" id=item.theme.journal.id %}">{{ item.theme.journal.name }}</a></td>
                                     {% if item.status == 'ASSIGNED' %}
                                         <td>Назначена</td>
                                     {% elif item.status == 'IN_WORK' %}
@@ -251,6 +253,7 @@
                     <table id="tableUserStatisticList" class="table table-bordered table-hover">
                         <thead>
                             <th>Тема</th>
+                            <th>Журнал</th>
                             <th>Дата и время</th>
                             <th>Место</th>
                             <th>Экзаменатор</th>
@@ -261,6 +264,7 @@
                             {% for exam in exam_list %}
                             <tr>
                                 <td><a href="{% url "theme_settings" id=exam.theme.id %}">{{ exam.theme.name }}</a></td>
+                                <td><a href="{% url "journal_settings" id=exam.theme.journal.id %}">{{ exam.theme.journal.name }}</a></td>
                                 <td>{{ exam.datetime|date:"d.m.Y H:i" }}</td>
                                 <td>{{ exam.place }}</td>
                                 <td><a href="{% url "user_info" id=exam.examiner.id %}">{{ exam.examiner.get_full_name }}</a></td>
