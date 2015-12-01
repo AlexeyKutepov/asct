@@ -87,3 +87,17 @@ class UserProfileAdmin(UserAdmin):
     search_fields = ('email',)
     ordering = ('email',)
     filter_horizontal = ()
+
+
+@admin.register(Test)
+class TestAdmin(admin.ModelAdmin):
+    list_display = ('name', 'author', 'date_and_time')
+    list_filter = ('author', 'date_and_time')
+    date_hierarchy = 'date_and_time'
+
+
+@admin.register(Journal)
+class JournalAdmin(admin.ModelAdmin):
+    list_display = ('user', 'test', 'start_date', 'end_date', 'number_of_questions', 'number_of_correct_answers', 'result')
+    list_filter = ('user', 'test', 'start_date', 'end_date', 'number_of_questions', 'number_of_correct_answers', 'result')
+    date_hierarchy = 'end_date'
