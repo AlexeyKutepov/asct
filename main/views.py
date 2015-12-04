@@ -1,7 +1,9 @@
 from datetime import timezone
 from mimetypes import MimeTypes
+import pickle
 from wsgiref.util import FileWrapper
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import SuspiciousOperation
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db.models import Q
@@ -9,8 +11,9 @@ from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.utils import formats
 from asct import settings
+from main.asct_test.asct_test import AsctTest, TestType, Question, CloseAnswer, Answer
 from main.models import UserProfile, Company, Department, Journal, Theme, SubTheme, ScheduledTheme, ScheduledSubTheme, \
-    File, Position, ThemeExam
+    File, Position, ThemeExam, Test, TestImage
 
 
 @login_required
@@ -1042,3 +1045,121 @@ def cancel_exam(request, id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     exam.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+"""
+Тесты
+"""
+
+TYPE_LIST = [
+            "Содержит один или несколько правильных вариантов ответа",
+            "Содержит только один правильный вариант ответа",
+            "Вопрос со свободной формой ответа",
+        ]
+
+@login_required
+def create_new_test(request):
+    """
+    Создание нового теста
+    :param request:
+    :return:
+    """
+    if "save" and "name" and "description" in request.POST:
+        try:
+            journal = Journal.objects.get(id=request.POST["save"])
+        except:
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        test = Test.objects.create(
+            name=request.POST["name"],
+            description=request.POST["description"],
+            journal=journal,
+            author=request.user,
+        )
+        return HttpResponseRedirect(reverse("create_new_question", args=[test.id]))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required(login_url='/')
+def create_new_question(request, id):
+    """
+    Создание нового вопроса для теста
+    :param request:
+    :param id: id of the test
+    :return:
+    """
+    test = Test.objects.get(id=id)
+    if request.user != test.author:
+        raise SuspiciousOperation("Некорректный id теста")
+    if "type" in request.POST and int(request.POST["type"]) in (1, 2, 3):
+        if test.test is None or test.test == b'':
+            exam_test = AsctTest()
+        else:
+            exam_test = pickle.loads(test.test)
+        question_type = TestType(int(request.POST["type"]))
+
+        if "question" in request.POST:
+            question = Question(request.POST["question"], question_type)
+        else:
+            question = Question(None, question_type)
+
+        if "image" in request.FILES:
+            image = TestImage.objects.get_or_create(image=request.FILES["image"])
+            image_id = image[0].id
+        else:
+            image_id = None
+        question.set_image(image_id)
+
+        if question_type is TestType.CLOSE_TYPE_SEVERAL_CORRECT_ANSWERS:
+            i = 1
+            while "answer"+str(i) in request.POST:
+                question.add_new_answer(
+                    CloseAnswer(
+                        answer=request.POST["answer"+str(i)],
+                        is_correct=str(i) in request.POST.getlist("trueAnswer")
+                    )
+                )
+                i += 1
+        elif question_type is TestType.CLOSE_TYPE_ONE_CORRECT_ANSWER:
+            i = 1
+            while "answer"+str(i) in request.POST:
+                question.add_new_answer(
+                    CloseAnswer(
+                        answer=request.POST["answer"+str(i)],
+                        is_correct=str(i) == request.POST["trueAnswer"]
+                    )
+                )
+                i += 1
+        elif question_type is TestType.OPEN_TYPE:
+            question.add_new_answer(
+                Answer(
+                    request.POST["openAnswer"]
+                )
+            )
+
+        exam_test.add_question(question)
+        test.test = pickle.dumps(exam_test)
+        test.save()
+        request.user.rating += 1
+        request.user.save()
+        if "complete" in request.POST:
+            return HttpResponseRedirect(reverse('dashboard'))
+        else:
+            return render(
+                request,
+                "test/create_question.html",
+                {
+                    "number_of_question": len(exam_test.get_questions()) + 1,
+                    "type_list": TYPE_LIST,
+                    "test_id": id
+                }
+            )
+    else:
+        return render(
+            request,
+            "test/create_question.html",
+            {
+                "type_list": TYPE_LIST,
+                "test_id": id
+            }
+        )

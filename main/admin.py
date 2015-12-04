@@ -96,8 +96,8 @@ class TestAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_and_time'
 
 
-@admin.register(Journal)
-class JournalAdmin(admin.ModelAdmin):
+@admin.register(TestJournal)
+class TestJournalAdmin(admin.ModelAdmin):
     list_display = ('user', 'test', 'start_date', 'end_date', 'number_of_questions', 'number_of_correct_answers', 'result')
     list_filter = ('user', 'test', 'start_date', 'end_date', 'number_of_questions', 'number_of_correct_answers', 'result')
     date_hierarchy = 'end_date'

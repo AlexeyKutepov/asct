@@ -262,7 +262,7 @@ class Test(models.Model):
     # The author of the test
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
     # date and time of create test
-    date_and_time = models.DateTimeField(default=timezone.now())
+    date_and_time = models.DateTimeField(default=timezone.now)
 
 
     def __str__(self):
@@ -279,9 +279,9 @@ class TestJournal(models.Model):
     # The completed test
     test = models.ForeignKey(Test)
     # Date and time of start test
-    start_date = models.DateTimeField(default=timezone.now())
+    start_date = models.DateTimeField(default=timezone.now)
     # Date and time of end test
-    end_date = models.DateTimeField(default=timezone.now())
+    end_date = models.DateTimeField(default=timezone.now)
     # Number of questions
     number_of_questions = models.IntegerField()
     # Number of correct answers
@@ -308,7 +308,7 @@ class Progress(models.Model):
     # The user, who  performs the test
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     # Start date time
-    start_date = models.DateTimeField(default=timezone.now())
+    start_date = models.DateTimeField(default=timezone.now)
     # End date time
     end_date = models.DateTimeField(blank=True, null=True)
     # The performed test by user

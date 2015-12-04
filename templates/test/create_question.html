@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block style %}
+    <link href="/static/css/bootstrap-select.min.css" rel="stylesheet">
+{% endblock %}
+{% block dashboard %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h3>Вопрос №{{ number_of_question|default:"1" }}</h3>
+        </div>
+    </div>
+    <p></p>
+    <form id="formCreateNewQuestion" action="{% url "create_new_question" id=test_id  %}" method="post"
+          enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="form-group">
+                    <label for="inputQuestion">Вопрос:</label>
+                    <textarea id="inputQuestion" name="question" class="form-control" rows="5" required></textarea>
+                </div>
+
+                {% if type_list %}
+                    <label for="selectType"><b>Тип вопроса:</b></label>
+                    <select id="selectType" name="type" class="selectpicker form-control">
+                        {% for type in type_list %}
+                            <option value="{{ forloop.counter }}">{{ type }}</option>
+                        {% endfor %}
+                    </select>
+                {% endif %}
+                <p></p>
+                <div id="divCloseAnswer">
+                    <label>Варианты ответа:</label>
+
+                    <div id="divAnswer1">
+                        <div class="input-group">
+                        <span class="input-group-addon">
+                            <input id="isTrueAnswer1" name="trueAnswer" value="1" type="checkbox">
+                        </span>
+                            <input id="inputAnswer1" name="answer1" type="text" class="form-control" required>
+                        </div>
+                    </div>
+                    <p></p>
+                    <div id="divAnswer2">
+                        <div class="input-group">
+                        <span class="input-group-addon">
+                            <input id="isTrueAnswer2" name="trueAnswer" value="2" type="checkbox">
+                        </span>
+                            <input id="inputAnswer2" name="answer2" type="text" class="form-control" required>
+                        </div>
+                    </div>
+                    <p></p>
+                    <div id="divAnswer3">
+                        <div class="input-group">
+                        <span class="input-group-addon">
+                            <input id="isTrueAnswer3" name="trueAnswer" value="3" type="checkbox">
+                        </span>
+                            <input id="inputAnswer3" name="answer3" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <p></p>
+                    <div id="divAnswer4"></div>
+                    <p></p>
+                </div>
+                <div id="divOpenAnswer" hidden>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label class="control-label" for="inputOpenAnswer">Введите правильный ответ:</label>
+                            <input id="inputOpenAnswer" name="openAnswer" type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <p></p>
+
+                <div id="divAddDel" class="row">
+                    <div class="col-lg-6">
+                        <button id="btnAddAnswer" type="button" class="btn btn-success">Добавить</button>
+                    </div>
+                    <div class="col-lg-6">
+                        <button id="btnDeleteAnswer" type="button" class="btn btn-danger pull-right">Удалить</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <label for="divImage">Изображение:</label>
+
+                <div id="divImage" class="form-group">
+                    <img id="impPreview" class="img-thumbnail"
+                         src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                         alt="Изображение" width="100%" height="350">
+
+                    <p></p>
+                    <input id="inputPicture" name="image" type="file" onchange="onPreview(this)">
+                </div>
+            </div>
+        </div>
+        <p></p>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="pull-right">
+                    <a href="{% url "index" %}"><input type="button" class="btn btn-default" value="Отмена"/></a>
+                    <button id="btnNext" type="submit" class="btn btn-success">Далее</button>
+                    <button id="btnComplete" name="complete" value="true" type="submit" class="btn btn-primary">Закончить</button>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+{% block scripts %}
+    <script src="/static/js/bootstrap-select.js"></script>
+{% endblock %}
