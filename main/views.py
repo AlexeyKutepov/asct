@@ -1140,10 +1140,8 @@ def create_new_question(request, id):
         exam_test.add_question(question)
         test.test = pickle.dumps(exam_test)
         test.save()
-        request.user.rating += 1
-        request.user.save()
         if "complete" in request.POST:
-            return HttpResponseRedirect(reverse('dashboard'))
+            return HttpResponseRedirect(reverse("journal_settings", args=[test.journal.id, ]))
         else:
             return render(
                 request,
