@@ -1165,6 +1165,39 @@ def create_new_question(request, id):
         )
 
 
+@login_required(login_url='/')
+def edit_test(request, id):
+    """
+    Edits the test
+    :param request:
+    :param id: id of test
+    :return:
+    """
+    id = int(id)
+    test = Test.objects.get(id=id)
+
+    if "save" in request.POST:
+        test.name = request.POST["name"]
+        test.description = request.POST["description"]
+        test.save()
+        return HttpResponseRedirect(reverse("dashboard"))
+
+    if test.test:
+        exam_test = pickle.loads(test.test)
+        question_list = exam_test.get_questions()
+    else:
+        question_list = None
+
+    return render(
+            request,
+            "test/edit_test.html",
+            {
+                "test": test,
+                "question_list": question_list
+            }
+        )
+
+
 @login_required
 def delete_test(request, id):
     try:

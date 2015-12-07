@@ -369,9 +369,9 @@
                         {% for test in test_list %}
                             <tr>
                                 <td>
-{#                                    <a href="{% url "theme_settings" id=theme.id %}">#}
+                                    <a href="{% url "edit_test" id=test.id %}">
                                         {{ test.name }}
-{#                                    </a>#}
+                                    </a>
                                 </td>
                                 <td>{{ test.description }}</td>
                                 <td>
