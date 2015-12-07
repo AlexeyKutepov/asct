@@ -1268,10 +1268,8 @@ def add_question(request, id):
         asct_test.add_question(question)
         test.test = pickle.dumps(asct_test)
         test.save()
-        request.user.rating += 1
-        request.user.save()
 
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(reverse("edit_test", args=[id]))
     else:
         return render(
             request,
