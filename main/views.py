@@ -1205,3 +1205,18 @@ def delete_test(request, id):
     except:
         pass
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
+def delete_question(request, id):
+    try:
+        test = Test.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    if test.test:
+        exam_test = pickle.loads(test.test)
+        if "delete" in request.POST:
+            exam_test.get_questions().pop(int(request.POST["delete"]) - 1)
+            test.test = pickle.dumps(exam_test)
+            test.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
