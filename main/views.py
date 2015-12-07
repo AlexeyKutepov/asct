@@ -1180,7 +1180,7 @@ def edit_test(request, id):
         test.name = request.POST["name"]
         test.description = request.POST["description"]
         test.save()
-        return HttpResponseRedirect(reverse("dashboard"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     if test.test:
         exam_test = pickle.loads(test.test)
