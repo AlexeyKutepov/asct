@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% block title %}
+    <title>Exam - конструктор тестов</title>
+{% endblock %}
+{% block seo %}
+    <meta name="description" content="Редактирование вопроса">
+    <meta name="keywords" content="Конструктор тестов, тестирование, on-line, редактирование, вопрос, ответ, преподавателю">
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="/static/css/bootstrap-select.min.css"/>
+    <script src="/static/js/bootstrap-select.js"></script>
+    <script src="/static/js/exam.js"></script>
+{% endblock %}
+{% block header_content %}
+    <div class="k-panel-header vertical-align">
+        <div class="container">
+            <div class="row vertical-align">
+                <div class="col-lg-4">
+                    <h4>Вопрос №{{ number_of_question|default:"1" }}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block content %}
+    <form id="formCreateNewQuestion" action="{% url "edit_test_edit_question" id=test_id number=number_of_question  %}" method="post"
+          enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="form-group">
+                    <label for="inputQuestion">Вопрос:</label>
+                    <textarea id="inputQuestion" name="question" class="form-control" rows="5" required>{{ question.get_question }}</textarea>
+                </div>
+
+                {% if  type_list %}
+                    <label for="selectType"><b>Тип вопроса:</b></label>
+                    <select id="selectType" name="type" class="selectpicker form-control">
+                        {% for type in type_list %}
+                            {% if question.get_test_type.value == forloop.counter %}
+                            <option selected value="{{ forloop.counter }}">{{ type }}</option>
+                            {% else %}
+                            <option value="{{ forloop.counter }}">{{ type }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                {% endif %}
+                {% if question.get_test_type.value == 3 %}
+                <div id="divCloseAnswer" hidden>
+                    <label>Варианты ответа:</label>
+
+                    <div id="divAnswer1" class="row">
+                        <div class="input-group">
+                        <span class="input-group-addon">
+                            <input id="isTrueAnswer1" name="trueAnswer" value="1" type="checkbox">
+                        </span>
+                            <input id="inputAnswer1" name="answer1" type="text" class="form-control" required>
+                        </div>
+                    </div>
+                    <div id="divAnswer2" class="row">
+                        <div class="input-group">
+                        <span class="input-group-addon">
+                            <input id="isTrueAnswer2" name="trueAnswer" value="2" type="checkbox">
+                        </span>
+                            <input id="inputAnswer2" name="answer2" type="text" class="form-control" required>
+                        </div>
+                    </div>
+                    <div id="divAnswer3" class="row">
+                        <div class="input-group">
+                        <span class="input-group-addon">
+                            <input id="isTrueAnswer3" name="trueAnswer" value="3" type="checkbox">
+                        </span>
+                            <input id="inputAnswer3" name="answer3" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div id="divAnswer4" class="row"></div>
+                </div>
+                <div id="divOpenAnswer" class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label class="control-label" for="inputOpenAnswer">Введите правильный ответ:</label>
+                            <input id="inputOpenAnswer" name="openAnswer" type="text" class="form-control" value="{{ question.get_answers.get_answer }}">
+                        </div>
+                    </div>
+                </div>
+                <p></p>
+
+                <div id="divAddDel" class="row" hidden>
+                    <div class="col-lg-6">
+                        <button id="btnAddAnswer" type="button" class="btn btn-success">Добавить</button>
+                    </div>
+                    <div class="col-lg-6">
+                        <button id="btnDeleteAnswer" type="button" class="btn btn-danger pull-right">Удалить</button>
+                    </div>
+                </div>
+                {% else %}
+                <div id="divCloseAnswer">
+                    <label>Варианты ответа:</label>
+                    {% if question.get_test_type.value == 1 %}
+                        {% for answer in question.get_answers %}
+                            <div id="divAnswer{{ forloop.counter }}" class="row">
+                                <div class="input-group">
+                                <span class="input-group-addon">
+                                    {% if answer.is_correct %}
+                                    <input id="isTrueAnswer{{ forloop.counter }}" name="trueAnswer" value="{{ forloop.counter }}" type="checkbox" checked>
+                                    {% else %}
+                                    <input id="isTrueAnswer{{ forloop.counter }}" name="trueAnswer" value="{{ forloop.counter }}" type="checkbox">
+                                    {% endif %}
+                                </span>
+                                    <input id="inputAnswer{{ forloop.counter }}" name="answer{{ forloop.counter }}" type="text" class="form-control" value="{{ answer.get_answer }}" required>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% elif question.get_test_type.value == 2 %}
+                        {% for answer in question.get_answers %}
+                            <div id="divAnswer{{ forloop.counter }}" class="row">
+                                <div class="input-group">
+                                <span class="input-group-addon">
+                                    {% if answer.is_correct %}
+                                    <input id="isTrueAnswer{{ forloop.counter }}" name="trueAnswer" value="{{ forloop.counter }}" type="radio" checked>
+                                     {% else %}
+                                    <input id="isTrueAnswer{{ forloop.counter }}" name="trueAnswer" value="{{ forloop.counter }}" type="radio">
+                                    {% endif %}
+                                </span>
+                                    <input id="inputAnswer{{ forloop.counter }}" name="answer{{ forloop.counter }}" type="text" class="form-control" value="{{ answer.get_answer }}" required>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <div id="divAnswer{{ question.get_answers|length|add:"1" }}" class="row"></div>
+                </div>
+                <div id="divOpenAnswer" class="row" hidden>
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label class="control-label" for="inputOpenAnswer">Введите правильный ответ:</label>
+                            <input id="inputOpenAnswer" name="openAnswer" type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <p></p>
+
+                <div id="divAddDel" class="row">
+                    <div class="col-lg-6">
+                        <button id="btnAddAnswer" type="button" class="btn btn-success">Добавить</button>
+                    </div>
+                    <div class="col-lg-6">
+                        <button id="btnDeleteAnswer" type="button" class="btn btn-danger pull-right">Удалить</button>
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+            <div class="col-lg-5">
+                <label for="divImage">Изображение:</label>
+
+                {% if image %}
+                <div id="divImage" class="form-group">
+                    <img id="impPreview" class="img-thumbnail"
+                         src="{{ image }}"
+                         alt="Изображение" width="100%" height="350">
+
+                    <p></p>
+                    <input id="inputPicture" name="image" type="file" onchange="onPreview(this)">
+                </div>
+                {% else %}
+                <div id="divImage" class="form-group">
+                    <img id="impPreview" class="img-thumbnail"
+                         src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                         alt="Изображение" width="100%" height="350">
+
+                    <p></p>
+                    <input id="inputPicture" name="image" type="file" onchange="onPreview(this)">
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <p></p>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="pull-right">
+                    <a href="{% url "edit_test" id=test_id %}"><input type="button" class="btn btn-default" value="Отмена"/></a>
+                    <button id="btnSave" name="save" type="submit" class="btn btn-success">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

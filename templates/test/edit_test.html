@@ -99,13 +99,13 @@
     </div>
     <div class="row">
         <div class="col-lg-12 centered">
-{#            <form action="{% url "edit_test_add_question" id=test.id %}" method="post">#}
+            <form action="{% url "add_question" id=test.id %}" method="post">
                 {% csrf_token %}
                 <button id="btnAdd" type="submit"
                     class="btn btn-primary" name="add" value="{{ forloop.counter }}">
                     Добавить вопроc
                 </button>
-{#            </form>#}
+            </form>
         </div>
     </div>
 {% endblock %}

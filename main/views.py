@@ -1208,6 +1208,84 @@ def delete_test(request, id):
 
 
 @login_required
+def add_question(request, id):
+    """
+    Adds the question to test
+    :param request:
+    :param id: id of the test
+    :return:
+    """
+    test = Test.objects.get(id=id)
+    if test.test is None or test.test == b'':
+        asct_test = AsctTest()
+    else:
+        asct_test = pickle.loads(test.test)
+
+    if request.user != test.author:
+        raise SuspiciousOperation("Некорректный id теста")
+    if "type" in request.POST and int(request.POST["type"]) in (1, 2, 3):
+        question_type = TestType(int(request.POST["type"]))
+
+        if "question" in request.POST:
+            question = Question(request.POST["question"], question_type)
+        else:
+            question = Question(None, question_type)
+
+        if "image" in request.FILES:
+            image = TestImage.objects.get_or_create(image=request.FILES["image"])
+            image_id = image[0].id
+        else:
+            image_id = None
+        question.set_image(image_id)
+
+        if question_type is TestType.CLOSE_TYPE_SEVERAL_CORRECT_ANSWERS:
+            i = 1
+            while "answer"+str(i) in request.POST:
+                question.add_new_answer(
+                    CloseAnswer(
+                        answer=request.POST["answer"+str(i)],
+                        is_correct=str(i) in request.POST.getlist("trueAnswer")
+                    )
+                )
+                i += 1
+        elif question_type is TestType.CLOSE_TYPE_ONE_CORRECT_ANSWER:
+            i = 1
+            while "answer"+str(i) in request.POST:
+                question.add_new_answer(
+                    CloseAnswer(
+                        answer=request.POST["answer"+str(i)],
+                        is_correct=str(i) == request.POST["trueAnswer"]
+                    )
+                )
+                i += 1
+        elif question_type is TestType.OPEN_TYPE:
+            question.add_new_answer(
+                Answer(
+                    request.POST["openAnswer"]
+                )
+            )
+
+        asct_test.add_question(question)
+        test.test = pickle.dumps(asct_test)
+        test.save()
+        request.user.rating += 1
+        request.user.save()
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        return render(
+            request,
+            "test/add_question.html",
+            {
+                "number_of_question": len(asct_test.get_questions()) + 1,
+                "type_list": TYPE_LIST,
+                "test_id": id
+            }
+        )
+
+
+
+@login_required
 def delete_question(request, id):
     try:
         test = Test.objects.get(id=id)

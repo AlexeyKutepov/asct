@@ -56,6 +56,7 @@ urlpatterns = patterns('',
         url(r'^create/new/question/(?P<id>\d+)/$', views.create_new_question, name='create_new_question'),
         url(r'^edit/test/(?P<id>\d+)/$', views.edit_test, name='edit_test'),
         url(r'^delete/test/(?P<id>\d+)/$', views.delete_test, name='delete_test'),
+        url(r'^add/question/(?P<id>\d+)/$', views.add_question, name='add_question'),
         url(r'^delete/question/(?P<id>\d+)/$', views.delete_question, name='delete_question'),
 
 
