@@ -399,6 +399,7 @@ def journal_settings(request, id):
     except:
         return HttpResponseRedirect(reverse("index"))
     theme_list = Theme.objects.filter(journal=journal)
+    test_list = Test.objects.filter(journal=journal)
     if request.user.user_type == UserProfile.CURATOR:
         company_list = Company.objects.all()
     else:
@@ -409,7 +410,8 @@ def journal_settings(request, id):
         {
             "journal": journal,
             "theme_list": theme_list,
-            "company_list": company_list
+            "company_list": company_list,
+            "test_list": test_list
         }
     )
 
@@ -1080,7 +1082,7 @@ def create_new_test(request):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-@login_required(login_url='/')
+@login_required
 def create_new_question(request, id):
     """
     Создание нового вопроса для теста
@@ -1161,3 +1163,12 @@ def create_new_question(request, id):
                 "test_id": id
             }
         )
+
+
+@login_required
+def delete_test(request, id):
+    try:
+        Test.objects.get(id=id).delete()
+    except:
+        pass
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
