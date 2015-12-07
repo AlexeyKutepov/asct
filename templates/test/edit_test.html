@@ -29,7 +29,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="centered">
-                        <button id="btnSave" name="save" value="true" type="submit" class="btn btn-success">Сохранить изменения</button>
+                        <button id="btnSave" name="save" value="true" type="submit" class="btn btn-primary">Сохранить изменения</button>
                     </div>
                 </div>
             </div>
@@ -103,7 +103,7 @@
 {#            <form action="{% url "edit_test_add_question" id=test.id %}" method="post">#}
                 {% csrf_token %}
                 <button id="btnAdd" type="submit"
-                    class="btn btn-success" name="add" value="{{ forloop.counter }}">
+                    class="btn btn-primary" name="add" value="{{ forloop.counter }}">
                     Добавить вопроc
                 </button>
 {#            </form>#}
