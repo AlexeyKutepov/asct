@@ -53,6 +53,7 @@ urlpatterns = patterns('',
 
         # Тесты
         url(r'^create/new/test/', views.create_new_test, name='create_new_test'),
+        url(r'^test/settings/(?P<id>\d+)/$', views.test_settings, name='test_settings'),
         url(r'^create/new/question/(?P<id>\d+)/$', views.create_new_question, name='create_new_question'),
         url(r'^edit/test/(?P<id>\d+)/$', views.edit_test, name='edit_test'),
         url(r'^delete/test/(?P<id>\d+)/$', views.delete_test, name='delete_test'),

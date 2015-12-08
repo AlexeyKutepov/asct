@@ -273,7 +273,14 @@ class TestJournal(models.Model):
     """
     The result journal
     """
-
+    ASSIGNED = 'ASSIGNED'
+    IN_WORK = 'IN_WORK'
+    COMPLETED = 'COMPLETED'
+    STATUS = (
+        (ASSIGNED, 'ASSIGNED'),
+        (IN_WORK, 'IN_WORK'),
+        (COMPLETED, 'COMPLETED'),
+    )
     # The user, who was complete the test
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     # The completed test
@@ -292,6 +299,8 @@ class TestJournal(models.Model):
     report = models.BinaryField()
     # The test
     test_object= models.BinaryField()
+    # Status
+    status = models.CharField(max_length=10, choices=STATUS, default=ASSIGNED)
 
     def __str__(self):
         if self.user:

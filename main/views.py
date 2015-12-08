@@ -1379,3 +1379,11 @@ def delete_question(request, id):
             test.test = pickle.dumps(exam_test)
             test.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
+def test_settings(request, id):
+    return render(
+                request,
+                "test/test_settings.html",
+            )
