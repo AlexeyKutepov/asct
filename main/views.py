@@ -13,7 +13,7 @@ from django.utils import formats
 from asct import settings
 from main.asct_test.asct_test import AsctTest, TestType, Question, CloseAnswer, Answer
 from main.models import UserProfile, Company, Department, Journal, Theme, SubTheme, ScheduledTheme, ScheduledSubTheme, \
-    File, Position, ThemeExam, Test, TestImage
+    File, Position, ThemeExam, Test, TestImage, TestJournal
 
 
 @login_required
@@ -712,6 +712,24 @@ def get_probationer_list(request):
             })
         result["probationer_list"] = list
         return JsonResponse(result)
+    elif request.user.user_type != UserProfile.PROBATIONER and "testId" in request.POST:
+        try:
+            test = Test.objects.get(id=request.POST["testId"])
+        except:
+            test = None
+        if test:
+            probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=test.journal.company)
+        else:
+            probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER)
+        result = {}
+        list = []
+        for item in probationer_list:
+            list.append({
+                "id": item.id,
+                "name": item.get_full_name()
+            })
+        result["probationer_list"] = list
+        return JsonResponse(result)
     else:
         return JsonResponse({"probationer_list": []})
 
@@ -1383,7 +1401,21 @@ def delete_question(request, id):
 
 @login_required
 def test_settings(request, id):
+    try:
+        test = Test.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    journal_list = TestJournal.objects.filter(test=test)
     return render(
                 request,
                 "test/test_settings.html",
+                {
+                    "test": test,
+                    "journal_list": journal_list
+                }
             )
+
+
+@login_required
+def schedule_test(request, id):
+    return None
