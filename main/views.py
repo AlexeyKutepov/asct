@@ -1418,4 +1418,33 @@ def test_settings(request, id):
 
 @login_required
 def schedule_test(request, id):
-    return None
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
+    if "save" in request.POST:
+        try:
+            test = Test.objects.get(id=id)
+            user = UserProfile.objects.get(id=request.POST["user"])
+        except:
+            return HttpResponseRedirect(reverse("index"))
+        scheduled_test = TestJournal.objects.create(
+            date_to=request.POST["dateTo"],
+            user=user,
+            test=test
+        )
+        try:
+            send_mail(
+                'Вам назначен тест в ASCT',
+                'Здравствуйте ' + user.first_name + '! \n \n Вам назначен тест: \"' + test.name + '\" \n\n Срок до ' + request.POST["dateTo"],
+                getattr(settings, "EMAIL_HOST_USER", None),
+                [user.email],
+                fail_silently=False
+            )
+        except:
+            pass
+        return HttpResponseRedirect(reverse("test_settings", args=[test.id,]))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

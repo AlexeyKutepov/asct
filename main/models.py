@@ -274,11 +274,9 @@ class TestJournal(models.Model):
     The result journal
     """
     ASSIGNED = 'ASSIGNED'
-    IN_WORK = 'IN_WORK'
     COMPLETED = 'COMPLETED'
     STATUS = (
         (ASSIGNED, 'ASSIGNED'),
-        (IN_WORK, 'IN_WORK'),
         (COMPLETED, 'COMPLETED'),
     )
     # The user, who was complete the test
@@ -286,19 +284,19 @@ class TestJournal(models.Model):
     # The completed test
     test = models.ForeignKey(Test)
     # Date and time of start test
-    start_date = models.DateTimeField(default=timezone.now)
+    date_from = models.DateTimeField(default=timezone.now)
     # Date and time of end test
-    end_date = models.DateTimeField(default=timezone.now)
+    date_to = models.DateTimeField(default=timezone.now)
     # Number of questions
-    number_of_questions = models.IntegerField()
+    number_of_questions = models.IntegerField(blank=True, null=True)
     # Number of correct answers
     number_of_correct_answers = models.IntegerField(default=0)
     # The result of test (%)
     result = models.IntegerField(default=0)
     # The report of the test (JSON - file)'
-    report = models.BinaryField()
+    report = models.BinaryField(blank=True, null=True)
     # The test
-    test_object= models.BinaryField()
+    test_object= models.BinaryField(blank=True, null=True)
     # Status
     status = models.CharField(max_length=10, choices=STATUS, default=ASSIGNED)
 

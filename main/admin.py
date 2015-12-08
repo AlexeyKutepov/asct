@@ -98,6 +98,6 @@ class TestAdmin(admin.ModelAdmin):
 
 @admin.register(TestJournal)
 class TestJournalAdmin(admin.ModelAdmin):
-    list_display = ('user', 'test', 'start_date', 'end_date', 'number_of_questions', 'number_of_correct_answers', 'result')
-    list_filter = ('user', 'test', 'start_date', 'end_date', 'number_of_questions', 'number_of_correct_answers', 'result')
-    date_hierarchy = 'end_date'
+    list_display = ('user', 'test', 'date_from', 'date_to', 'number_of_questions', 'number_of_correct_answers', 'result')
+    list_filter = ('user', 'test', 'date_from', 'date_to', 'number_of_questions', 'number_of_correct_answers', 'result')
+    date_hierarchy = 'date_to'
