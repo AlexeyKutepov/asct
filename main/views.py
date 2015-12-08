@@ -1282,6 +1282,89 @@ def add_question(request, id):
         )
 
 
+@login_required
+def edit_question(request, id, number):
+    """
+    Edits the question in the test
+    :param request:
+    :param id: id of test
+    :param number: number of question
+    :return:
+    """
+    id = int(id)
+    number = int(number)
+    test = Test.objects.get(id=id)
+    if test.test is None or test.test == b'':
+        raise SuspiciousOperation("Некорректный запрос")
+    asct_test = pickle.loads(test.test)
+    if "type" in request.POST and int(request.POST["type"]) in (1, 2, 3):
+        question_type = TestType(int(request.POST["type"]))
+
+        if "question" in request.POST:
+            question = Question(request.POST["question"], question_type)
+        else:
+            question = Question(None, question_type)
+
+        if "image" in request.FILES:
+            image = TestImage.objects.get_or_create(image=request.FILES["image"])
+            question.set_image(image[0].id)
+        else:
+            question.set_image(asct_test.get_questions()[number-1].get_image())
+
+        if question_type is TestType.CLOSE_TYPE_SEVERAL_CORRECT_ANSWERS:
+            i = 1
+            while "answer"+str(i) in request.POST:
+                question.add_new_answer(
+                    CloseAnswer(
+                        answer=request.POST["answer"+str(i)],
+                        is_correct=str(i) in request.POST.getlist("trueAnswer")
+                    )
+                )
+                i += 1
+        elif question_type is TestType.CLOSE_TYPE_ONE_CORRECT_ANSWER:
+            i = 1
+            while "answer"+str(i) in request.POST:
+                question.add_new_answer(
+                    CloseAnswer(
+                        answer=request.POST["answer"+str(i)],
+                        is_correct=str(i) == request.POST["trueAnswer"]
+                    )
+                )
+                i += 1
+        elif question_type is TestType.OPEN_TYPE:
+            question.add_new_answer(
+                Answer(
+                    request.POST["openAnswer"]
+                )
+            )
+
+        asct_test.get_questions()[number-1] = question
+        test.test = pickle.dumps(asct_test)
+        test.save()
+
+        return HttpResponseRedirect(reverse("edit_test", args=[id]))
+    else:
+        question = asct_test.get_questions()[number-1]
+        if question.get_image():
+            image_test = TestImage.objects.get(id=question.get_image())
+            image = image_test.image.url
+        else:
+            image = None
+
+        return render(
+                request,
+                "test/edit_question.html",
+                {
+                    "number_of_question": number,
+                    "operation": "edit_test_edit_question",
+                    "type_list": TYPE_LIST,
+                    "test_id": id,
+                    "question": question,
+                    "image": image
+                }
+            )
+
+
 
 @login_required
 def delete_question(request, id):

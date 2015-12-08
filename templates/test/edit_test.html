@@ -57,6 +57,9 @@
                     <td>{{ forloop.counter }}</td>
                     <td>{{ question.get_question }}</td>
                     <td>
+                        <form id="formEditQuestion{{ forloop.counter }}" action="{% url "edit_question" id=test.id number=forloop.counter %}" method="post">
+                            {% csrf_token %}
+                        </form>
                         <form action="{% url "delete_question" id=test.id %}" method="post">
                             {% csrf_token %}
                             <!-- Modal dialog delete -->
@@ -79,15 +82,15 @@
                                 </div>
                             </div>
                         </form>
-                            <button id="btnEdit{{ forloop.counter }}" type="submit"
-                                    class="btn btn-primary" name="edit" value="{{ forloop.counter }}">
-                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                            </button>
-                            <button id="btnDel{{ forloop.counter }}" type="button" data-toggle="modal"
-                                    data-target="#modalDeleteQuestion{{ forloop.counter }}" class="btn btn-danger"
-                                    title="Удалить вопрос">
-                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                            </button>
+                        <button id="btnEdit{{ forloop.counter }}" type="button"
+                                class="btn btn-primary" onclick="document.getElementById('formEditQuestion{{ forloop.counter }}').submit();">
+                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                        </button>
+                        <button id="btnDel{{ forloop.counter }}" type="button" data-toggle="modal"
+                                data-target="#modalDeleteQuestion{{ forloop.counter }}" class="btn btn-danger"
+                                title="Удалить вопрос">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </button>
                     </td>
                     </tr>
                     {% endfor %}
