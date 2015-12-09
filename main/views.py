@@ -1084,6 +1084,12 @@ def create_new_test(request):
     :param request:
     :return:
     """
+    if request.user.user_type == UserProfile.PROBATIONER:
+       result = {
+           "status": "danger",
+           "message": "Доступ запрещён"
+           }
+       return render(request, "alert.html", result)
     if "save" and "name" and "description" in request.POST:
         try:
             journal = Journal.objects.get(id=request.POST["save"])
@@ -1108,6 +1114,12 @@ def create_new_question(request, id):
     :param id: id of the test
     :return:
     """
+    if request.user.user_type == UserProfile.PROBATIONER:
+       result = {
+           "status": "danger",
+           "message": "Доступ запрещён"
+           }
+       return render(request, "alert.html", result)
     test = Test.objects.get(id=id)
     if request.user != test.author:
         raise SuspiciousOperation("Некорректный id теста")
@@ -1191,6 +1203,12 @@ def edit_test(request, id):
     :param id: id of test
     :return:
     """
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
     id = int(id)
     test = Test.objects.get(id=id)
 
@@ -1218,6 +1236,12 @@ def edit_test(request, id):
 
 @login_required
 def delete_test(request, id):
+    if request.user.user_type == UserProfile.PROBATIONER:
+       result = {
+           "status": "danger",
+           "message": "Доступ запрещён"
+           }
+       return render(request, "alert.html", result)
     try:
         Test.objects.get(id=id).delete()
     except:
@@ -1233,6 +1257,12 @@ def add_question(request, id):
     :param id: id of the test
     :return:
     """
+    if request.user.user_type == UserProfile.PROBATIONER:
+       result = {
+           "status": "danger",
+           "message": "Доступ запрещён"
+           }
+       return render(request, "alert.html", result)
     test = Test.objects.get(id=id)
     if test.test is None or test.test == b'':
         asct_test = AsctTest()
@@ -1309,6 +1339,12 @@ def edit_question(request, id, number):
     :param number: number of question
     :return:
     """
+    if request.user.user_type == UserProfile.PROBATIONER:
+       result = {
+           "status": "danger",
+           "message": "Доступ запрещён"
+           }
+       return render(request, "alert.html", result)
     id = int(id)
     number = int(number)
     test = Test.objects.get(id=id)
@@ -1386,6 +1422,12 @@ def edit_question(request, id, number):
 
 @login_required
 def delete_question(request, id):
+    if request.user.user_type == UserProfile.PROBATIONER:
+       result = {
+           "status": "danger",
+           "message": "Доступ запрещён"
+           }
+       return render(request, "alert.html", result)
     try:
         test = Test.objects.get(id=id)
     except:
@@ -1401,6 +1443,12 @@ def delete_question(request, id):
 
 @login_required
 def test_settings(request, id):
+    if request.user.user_type == UserProfile.PROBATIONER:
+       result = {
+           "status": "danger",
+           "message": "Доступ запрещён"
+           }
+       return render(request, "alert.html", result)
     try:
         test = Test.objects.get(id=id)
     except:
@@ -1429,7 +1477,7 @@ def schedule_test(request, id):
             test = Test.objects.get(id=id)
             user = UserProfile.objects.get(id=request.POST["user"])
         except:
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         scheduled_test = TestJournal.objects.create(
             date_to=request.POST["dateTo"],
             user=user,
@@ -1448,3 +1496,17 @@ def schedule_test(request, id):
         return HttpResponseRedirect(reverse("test_settings", args=[test.id,]))
     else:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def cancel_test(request, id):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
+    try:
+        TestJournal.objects.get(id=id).delete()
+    except:
+        pass
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
