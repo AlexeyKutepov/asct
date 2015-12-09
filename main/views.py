@@ -1573,7 +1573,7 @@ def next_question(request, id, number):
         elif len(result_list) + 1 < number:
             return HttpResponseRedirect(reverse("next_question", args=[test.id, len(result_list) + 1]))
         elif number > len(exam_test.get_questions()):
-            return HttpResponseRedirect(reverse("get_test_list", args=[1]))
+            return HttpResponseRedirect(reverse("index"))
 
 
     question = exam_test.get_questions()[number - 1]
@@ -1617,11 +1617,11 @@ def next_question(request, id, number):
             progress.save()
 
             result_of_test = int(100/len(exam_test.get_questions()) * progress.current_result)
-            journal = Journal.objects.create(
+            journal = TestJournal.objects.create(
                 user=request.user,
                 test=test,
-                start_date=progress.start_date,
-                end_date=progress.end_date,
+                date_from=progress.start_date,
+                date_to=progress.end_date,
                 number_of_questions=len(exam_test.get_questions()),
                 number_of_correct_answers=progress.current_result,
                 result=result_of_test,
@@ -1660,5 +1660,28 @@ def next_question(request, id, number):
             "type": question.get_test_type().value,
             "variant_list": variant_list,
             "image": image
+        }
+    )
+
+
+@login_required
+def end_test(request, id):
+    """
+    Renders simple result form (without detail report)
+    :param request:
+    :param id: id of Journal field
+    :return: end_test.html
+    """
+    journal = TestJournal.objects.get(id=id)
+    if not journal:
+        raise SuspiciousOperation("Некорректный запрос")
+    elif not request.user.is_authenticated() and journal.user:
+        raise SuspiciousOperation("Некорректный запрос")
+    return render(
+        request,
+        "test/end_test.html",
+        {
+            "journal": journal,
+            "time_for_test": journal.date_from - journal.date_to
         }
     )

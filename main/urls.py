@@ -64,6 +64,7 @@ urlpatterns = patterns('',
         url(r'^schedule/test/(?P<id>\d+)/$', views.schedule_test, name="schedule_test"),
         url(r'^test/(?P<id>\d+)/$', views.start_test, name='start_test'),
         url(r'^next/question/(?P<id>\d+)/(?P<number>\d+)/$', views.next_question, name='next_question'),
+        url(r'^end/test/(?P<id>\d+)/$', views.end_test, name='end_test'),
 
 
 )
