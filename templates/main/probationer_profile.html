@@ -10,6 +10,8 @@
         </li>
         <li id="liExam" role="presentation"><a id="aExam" href="#">Зачёты</a>
         </li>
+        <li id="liTest" role="presentation"><a id="aTest" href="#">Тесты</a>
+        </li>
     </ul>
     <p></p>
     <div id="divStudy">
@@ -85,6 +87,44 @@
                             <td>{{ exam.place }}</td>
                             <td>{{ exam.examiner.get_full_name }}</td>
                             <td>{{ exam.result|default:"" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="divTest" hidden>
+        <div class="row">
+            <div class="col-lg-12">
+                <table id="tableTest" class="table table-bordered table-hover">
+                    <thead>
+                        <th>Название</th>
+                        <th>Описание</th>
+                        <th>Статус</th>
+                        <th>Назначен</th>
+                        <th>Срок</th>
+                        <th>Результат</th>
+                        <th>Действия</th>
+                    </thead>
+                    <tbody>
+                        {% for test in test_list %}
+                        <tr>
+                            <td>{{ test.test.name }}</td>
+                            <td>{{ test.test.description }}</td>
+
+                             {% if test.status == 'ASSIGNED' %}
+                             <td>Назначен</td>
+                             {% elif test.status == 'IN_WORK' %}
+                             <td>Прохождение</td>
+                             {% elif test.status == 'COMPLETED' %}
+                             <td>Пройден</td>
+                             {% endif %}
+
+                            <td>{{ test.date_from|date:"d.m.Y" }}</td>
+                            <td>{{ test.date_to|date:"d.m.Y" }}</td>
+                            <td></td>
+                            <td></td>
                         </tr>
                         {% endfor %}
                     </tbody>
