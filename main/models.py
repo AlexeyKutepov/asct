@@ -283,10 +283,12 @@ class TestJournal(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     # The completed test
     test = models.ForeignKey(Test)
-    # Date and time of start test
     date_from = models.DateTimeField(default=timezone.now)
-    # Date and time of end test
     date_to = models.DateTimeField(default=timezone.now)
+    # Date and time of start test
+    start_date = models.DateTimeField(default=timezone.now)
+    # Date and time of end test
+    end_date = models.DateTimeField(default=timezone.now)
     # Number of questions
     number_of_questions = models.IntegerField(blank=True, null=True)
     # Number of correct answers

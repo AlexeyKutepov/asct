@@ -34,8 +34,8 @@
                     {% else %}
                     <td>{{ journal.unregistered_user.get_full_name }}</td>
                     {% endif %}
-                    <td>{{ journal.date_from|date:"d.m.Y H:i:s" }}</td>
-                    <td>{{ journal.date_to|date:"d.m.Y H:i:s" }}</td>
+                    <td>{{ journal.start_date|date:"d.m.Y H:i:s" }}</td>
+                    <td>{{ journal.end_date|date:"d.m.Y H:i:s" }}</td>
                     <td>{{ journal.number_of_questions }}</td>
                     <td>{{ journal.number_of_correct_answers }}</td>
                     <td>{{ journal.result }}%</td>

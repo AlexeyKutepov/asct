@@ -73,7 +73,7 @@
                         {% if item.status == 'ASSIGNED' %}
                         <td>Назначен</td>
                         {% elif item.status == 'COMPLETED' %}
-                        <td>Изучена</td>
+                        <td>Пройден</td>
                         {% endif %}
                         <td>{{ item.date_from|date:"d.m.Y" }}</td>
                         <td>{{ item.date_to|date:"d.m.Y" }}</td>

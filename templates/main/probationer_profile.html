@@ -123,14 +123,27 @@
 
                             <td>{{ test.date_from|date:"d.m.Y" }}</td>
                             <td>{{ test.date_to|date:"d.m.Y" }}</td>
-                            <td></td>
                             <td>
+                                {% if test.status == 'COMPLETED' %}
+                                    {{ test.result }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if test.status != 'COMPLETED' %}
                                 <a href="{% url "start_test" id=test.test.id %}">
                                     <button id="btnStartTest{{ forloop.counter }}" type="button" class="btn btn-success"
                                             title="Начать прохождение теста">
                                         <span class="glyphicon gglyphicon glyphicon-play" aria-hidden="true"></span>
                                     </button>
                                 </a>
+                                {% else %}
+                                <a href="{% url "end_test" id=test.id %}">
+                                    <button id="btnEndTest{{ forloop.counter }}" type="button" class="btn btn-primary"
+                                            title="Результаты теста">
+                                        <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                                    </button>
+                                </a>
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}

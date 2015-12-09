@@ -1473,12 +1473,20 @@ def schedule_test(request, id):
             "message": "Доступ запрещён"
             }
         return render(request, "alert.html", result)
+
     if "save" in request.POST:
         try:
             test = Test.objects.get(id=id)
             user = UserProfile.objects.get(id=request.POST["user"])
         except:
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        journal = TestJournal.objects.filter(user=user, test=test)
+        if journal:
+            result = {
+                "status": "danger",
+                "message": "Тест \"" + test.name + "\" уже назначен пользователю " + user.get_full_name()
+                }
+            return render(request, "alert.html", result)
         scheduled_test = TestJournal.objects.create(
             date_to=request.POST["dateTo"],
             user=user,
@@ -1617,18 +1625,36 @@ def next_question(request, id, number):
             progress.save()
 
             result_of_test = int(100/len(exam_test.get_questions()) * progress.current_result)
-            journal = TestJournal.objects.create(
-                user=request.user,
-                test=test,
-                date_from=progress.start_date,
-                date_to=progress.end_date,
-                number_of_questions=len(exam_test.get_questions()),
-                number_of_correct_answers=progress.current_result,
-                result=result_of_test,
-                report=progress.result_list,
-                test_object=test.test
-            )
-            test.save()
+
+            journal = TestJournal.objects.filter(user=request.user, test=test)
+
+            if not journal:
+                journal = TestJournal.objects.create(
+                    user=request.user,
+                    test=test,
+                    status=TestJournal.COMPLETED,
+                    start_date=progress.start_date,
+                    end_date=progress.end_date,
+                    number_of_questions=len(exam_test.get_questions()),
+                    number_of_correct_answers=progress.current_result,
+                    result=result_of_test,
+                    report=progress.result_list,
+                    test_object=test.test
+                )
+            else:
+                if len(journal) > 1:
+                    for item in journal[1:]:
+                        item.delete()
+                journal = journal[0]
+                journal.status=TestJournal.COMPLETED
+                journal.start_date=progress.start_date
+                journal.end_date=progress.end_date
+                journal.number_of_questions=len(exam_test.get_questions())
+                journal.number_of_correct_answers=progress.current_result
+                journal.result=result_of_test
+                journal.report=progress.result_list
+                journal.test_object=test.test
+                journal.save()
 
             return HttpResponseRedirect(reverse("end_test", args=[journal.id]))
         else:
@@ -1681,7 +1707,6 @@ def end_test(request, id):
         request,
         "test/end_test.html",
         {
-            "journal": journal,
-            "time_for_test": journal.date_from - journal.date_to
+            "journal": journal
         }
     )
