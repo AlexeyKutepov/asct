@@ -78,7 +78,9 @@
                         <td>{{ item.date_from|date:"d.m.Y" }}</td>
                         <td>{{ item.date_to|date:"d.m.Y" }}</td>
                         <td>
-
+                        {% if item.status == 'COMPLETED' %}
+                            {{ item.result }}
+                        {% endif %}
                         </td>
                         <td>
                         <form action="{% url "cancel_test" id=item.id %}" method="post">
