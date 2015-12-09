@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block style %}
+    <link href="/static/css/bootstrap-select.min.css" rel="stylesheet">
+{% endblock %}
+{% block dashboard %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header">Тест "{{ test.name }}", вопрос №{{ number_of_question }}</h3>
+        </div>
+    </div>
+    {% if user.is_authenticated %}
+    <form action="{% url "next_question" id=test.id number=number_of_question %}" method="post">
+    {% else %}
+    <form action="{% url "next_question_unregistered_user" id=test.id progress_id=progress_id number=number_of_question %}" method="post">
+    {% endif %}
+    {% csrf_token %}
+        <div class="row">
+            {% if image %}
+                <div class="col-lg-6">
+            {% else %}
+                <div class="col-lg-12">
+            {% endif %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <pre><span style="font-size: 14px; font-family: sans-serif;"><b>{{ question }}</b></span></pre>
+                </div>
+                <div class="panel-body">
+                    {% if type == 1 %}
+                        <h6><b>Варианты ответа:</b></h6>
+                        {% for variant in variant_list %}
+                            <input id="isTrueAnswer{{ forloop.counter }}" name="answer" value="{{ forloop.counter }}"
+                                   type="checkbox">{{ variant }}<br>
+                        {% endfor %}
+                    {% endif %}
+                    {% if type == 2 %}
+                        <p>Варианты ответа:</p>
+                        {% for variant in variant_list %}
+                            <input id="isTrueAnswer{{ forloop.counter }}" name="answer" value="{{ forloop.counter }}"
+                                   type="radio">{{ variant }}<br>
+                        {% endfor %}
+                    {% endif %}
+                    {% if type == 3 %}
+                        <div class="form-group">
+                            <label class="control-label" for="inputOpenAnswer">Введите правильный ответ:</label>
+                            <input id="inputOpenAnswer" name="answer" type="text" class="form-control">
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            </div>
+            {% if image %}
+                <div class="col-lg-6">
+                    <label for="divImage">Изображение:</label>
+
+                    <div id="divImage" class="form-group">
+                        <img id="impPreview" class="img-thumbnail"
+                             src="{{ image }}"
+                             alt="Изображение" width="auto" height="auto">
+                    </div>
+                </div>
+            {% endif %}
+            </div>
+        <div class="row">
+            <div class="col-lg-12 centered">
+                <button id="btnNext" name="next" type="submit" class="btn btn-success">Ответить</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+{% block scripts %}
+    <script src="/static/js/bootstrap-select.js"></script>
+    <script src="/static/js/create_question.js"></script>
+{% endblock %}

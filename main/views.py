@@ -1,4 +1,4 @@
-from datetime import timezone
+from django.utils import timezone
 from mimetypes import MimeTypes
 import pickle
 from wsgiref.util import FileWrapper
@@ -9,11 +9,10 @@ from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
-from django.utils import formats
 from asct import settings
-from main.asct_test.asct_test import AsctTest, TestType, Question, CloseAnswer, Answer
+from main.asct_test.asct_test import AsctTest, TestType, Question, CloseAnswer, Answer, AsctResult
 from main.models import UserProfile, Company, Department, Journal, Theme, SubTheme, ScheduledTheme, ScheduledSubTheme, \
-    File, Position, ThemeExam, Test, TestImage, TestJournal
+    File, Position, ThemeExam, Test, TestImage, TestJournal, Progress
 
 
 @login_required
@@ -1500,6 +1499,7 @@ def schedule_test(request, id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+@login_required
 def cancel_test(request, id):
     if request.user.user_type == UserProfile.PROBATIONER:
         result = {
@@ -1512,3 +1512,153 @@ def cancel_test(request, id):
     except:
         pass
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
+def start_test(request, id):
+    """
+    Starts selected test
+    :param request:
+    :param id:
+    :return:
+    """
+    try:
+        test = Test.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    if request.user.is_authenticated():
+        progress = Progress.objects.filter(user=request.user, test=test)
+        if not progress:
+            Progress.objects.get_or_create(
+                user=request.user,
+                start_date=timezone.now(),
+                end_date=None,
+                test=test,
+                result_list=None,
+                current_result=0
+            )
+        else:
+            progress = progress[0]
+            progress.start_date = timezone.now()
+            progress.end_date = None
+            progress.result_list = None
+            progress.current_result = 0
+            progress.save()
+    return HttpResponseRedirect(reverse("next_question", args=[id, 1]))
+
+
+@login_required
+def next_question(request, id, number):
+    """
+    Shows next question
+    :param request:
+    :param id: - id of test
+    :param number: number of question
+    :return:
+    """
+    id = int(id)
+    number = int(number)
+    test = Test.objects.get(id=id)
+    progress = Progress.objects.filter(user=request.user, test=test)[0]
+    result_list = []
+    exam_test = pickle.loads(test.test)
+
+    if not progress.result_list:
+        if number > 1:
+            return HttpResponseRedirect(reverse("next_question", args=[test.id, 1]))
+    else:
+        result_list = pickle.loads(progress.result_list)
+        if len(result_list) > number - 1:
+            return HttpResponseRedirect(reverse("next_question", args=[test.id, len(result_list) + 1]))
+        elif len(result_list) + 1 < number:
+            return HttpResponseRedirect(reverse("next_question", args=[test.id, len(result_list) + 1]))
+        elif number > len(exam_test.get_questions()):
+            return HttpResponseRedirect(reverse("get_test_list", args=[1]))
+
+
+    question = exam_test.get_questions()[number - 1]
+
+    if "answer" in request.POST:
+        is_correct = True
+        request_answer = None
+        if question.get_test_type() is TestType.OPEN_TYPE:
+            if question.get_answers().get_answer() != request.POST["answer"]:
+                is_correct = False
+                request_answer = request.POST["answer"]
+        elif question.get_test_type() is TestType.CLOSE_TYPE_SEVERAL_CORRECT_ANSWERS:
+            correct_answer_list = []
+            for item in range(len(question.get_answers())):
+                if question.get_answers()[item].is_correct():
+                    correct_answer_list.append(str(item + 1))
+            is_correct = correct_answer_list == request.POST.getlist("answer")
+            request_answer = request.POST.getlist("answer")
+        elif question.get_test_type() is TestType.CLOSE_TYPE_ONE_CORRECT_ANSWER:
+            correct_answer = 1
+            for item in range(len(question.get_answers())):
+                if question.get_answers()[item].is_correct():
+                    correct_answer = item + 1
+                    break
+            is_correct = str(correct_answer) == request.POST["answer"]
+            request_answer = request.POST["answer"]
+
+        if is_correct:
+            progress.current_result += 1
+        result_list.append(
+            AsctResult(
+                is_correct=is_correct,
+                answer=request_answer
+            )
+        )
+        progress.result_list = pickle.dumps(result_list)
+        progress.save()
+
+        if number == len(exam_test.get_questions()):
+            progress.end_date = timezone.now()
+            progress.save()
+
+            result_of_test = int(100/len(exam_test.get_questions()) * progress.current_result)
+            journal = Journal.objects.create(
+                user=request.user,
+                test=test,
+                start_date=progress.start_date,
+                end_date=progress.end_date,
+                number_of_questions=len(exam_test.get_questions()),
+                number_of_correct_answers=progress.current_result,
+                result=result_of_test,
+                report=progress.result_list,
+                test_object=test.test
+            )
+            test.save()
+
+            return HttpResponseRedirect(reverse("end_test", args=[journal.id]))
+        else:
+            number += 1
+            return HttpResponseRedirect(reverse("next_question", args=[test.id, number]))
+
+    progress = 100/len(exam_test.get_questions()) * (number - 1)
+    answers = question.get_answers()
+    if question.get_image():
+        image_test = TestImage.objects.get(id=question.get_image())
+        image = image_test.image.url
+    else:
+        image = None
+    if question.get_test_type() != TestType.OPEN_TYPE:
+        variant_list = []
+        for answer in answers:
+            variant_list.append(answer.get_answer())
+    else:
+        variant_list = None
+
+    return render(
+        request,
+        "test/next_question.html",
+        {
+            "test": test,
+            "progress": progress,
+            "number_of_question": number,
+            "question": question.get_question(),
+            "type": question.get_test_type().value,
+            "variant_list": variant_list,
+            "image": image
+        }
+    )
