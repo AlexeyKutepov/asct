@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+{% block dashboard %}
+{% load poll_extras %}
+<div class="row">
+    <div class="col-lg-12">
+        <p></p>
+    {% if journal.result >= 70 %}
+        <div id="divResult" class="panel panel-success">
+    {% elif journal.result >= 40 %}
+        <div id="divResult" class="panel panel-warning">
+    {% else %}
+        <div id="divResult" class="panel panel-danger">
+    {% endif %}
+            <div class="panel-heading">
+                <h3 class="panel-title">Результаты тестирования</h3>
+            </div>
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <th>ФИО пользователя</th>
+                        {% if journal.user %}
+                        <td>{{ journal.user.get_full_name }}</td>
+                        {% else %}
+                        <td>{{ journal.unregistered_user.get_full_name }}</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <th>Дата рождения</th>
+                         {% if journal.user and journal.user.date_of_birth %}
+                        <td>{{ journal.user.date_of_birth|date:"d.m.Y" }}</td>
+                        {% else %}
+                        <td>-</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <th>Страна</th>
+                        {% if journal.user and journal.user.country %}
+                        <td>{{ journal.user.country }}</td>
+                        {% else %}
+                        <td>-</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <th>Город</th>
+                        {% if journal.user and journal.user.city %}
+                        <td>{{ journal.user.city }}</td>
+                        {% else %}
+                        <td>-</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <th>Организация</th>
+                        {% if journal.user and journal.user.institution %}
+                        <td>{{ journal.user.institution }}</td>
+                        {% else %}
+                        <td>-</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <th>Должность</th>
+                        {% if journal.user and journal.user.position %}
+                        <td>{{ journal.user.position }}</td>
+                        {% else %}
+                        <td>-</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <th>Дата и время начала тестирования</th>
+                        <td>{{ journal.start_date|date:"d.m.Y H:i:s" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Дата и время завершения тестирования</th>
+                        <td>{{ journal.end_date|date:"d.m.Y H:i:s" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Количество вопросов в тесте</th>
+                        <td>{{ journal.number_of_questions }}</td>
+                    </tr>
+                    <tr>
+                        <th>Количество правильных ответов</th>
+                        <td>{{ journal.number_of_correct_answers }}</td>
+                    </tr>
+                    <tr>
+                        <th>Оценка</th>
+                        <td>{{ journal.result }}%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        {% if journal.result >= 70 %}
+            <div id="divResult" class="panel panel-success">
+        {% elif journal.result >= 40 %}
+            <div id="divResult" class="panel panel-warning">
+        {% else %}
+            <div id="divResult" class="panel panel-danger">
+        {% endif %}
+            <div class="panel-heading">
+                    <h3 class="panel-title">{{ journal.test.name }}</h3>
+                </div>
+                {% for question in exam_test.get_questions %}
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            {% if report|is_correct_by_index:forloop.counter0 %}
+                            <th class="success">Вопрос №{{ forloop.counter }}</th>
+                            {% else %}
+                            <th class="danger">Вопрос №{{ forloop.counter }}</th>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <td><pre>{{ question.get_question }}</pre></td>
+                        </tr>
+                     </tbody>
+                </table>
+                {% if question.get_test_type.value == 1 or question.get_test_type.value == 2 %}
+                <table class="table">
+                    <tbody>
+                            <tr>
+                                <th>Варианты ответа:</th>
+                                <th>Правильные:</th>
+                                <th>Выбранные:</th>
+                            </tr>
+                        {% for answer in  question.get_answers%}
+
+                            <tr>
+                                <td>{{ answer.get_answer }}</td>
+
+                                {% if answer.is_correct %}
+                                <td><i class="fa fa-check"></i></td>
+                                {% else %}
+                                <td></td>
+                                {% endif %}
+
+                                {% if forloop.counter in report|get_answers_by_index:forloop.parentloop.counter0 %}
+                                <td><i class="fa fa-check"></i></td>
+                                {% else %}
+                                <td></td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        <tr><td></td><td></td><td></td></tr>
+                    </tbody>
+                </table>
+                {% else %}
+                <table class="table">
+                    <tbody>
+                            <tr>
+                                <th>Правильный ответ:</th>
+                                <th>Фактический ответ:</th>
+                            </tr>
+                            <tr>
+                                <td>{{ question.get_answers.get_answer }}</td>
+                                <td>{{ report|get_answer_by_index:forloop.counter0 }}</td>
+                            </tr>
+                        <tr><td></td><td></td></tr>
+                    </tbody>
+                </table>
+                {% endif %}
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <form action="{% url "cancel_test" id=journal.id %}" method="post">
+            {% csrf_token %}
+            <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Удаление записи в журнале</h4>
+                        </div>
+                        <div class="modal-body">
+                            Вы действительно хотите удалить данный результат тестирования?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Нет</button>
+                            <button type="submit" name="delete" value="{{ journal.id }}" class="btn btn-default">Да</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 centered">
+            <button id="btnDel" type="button" data-toggle="modal" data-target="#modalDelete" class="btn btn-danger"
+                    title="Удалить запись в журнале">Удалить
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

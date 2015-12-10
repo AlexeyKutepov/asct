@@ -1682,3 +1682,34 @@ def end_test(request, id):
             "journal": journal
         }
     )
+
+@login_required
+def report(request, id):
+    """
+    Prepares the report of the test result
+    :param request:
+    :param id: id of Journal field
+    :return:
+    """
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
+    id = int(id)
+    journal = TestJournal.objects.get(id=id)
+    if not journal:
+        raise SuspiciousOperation("Некорректный запрос")
+    else:
+        report = pickle.loads(journal.report)
+        asct_test = pickle.loads(journal.test_object)
+        return render(
+            request,
+            "test/report.html",
+            {
+                "journal": journal,
+                "report": report,
+                "exam_test": asct_test
+            }
+        )
