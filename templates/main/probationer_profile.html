@@ -109,7 +109,17 @@
                     </thead>
                     <tbody>
                         {% for test in test_list %}
-                        <tr>
+                        {% if test.status == 'ASSIGNED' %}
+                            <tr>
+                         {% elif test.status == 'COMPLETED' %}
+                            {% if test.result >= 70 %}
+                            <tr class="success">
+                            {% elif test.result >= 40 %}
+                            <tr class="warning">
+                            {% else %}
+                            <tr class="danger">
+                            {% endif %}
+                        {% endif %}
                             <td>{{ test.test.name }}</td>
                             <td>{{ test.test.description }}</td>
 

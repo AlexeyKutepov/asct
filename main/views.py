@@ -1586,6 +1586,8 @@ def next_question(request, id, number):
             if question.get_answers().get_answer() != request.POST["answer"]:
                 is_correct = False
                 request_answer = request.POST["answer"]
+            else:
+                request_answer = request.POST["answer"]
         elif question.get_test_type() is TestType.CLOSE_TYPE_SEVERAL_CORRECT_ANSWERS:
             correct_answer_list = []
             for item in range(len(question.get_answers())):
