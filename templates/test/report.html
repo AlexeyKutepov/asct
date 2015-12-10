@@ -3,6 +3,11 @@
 {% load poll_extras %}
 <div class="row">
     <div class="col-lg-12">
+        <h3 class="page-header">Результаты выполнения теста "{{ journal.test.name }}"</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
         <p></p>
     {% if journal.result >= 70 %}
         <div id="divResult" class="panel panel-success">
@@ -18,11 +23,7 @@
                 <tbody>
                     <tr>
                         <th>ФИО пользователя</th>
-                        {% if journal.user %}
-                        <td>{{ journal.user.get_full_name }}</td>
-                        {% else %}
-                        <td>{{ journal.unregistered_user.get_full_name }}</td>
-                        {% endif %}
+                        <td><a href="{% url "user_info" id=journal.user.id %}">{{ journal.user.get_full_name }}</a></td>
                     </tr>
                     <tr>
                         <th>Дата рождения</th>
@@ -33,25 +34,17 @@
                         {% endif %}
                     </tr>
                     <tr>
-                        <th>Страна</th>
-                        {% if journal.user and journal.user.country %}
-                        <td>{{ journal.user.country }}</td>
+                        <th>Компания</th>
+                        {% if journal.user and journal.user.company %}
+                        <td>{{ journal.user.company }}</td>
                         {% else %}
                         <td>-</td>
                         {% endif %}
                     </tr>
                     <tr>
-                        <th>Город</th>
-                        {% if journal.user and journal.user.city %}
-                        <td>{{ journal.user.city }}</td>
-                        {% else %}
-                        <td>-</td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        <th>Организация</th>
-                        {% if journal.user and journal.user.institution %}
-                        <td>{{ journal.user.institution }}</td>
+                        <th>Подразделение</th>
+                        {% if journal.user and journal.user.department %}
+                        <td>{{ journal.user.department }}</td>
                         {% else %}
                         <td>-</td>
                         {% endif %}
@@ -91,110 +84,66 @@
 </div>
 <div class="row">
     <div class="col-lg-12">
-        {% if journal.result >= 70 %}
-            <div id="divResult" class="panel panel-success">
-        {% elif journal.result >= 40 %}
-            <div id="divResult" class="panel panel-warning">
+        {% for question in exam_test.get_questions %}
+        <table class="table">
+            <tbody>
+                <tr>
+                    {% if report|is_correct_by_index:forloop.counter0 %}
+                    <th class="success">Вопрос №{{ forloop.counter }}</th>
+                    {% else %}
+                    <th class="danger">Вопрос №{{ forloop.counter }}</th>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td><pre>{{ question.get_question }}</pre></td>
+                </tr>
+             </tbody>
+        </table>
+        {% if question.get_test_type.value == 1 or question.get_test_type.value == 2 %}
+        <table class="table">
+            <tbody>
+                    <tr>
+                        <th>Варианты ответа:</th>
+                        <th>Правильные:</th>
+                        <th>Выбранные:</th>
+                    </tr>
+                {% for answer in  question.get_answers%}
+
+                    <tr>
+                        <td>{{ answer.get_answer }}</td>
+
+                        {% if answer.is_correct %}
+                        <td><i class="fa fa-check"></i></td>
+                        {% else %}
+                        <td></td>
+                        {% endif %}
+
+                        {% if forloop.counter in report|get_answers_by_index:forloop.parentloop.counter0 %}
+                        <td><i class="fa fa-check"></i></td>
+                        {% else %}
+                        <td></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                <tr><td></td><td></td><td></td></tr>
+            </tbody>
+        </table>
         {% else %}
-            <div id="divResult" class="panel panel-danger">
+        <table class="table">
+            <tbody>
+                    <tr>
+                        <th>Правильный ответ:</th>
+                        <th>Фактический ответ:</th>
+                    </tr>
+                    <tr>
+                        <td>{{ question.get_answers.get_answer }}</td>
+                        <td>{{ report|get_answer_by_index:forloop.counter0 }}</td>
+                    </tr>
+                <tr><td></td><td></td></tr>
+            </tbody>
+        </table>
         {% endif %}
-            <div class="panel-heading">
-                    <h3 class="panel-title">{{ journal.test.name }}</h3>
-                </div>
-                {% for question in exam_test.get_questions %}
-                <table class="table">
-                    <tbody>
-                        <tr>
-                            {% if report|is_correct_by_index:forloop.counter0 %}
-                            <th class="success">Вопрос №{{ forloop.counter }}</th>
-                            {% else %}
-                            <th class="danger">Вопрос №{{ forloop.counter }}</th>
-                            {% endif %}
-                        </tr>
-                        <tr>
-                            <td><pre>{{ question.get_question }}</pre></td>
-                        </tr>
-                     </tbody>
-                </table>
-                {% if question.get_test_type.value == 1 or question.get_test_type.value == 2 %}
-                <table class="table">
-                    <tbody>
-                            <tr>
-                                <th>Варианты ответа:</th>
-                                <th>Правильные:</th>
-                                <th>Выбранные:</th>
-                            </tr>
-                        {% for answer in  question.get_answers%}
-
-                            <tr>
-                                <td>{{ answer.get_answer }}</td>
-
-                                {% if answer.is_correct %}
-                                <td><i class="fa fa-check"></i></td>
-                                {% else %}
-                                <td></td>
-                                {% endif %}
-
-                                {% if forloop.counter in report|get_answers_by_index:forloop.parentloop.counter0 %}
-                                <td><i class="fa fa-check"></i></td>
-                                {% else %}
-                                <td></td>
-                                {% endif %}
-                            </tr>
-                        {% endfor %}
-                        <tr><td></td><td></td><td></td></tr>
-                    </tbody>
-                </table>
-                {% else %}
-                <table class="table">
-                    <tbody>
-                            <tr>
-                                <th>Правильный ответ:</th>
-                                <th>Фактический ответ:</th>
-                            </tr>
-                            <tr>
-                                <td>{{ question.get_answers.get_answer }}</td>
-                                <td>{{ report|get_answer_by_index:forloop.counter0 }}</td>
-                            </tr>
-                        <tr><td></td><td></td></tr>
-                    </tbody>
-                </table>
-                {% endif %}
-            {% endfor %}
-            </div>
-        </div>
+    {% endfor %}
     </div>
 </div>
-<div class="row">
-    <div class="col-lg-12">
-        <form action="{% url "cancel_test" id=journal.id %}" method="post">
-            {% csrf_token %}
-            <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">Удаление записи в журнале</h4>
-                        </div>
-                        <div class="modal-body">
-                            Вы действительно хотите удалить данный результат тестирования?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Нет</button>
-                            <button type="submit" name="delete" value="{{ journal.id }}" class="btn btn-default">Да</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-12 centered">
-            <button id="btnDel" type="button" data-toggle="modal" data-target="#modalDelete" class="btn btn-danger"
-                    title="Удалить запись в журнале">Удалить
-                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-            </button>
-            </div>
-        </form>
-    </div>
-</div>
-
 {% endblock %}

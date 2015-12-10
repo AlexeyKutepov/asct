@@ -1698,7 +1698,10 @@ def report(request, id):
             }
         return render(request, "alert.html", result)
     id = int(id)
-    journal = TestJournal.objects.get(id=id)
+    try:
+        journal = TestJournal.objects.get(id=id)
+    except:
+        raise SuspiciousOperation("Некорректный запрос")
     if not journal:
         raise SuspiciousOperation("Некорректный запрос")
     else:

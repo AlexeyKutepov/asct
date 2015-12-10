@@ -69,7 +69,7 @@
                     {% elif item.status == 'COMPLETED' %}
                         <tr class="success">
                     {% endif %}
-                        <td><a href="/user/info/{{ item.user.id }}/">{{ item.user.get_full_name }}</a></td>
+                        <td><a href="{% url "user_info" id=item.user.id %}">{{ item.user.get_full_name }}</a></td>
                         {% if item.status == 'ASSIGNED' %}
                         <td>Назначен</td>
                         {% elif item.status == 'COMPLETED' %}
