@@ -130,7 +130,7 @@
                             </td>
                             <td>
                                 {% if test.status != 'COMPLETED' %}
-                                <a href="{% url "start_test" id=test.test.id %}">
+                                <a href="{% url "start_test" id=test.id %}">
                                     <button id="btnStartTest{{ forloop.counter }}" type="button" class="btn btn-success"
                                             title="Начать прохождение теста">
                                         <span class="glyphicon gglyphicon glyphicon-play" aria-hidden="true"></span>

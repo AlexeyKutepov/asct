@@ -5,14 +5,10 @@
 {% block dashboard %}
     <div class="row">
         <div class="col-lg-12">
-            <h3 class="page-header">Тест "{{ test.name }}", вопрос №{{ number_of_question }}</h3>
+            <h3 class="page-header">Тест "{{ journal.test.name }}", вопрос №{{ number_of_question }}</h3>
         </div>
     </div>
-    {% if user.is_authenticated %}
-    <form action="{% url "next_question" id=test.id number=number_of_question %}" method="post">
-    {% else %}
-    <form action="{% url "next_question_unregistered_user" id=test.id progress_id=progress_id number=number_of_question %}" method="post">
-    {% endif %}
+    <form action="{% url "next_question" id=journal.id number=number_of_question %}" method="post">
     {% csrf_token %}
         <div class="row">
             {% if image %}
