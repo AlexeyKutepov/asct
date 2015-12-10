@@ -60,7 +60,7 @@
                     <th>Назначен</th>
                     <th>Срок</th>
                     <th>Результат</th>
-                    <th>Действия</th>
+                    <th width="100px">Действия</th>
                 </thead>
                 <tbody>
                 {% for item in journal_list %}
@@ -105,8 +105,18 @@
                                 </div>
                             </div>
                         </form>
+
+                        {% if item.status == 'COMPLETED' %}
+                        <a href="{% url "end_test" id=item.id %}">
+                            <button id="btnEndTest{{ forloop.counter }}" type="button" class="btn btn-primary"
+                                    title="Результаты теста">
+                                <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                            </button>
+                        </a>
+                        {% endif %}
+
                         <button id="btnDel{{ forloop.counter }}" type="button" data-toggle="modal"
-                                data-target="#modalCancel{{ forloop.counter }}" class="btn btn-danger"
+                                data-target="#modalCancel{{ forloop.counter }}" class="btn btn-danger pull-right"
                                 title="Отменить тест">
                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                         </button>
