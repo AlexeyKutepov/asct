@@ -3,26 +3,49 @@ $(document).ready(function () {
         var tab = window.localStorage.getItem("tab");
         if (tab == "exam") {
             $("#liStudy").removeClass( "active" );
+            $("#liTest").removeClass( "active" );
             $("#liExam").addClass( "active" );
             $("#divStudy").hide();
+            $("#divTest").hide();
             $("#divExam").show();
+        } else if (tab == "test") {
+            $("#liStudy").removeClass( "active" );
+            $("#liTest").addClass( "active" );
+            $("#liExam").removeClass( "active" );
+            $("#divStudy").hide();
+            $("#divTest").show();
+            $("#divExam").hide();
         }
     }
 
     $("#aStudy").click(function() {
         $("#liStudy").addClass( "active" );
         $("#liExam").removeClass( "active" );
+        $("#liTest").removeClass( "active" );
         $("#divStudy").show();
         $("#divExam").hide();
+        $("#divTest").hide();
         window.localStorage.setItem("tab", "study")
     });
 
     $("#aExam").click(function() {
         $("#liStudy").removeClass( "active" );
+        $("#liTest").removeClass( "active" );
         $("#liExam").addClass( "active" );
         $("#divStudy").hide();
+        $("#divTest").hide();
         $("#divExam").show();
         window.localStorage.setItem("tab", "exam")
+    });
+
+    $("#aTest").click(function() {
+        $("#liStudy").removeClass( "active" );
+        $("#liTest").addClass( "active" );
+        $("#liExam").removeClass( "active" );
+        $("#divStudy").hide();
+        $("#divTest").show();
+        $("#divExam").hide();
+        window.localStorage.setItem("tab", "test")
     });
 
     $.ajax({

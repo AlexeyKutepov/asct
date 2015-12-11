@@ -777,13 +777,15 @@ def user_info(request, id):
         return render(request, "alert.html", result)
     scheduled_theme_list = ScheduledTheme.objects.filter(user=user_data)
     exam_list = ThemeExam.objects.filter(user=user_data)
+    test_list = TestJournal.objects.filter(user=user_data)
     return render(
         request,
         "main/user_info.html",
         {
             "user_data": user_data,
             "scheduled_theme_list": scheduled_theme_list,
-            "exam_list":exam_list
+            "exam_list": exam_list,
+            "test_list": test_list
         }
     )
 
