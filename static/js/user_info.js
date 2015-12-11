@@ -68,6 +68,12 @@ $(document).ready(function () {
                 .end()
                 .selectpicker('refresh')
             ;
+            $('#selectJournalTest')
+                .find('option')
+                .remove()
+                .end()
+                .selectpicker('refresh')
+            ;
             var journalList = data["journal_list"];
             for (var i = 0; i < journalList.length; i++) {
                 var companyName = "";
@@ -82,9 +88,14 @@ $(document).ready(function () {
                     value: journalList[i]["id"],
                     text: journalList[i]["name"] + companyName
                 })).selectpicker('refresh');
+                $('#selectJournalTest').append($("<option/>", {
+                    value: journalList[i]["id"],
+                    text: journalList[i]["name"] + companyName
+                })).selectpicker('refresh');
             }
             $("#selectJournal").trigger( "change" );
             $("#selectExamJournal").trigger( "change" );
+            $("#selectJournalTest").trigger( "change" );
         },
         error: function(xhr, textStatus, errorThrown) {
             console.log("Error: "+errorThrown+xhr.status+xhr.responseText);
@@ -149,6 +160,38 @@ $(document).ready(function () {
                     $("#formScheduleTheme").attr('action', '/schedule/theme/to/user/');
                 }
                 $("#selectExamTheme").trigger( "change" );
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Error: " + errorThrown + xhr.status + xhr.responseText);
+            }
+        });
+    });
+
+     $("#selectJournalTest").change(function() {
+        $.ajax({
+            type: "POST",
+            url: "/get/test/list/by/journal/",
+            data: {
+                csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+                id: $(this).val()
+            },
+            success: function (data) {
+                $('#selectTest')
+                    .find('option')
+                    .remove()
+                    .end()
+                    .selectpicker('refresh')
+                ;
+                var testList = data["test_list"];
+                for (var i = 0; i < testList.length; i++) {
+                    $('#selectTest').append($("<option/>", {
+                        value: testList[i]["id"],
+                        text: testList[i]["name"]
+                    })).selectpicker('refresh');
+                }
+                if (testList.length > 0) {
+                    $("#formScheduleTest").attr('action', '/schedule/test/to/user/');
+                }
             },
             error: function (xhr, textStatus, errorThrown) {
                 console.log("Error: " + errorThrown + xhr.status + xhr.responseText);

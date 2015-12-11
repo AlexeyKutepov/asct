@@ -837,6 +837,24 @@ def get_theme_list_by_journal(request):
 
 
 @login_required
+def get_test_list_by_journal(request):
+    if "id" in request.POST:
+        journal = Journal.objects.get(id=request.POST["id"])
+        test_list = Test.objects.filter(journal=journal)
+        result = {}
+        list = []
+        for item in test_list:
+            list.append({
+                "id": item.id,
+                "name": item.name,
+            })
+        result["test_list"] = list
+        return JsonResponse(result)
+    else:
+        return JsonResponse({"test_list": []})
+
+
+@login_required
 def delete_journal(request, id):
     if request.user.user_type == UserProfile.PROBATIONER:
         result = {
@@ -1720,3 +1738,38 @@ def report(request, id):
                 "exam_test": asct_test
             }
         )
+
+
+@login_required
+def schedule_test_to_user(request):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
+    if "save" in request.POST:
+        try:
+            test = Test.objects.get(id=request.POST["test"])
+            user = UserProfile.objects.get(id=request.POST["user"])
+        except:
+            return HttpResponseRedirect(reverse("index"))
+        scheduled_test = TestJournal.objects.create(
+            date_to=request.POST["dateTo"],
+            user=user,
+            test=test
+        )
+
+        try:
+            send_mail(
+                'Вам назначен тест в ASCT',
+                'Здравствуйте ' + user.first_name + '! \n \n Вам назначен тест: \"' + test.name + '\" \n\n Срок до ' + request.POST["dateTo"],
+                getattr(settings, "EMAIL_HOST_USER", None),
+                [user.email],
+                fail_silently=False
+            )
+        except:
+            pass
+        return HttpResponseRedirect(reverse("user_info", args=[user.id,]))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
