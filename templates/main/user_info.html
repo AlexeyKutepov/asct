@@ -411,14 +411,14 @@
 
                                     {% if test.status == 'COMPLETED' %}
                                     <a href="{% url "report" id=test.id %}">
-                                        <button id="btnEndTest{{ forloop.counter }}" type="button" class="btn btn-primary"
+                                        <button id="btnReport{{ forloop.counter }}" type="button" class="btn btn-primary"
                                                 title="Результаты теста">
                                             <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
                                         </button>
                                     </a>
                                     {% endif %}
 
-                                    <button id="btnDel{{ forloop.counter }}" type="button" data-toggle="modal"
+                                    <button id="btnCancelTest{{ forloop.counter }}" type="button" data-toggle="modal"
                                             data-target="#modalCancelTest{{ forloop.counter }}" class="btn btn-danger pull-right"
                                             title="Отменить тест">
                                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
