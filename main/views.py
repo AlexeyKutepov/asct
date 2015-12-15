@@ -380,6 +380,16 @@ def clone_journal(request, id):
                 owner=request.user,
                 parent_theme=cloned_theme
             )
+    test_list = Test.objects.filter(journal=journal)
+    for test in test_list:
+        cloned_test = Test.objects.create(
+            name=test.name,
+            description=test.description,
+            test=test.test,
+            journal=cloned_journal,
+            author=test.author,
+            date_and_time=timezone.now()
+        )
     result = {
         "status": "success",
         "message": "Журнал \"" + journal.name + "\" дублирован для компании \"" + company.name + "\""
