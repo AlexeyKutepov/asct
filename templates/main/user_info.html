@@ -421,6 +421,8 @@
                                     {% else %}
                                     <tr class="danger">
                                     {% endif %}
+                            {% elif test.status == 'OVERDUE' %}
+                                    <tr class="danger">
                             {% endif %}
                                 <td><a href="{% url "test_settings" id=test.test.id %}">{{ test.test.name }}</a></td>
                                 <td><a href="{% url "journal_settings" id=test.test.journal.id %}">{{ test.test.journal.name }}</a></td>
@@ -430,6 +432,8 @@
                                 <td>Назначен</td>
                                 {% elif test.status == 'COMPLETED' %}
                                 <td>Пройден</td>
+                                {% elif test.status == 'OVERDUE' %}
+                                <td>Просрочен</td>
                                 {% endif %}
                                 <td>{{ test.result|default:"" }}</td>
                                 <td>

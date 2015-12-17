@@ -115,14 +115,16 @@
                         {% for test in test_list %}
                         {% if test.status == 'ASSIGNED' %}
                             <tr>
-                         {% elif test.status == 'COMPLETED' %}
-                            {% if test.result >= 70 %}
-                            <tr class="success">
-                            {% elif test.result >= 40 %}
-                            <tr class="warning">
-                            {% else %}
-                            <tr class="danger">
-                            {% endif %}
+                        {% elif test.status == 'COMPLETED' %}
+                           {% if test.result >= 70 %}
+                           <tr class="success">
+                           {% elif test.result >= 40 %}
+                           <tr class="warning">
+                           {% else %}
+                           <tr class="danger">
+                           {% endif %}
+                        {% elif test.status == 'OVERDUE' %}
+                           <tr class="danger">
                         {% endif %}
                             <td>{{ test.test.name }}</td>
                             <td>{{ test.test.description }}</td>
@@ -133,6 +135,8 @@
                              <td>Прохождение</td>
                              {% elif test.status == 'COMPLETED' %}
                              <td>Пройден</td>
+                             {% elif test.status == 'OVERDUE' %}
+                             <td>Просрочен</td>
                              {% endif %}
 
                             <td>{{ test.date_from|date:"d.m.Y" }}</td>
@@ -143,13 +147,18 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% if test.status != 'COMPLETED' %}
+                                {% if test.status != 'COMPLETED' and test.status != 'OVERDUE' %}
                                 <a href="{% url "start_test" id=test.id %}">
                                     <button id="btnStartTest{{ forloop.counter }}" type="button" class="btn btn-success"
                                             title="Начать прохождение теста">
                                         <span class="glyphicon gglyphicon glyphicon-play" aria-hidden="true"></span>
                                     </button>
                                 </a>
+                                {% elif test.status == 'OVERDUE' %}
+                                    <button id="btnStartTest{{ forloop.counter }}" type="button" class="btn btn-success disabled"
+                                            title="Начать прохождение теста">
+                                        <span class="glyphicon gglyphicon glyphicon-play" aria-hidden="true"></span>
+                                    </button>
                                 {% else %}
                                 <a href="{% url "end_test" id=test.id %}">
                                     <button id="btnEndTest{{ forloop.counter }}" type="button" class="btn btn-primary"

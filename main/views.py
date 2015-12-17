@@ -61,8 +61,16 @@ def prepare_operator_page(request):
 
 def prepare_probationer_page(request):
     scheduled_theme_list = ScheduledTheme.objects.filter(user=request.user)
+    for scheduled_theme in scheduled_theme_list:
+        if scheduled_theme.date_to < timezone.now() and scheduled_theme.status != ScheduledTheme.COMPLETED and scheduled_theme.status != ScheduledTheme.OVERDUE:
+            scheduled_theme.status = ScheduledTheme.OVERDUE
+            scheduled_theme.save()
     exam_list = ThemeExam.objects.filter(user=request.user)
     test_list = TestJournal.objects.filter(user=request.user)
+    for test in test_list:
+        if test.date_to < timezone.now() and test.status != TestJournal.COMPLETED and test.status != TestJournal.OVERDUE:
+            test.status = TestJournal.OVERDUE
+            test.save()
     return render(
         request,
         "main/probationer_profile.html",
@@ -488,7 +496,7 @@ def theme_settings(request, id):
         user_list = UserProfile.objects.filter(company=request.user.company)
         scheduled_theme_list = ScheduledTheme.objects.filter(theme=theme, user__in=user_list)
     for scheduled_theme in scheduled_theme_list:
-        if scheduled_theme.date_to < timezone.now() and scheduled_theme.status != ScheduledTheme.COMPLETED:
+        if scheduled_theme.date_to < timezone.now() and scheduled_theme.status != ScheduledTheme.COMPLETED and scheduled_theme.status != ScheduledTheme.OVERDUE:
             scheduled_theme.status = ScheduledTheme.OVERDUE
             scheduled_theme.save()
     exam_list = ThemeExam.objects.filter(theme=theme)
@@ -791,11 +799,15 @@ def user_info(request, id):
         return render(request, "alert.html", result)
     scheduled_theme_list = ScheduledTheme.objects.filter(user=user_data)
     for scheduled_theme in scheduled_theme_list:
-        if scheduled_theme.date_to < timezone.now() and scheduled_theme.status != ScheduledTheme.COMPLETED:
+        if scheduled_theme.date_to < timezone.now() and scheduled_theme.status != ScheduledTheme.COMPLETED and scheduled_theme.status != ScheduledTheme.OVERDUE:
             scheduled_theme.status = ScheduledTheme.OVERDUE
             scheduled_theme.save()
     exam_list = ThemeExam.objects.filter(user=user_data)
     test_list = TestJournal.objects.filter(user=user_data)
+    for test in test_list:
+        if test.date_to < timezone.now() and test.status != TestJournal.COMPLETED and test.status != TestJournal.OVERDUE:
+            test.status = TestJournal.OVERDUE
+            test.save()
     return render(
         request,
         "main/user_info.html",
@@ -899,6 +911,9 @@ def probationer_theme_settings(request, id):
         scheduled_theme = ScheduledTheme.objects.get(id=id)
     except:
         return HttpResponseRedirect(reverse("index"))
+    if scheduled_theme.date_to < timezone.now() and scheduled_theme.status != ScheduledTheme.COMPLETED and scheduled_theme.status != ScheduledTheme.OVERDUE:
+        scheduled_theme.status = ScheduledTheme.OVERDUE
+        scheduled_theme.save()
     sub_theme_list = SubTheme.objects.filter(parent_theme=scheduled_theme.theme)
     scheduled_sub_theme_list = ScheduledSubTheme.objects.filter(sub_theme__in=sub_theme_list, user=request.user, scheduled_theme=scheduled_theme)
     file_dict = {}
@@ -1493,6 +1508,10 @@ def test_settings(request, id):
     except:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     journal_list = TestJournal.objects.filter(test=test)
+    for journal in journal_list:
+        if journal.date_to < timezone.now() and journal.status != TestJournal.COMPLETED and journal.status != TestJournal.OVERDUE:
+            journal.status = TestJournal.OVERDUE
+            journal.save()
     return render(
                 request,
                 "test/test_settings.html",

@@ -74,12 +74,16 @@
                             {% else %}
                             <tr class="danger">
                             {% endif %}
+                    {% elif item.status == 'OVERDUE' %}
+                            <tr class="danger">
                     {% endif %}
                         <td><a href="{% url "user_info" id=item.user.id %}">{{ item.user.get_full_name }}</a></td>
                         {% if item.status == 'ASSIGNED' %}
                         <td>Назначен</td>
                         {% elif item.status == 'COMPLETED' %}
                         <td>Пройден</td>
+                        {% elif item.status == 'OVERDUE' %}
+                        <td>Просрочен</td>
                         {% endif %}
                         <td>{{ item.date_from|date:"d.m.Y" }}</td>
                         <td>{{ item.date_to|date:"d.m.Y" }}</td>
