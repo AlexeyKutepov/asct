@@ -32,6 +32,14 @@
             </div>
         </div>
     </div>
+    {% elif scheduled_theme.status == 'OVERDUE' %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-danger" role="alert">
+                Тема просрочена
+            </div>
+        </div>
+    </div>
     {% endif %}
     <p></p>
     {% if scheduled_theme.theme.description %}

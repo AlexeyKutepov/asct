@@ -487,6 +487,10 @@ def theme_settings(request, id):
     else:
         user_list = UserProfile.objects.filter(company=request.user.company)
         scheduled_theme_list = ScheduledTheme.objects.filter(theme=theme, user__in=user_list)
+    for scheduled_theme in scheduled_theme_list:
+        if scheduled_theme.date_to < timezone.now() and scheduled_theme.status != ScheduledTheme.COMPLETED:
+            scheduled_theme.status = ScheduledTheme.OVERDUE
+            scheduled_theme.save()
     exam_list = ThemeExam.objects.filter(theme=theme)
     file_dict = {}
     for sub_theme in sub_theme_list:
@@ -786,6 +790,10 @@ def user_info(request, id):
             }
         return render(request, "alert.html", result)
     scheduled_theme_list = ScheduledTheme.objects.filter(user=user_data)
+    for scheduled_theme in scheduled_theme_list:
+        if scheduled_theme.date_to < timezone.now() and scheduled_theme.status != ScheduledTheme.COMPLETED:
+            scheduled_theme.status = ScheduledTheme.OVERDUE
+            scheduled_theme.save()
     exam_list = ThemeExam.objects.filter(user=user_data)
     test_list = TestJournal.objects.filter(user=user_data)
     return render(

@@ -169,6 +169,7 @@ class ScheduledTheme(models.Model):
     ASSIGNED = 'ASSIGNED'
     IN_WORK = 'IN_WORK'
     COMPLETED = 'COMPLETED'
+    OVERDUE = 'OVERDUE'
     STATUS = (
         (ASSIGNED, 'ASSIGNED'),
         (IN_WORK, 'IN_WORK'),
@@ -275,6 +276,7 @@ class TestJournal(models.Model):
     """
     ASSIGNED = 'ASSIGNED'
     COMPLETED = 'COMPLETED'
+    OVERDUE = 'OVERDUE'
     STATUS = (
         (ASSIGNED, 'ASSIGNED'),
         (COMPLETED, 'COMPLETED'),

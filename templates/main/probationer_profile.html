@@ -29,9 +29,11 @@
                         {% for item in scheduled_theme_list %}
                             {% if item.status == 'ASSIGNED' %}
                                 <tr>
-                                {% elif item.status == 'IN_WORK' %}
+                            {% elif item.status == 'IN_WORK' %}
                                 <tr class="info">
-                                {% elif item.status == 'COMPLETED' %}
+                            {% elif item.status == 'OVERDUE' %}
+                                <tr class="danger">
+                            {% elif item.status == 'COMPLETED' %}
                                 <tr class="success">
                             {% endif %}
                                 <td><a href="{% url "probationer_theme_settings" id=item.id %}">{{ item.theme.name }}</a></td>
@@ -41,6 +43,8 @@
                                 <td>Изучение</td>
                                 {% elif item.status == 'COMPLETED' %}
                                 <td>Изучена</td>
+                                {% elif item.status == 'OVERDUE' %}
+                                <td>Просрочена</td>
                                 {% endif %}
                                 <td>{{ item.date_from|date:"d.m.Y" }}</td>
                                 <td>{{ item.date_to|date:"d.m.Y" }}</td>
