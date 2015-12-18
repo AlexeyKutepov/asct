@@ -170,7 +170,9 @@
                 </div>
                 <div class="panel-body user-panel">
                     <table id="tableCompanyList" class="table table-hover">
+                    <thead>
                         <th id="thCompanyName" class="cursor-pointer"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span> Название</th>
+                    </thead>
                         {% for company in company_list %}
                         <tr>
                             <td><a href="{% url "edit_company" company.id %}">{{ company.name }}</a></td>
@@ -205,7 +207,9 @@
                 </div>
                 <div class="panel-body user-panel">
                     <table id="tablePositionList" class="table table-hover">
+                    <thead>
                         <th id="thPositionName" class="cursor-pointer"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span> Название</th>
+                    </thead>
                         {% for position in position_list %}
                         <tr>
                             <td>{{ position.name }}</td>

@@ -2,10 +2,10 @@ $(document).ready(function () {
 
     var probationerSearch = function() {
         $('#tableProbationerList > tbody > tr').each(function() {
-            if(($(this).find('a').html()).indexOf($("#inputProbationerSearch").val())) {
-                $(this).hide();
-            } else {
+            if(($(this).find('a').html().toUpperCase()).indexOf($("#inputProbationerSearch").val().toUpperCase()) > -1) {
                 $(this).show();
+            } else {
+                $(this).hide();
             }
         });
     };
@@ -15,10 +15,10 @@ $(document).ready(function () {
 
     var journalSearch = function() {
         $('#tableJournalList > tbody > tr').each(function() {
-            if(($(this).find('a').html()).indexOf($("#inputJournalSearch").val())) {
-                $(this).hide();
-            } else {
+            if(($(this).find('a').html().toUpperCase()).indexOf($("#inputJournalSearch").val().toUpperCase()) > -1) {
                 $(this).show();
+            } else {
+                $(this).hide();
             }
         });
     };

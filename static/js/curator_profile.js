@@ -2,10 +2,10 @@ $(document).ready(function () {
 
     var userSearch = function() {
         $('#tableUserList > tbody > tr').each(function() {
-            if(($(this).find('a').html()).indexOf($("#inputUserSearch").val())) {
-                $(this).hide();
-            } else {
+            if(($(this).find('a').html().toUpperCase()).indexOf($("#inputUserSearch").val().toUpperCase()) > -1) {
                 $(this).show();
+            } else {
+                $(this).hide();
             }
         });
     };
@@ -15,10 +15,10 @@ $(document).ready(function () {
 
     var journalSearch = function() {
         $('#tableJournalList > tbody > tr').each(function() {
-            if(($(this).find('a').html()).indexOf($("#inputJournalSearch").val())) {
-                $(this).hide();
-            } else {
+            if(($(this).find('a').html().toUpperCase()).indexOf($("#inputJournalSearch").val().toUpperCase()) > -1) {
                 $(this).show();
+            } else {
+                $(this).hide();
             }
         });
     };
@@ -28,10 +28,10 @@ $(document).ready(function () {
 
     var companySearch = function() {
         $('#tableCompanyList > tbody > tr').each(function() {
-            if(($(this).find('a').html()).indexOf($("#inputCompanySearch").val())) {
-                $(this).hide();
-            } else {
+            if(($(this).find('a').html().toUpperCase()).indexOf($("#inputCompanySearch").val().toUpperCase()) > -1) {
                 $(this).show();
+            } else {
+                $(this).hide();
             }
         });
     };
@@ -41,10 +41,10 @@ $(document).ready(function () {
 
     var positiontSearch = function() {
         $('#tablePositionList > tbody > tr').each(function() {
-            if(($(this).find("td:first").html()).indexOf($("#inputPositionSearch").val())) {
-                $(this).hide();
-            } else {
+            if(($(this).find("td:first").html().toUpperCase()).indexOf($("#inputPositionSearch").val().toUpperCase()) > -1) {
                 $(this).show();
+            } else {
+                $(this).hide();
             }
         });
     };
@@ -54,10 +54,10 @@ $(document).ready(function () {
 
     var departmentSearch = function() {
         $('#tableDepartmentList > tbody > tr').each(function() {
-            if(($(this).find('a').html()).indexOf($("#inputDepartmentSearch").val())) {
-                $(this).hide();
-            } else {
+            if(($(this).find('a').html().toUpperCase()).indexOf($("#inputDepartmentSearch").val().toUpperCase()) > -1) {
                 $(this).show();
+            } else {
+                $(this).hide();
             }
         });
     };
@@ -67,10 +67,10 @@ $(document).ready(function () {
 
     var profilesSearch = function() {
         $('#tableProfileList > tbody > tr').each(function() {
-            if(($(this).find('a').html()).indexOf($("#inputProfileSearch").val())) {
-                $(this).hide();
-            } else {
+            if(($(this).find('a').html().toUpperCase()).indexOf($("#inputProfileSearch").val().toUpperCase()) > -1) {
                 $(this).show();
+            } else {
+                $(this).hide();
             }
         });
     };

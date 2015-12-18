@@ -2,10 +2,10 @@ $(document).ready(function () {
 
     var userSearch = function() {
         $('#tableUserList > tbody > tr').each(function() {
-            if(($(this).find('a').html()).indexOf($("#inputUserSearch").val())) {
-                $(this).hide();
-            } else {
+            if(($(this).find('a').html().toUpperCase()).indexOf($("#inputUserSearch").val().toUpperCase()) > -1) {
                 $(this).show();
+            } else {
+                $(this).hide();
             }
         });
     };
@@ -15,10 +15,10 @@ $(document).ready(function () {
 
     var journalSearch = function() {
         $('#tableJournalList > tbody > tr').each(function() {
-            if(($(this).find('a').html()).indexOf($("#inputJournalSearch").val())) {
-                $(this).hide();
-            } else {
+            if(($(this).find('a').html().toUpperCase()).indexOf($("#inputJournalSearch").val().toUpperCase()) > -1) {
                 $(this).show();
+            } else {
+                $(this).hide();
             }
         });
     };
