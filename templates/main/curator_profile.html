@@ -57,8 +57,8 @@
                 <div class="panel-body user-panel">
                     <table id="tableJournalList" class="table table-hover">
                         <thead>
-                            <th id="thJournalName">Название журнала <span class="glyphicon glyphicon-sort pull-right" aria-hidden="true"></span></th>
-                            <th id="thJournalCompany">Компания <span class="glyphicon glyphicon-sort pull-right" aria-hidden="true"></span></th>
+                            <th id="thJournalName" class="cursor-pointer"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span> Название журнала</th>
+                            <th id="thJournalCompany" class="cursor-pointer"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span> Компания</th>
                         </thead>
                     </table>
                 </div>
@@ -113,10 +113,10 @@
                 <div class="panel-body user-panel">
                     <table id="tableUserList" class="table table-hover">
                         <thead>
-                            <th id="thUserName">ФИО <span class="glyphicon glyphicon-sort pull-right" aria-hidden="true"></span></th>
-                            <th id="thUserPosition">Должность <span class="glyphicon glyphicon-sort pull-right" aria-hidden="true"></span></th>
-                            <th id="thUserCompany">Компания <span class="glyphicon glyphicon-sort pull-right" aria-hidden="true"></span></th>
-                            <th id="thUserType">Права <span class="glyphicon glyphicon-sort pull-right" aria-hidden="true"></span></th>
+                            <th id="thUserName" class="cursor-pointer"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span> ФИО</th>
+                            <th id="thUserPosition" class="cursor-pointer"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span> Должность</th>
+                            <th id="thUserCompany" class="cursor-pointer"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span> Компания</th>
+                            <th id="thUserType" class="cursor-pointer"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span> Права</th>
                         </thead>
                         {% for item in user_list %}
                         <tr>
@@ -170,6 +170,7 @@
                 </div>
                 <div class="panel-body user-panel">
                     <table id="tableCompanyList" class="table table-hover">
+                        <th id="thCompanyName" class="cursor-pointer"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span> Название</th>
                         {% for company in company_list %}
                         <tr>
                             <td><a href="{% url "edit_company" company.id %}">{{ company.name }}</a></td>
@@ -204,6 +205,7 @@
                 </div>
                 <div class="panel-body user-panel">
                     <table id="tablePositionList" class="table table-hover">
+                        <th id="thPositionName" class="cursor-pointer"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span> Название</th>
                         {% for position in position_list %}
                         <tr>
                             <td>{{ position.name }}</td>

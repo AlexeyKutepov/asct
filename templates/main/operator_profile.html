@@ -27,8 +27,8 @@
                 <div class="panel-body user-panel">
                     <table id="tableJournalList" class="table table-hover">
                         <thead>
-                            <th id="thJournalName">Название журнала <span class="glyphicon glyphicon-sort pull-right" aria-hidden="true"></span></th>
-                            <th id="thJournalCompany">Компания <span class="glyphicon glyphicon-sort pull-right" aria-hidden="true"></span></th>
+                            <th id="thJournalName" class="cursor-pointer"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span> Название журнала</th>
+                            <th id="thJournalCompany" class="cursor-pointer"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span> Компания</th>
                         </thead>
                     </table>
                 </div>
@@ -69,9 +69,9 @@
                 <div class="panel-body user-panel">
                     <table id="tableProbationerList" class="table table-hover">
                         <thead>
-                            <th id="thUserName">ФИО <span class="glyphicon glyphicon-sort pull-right" aria-hidden="true"></span></th>
-                            <th id="thUserDepartment">Подразделение <span class="glyphicon glyphicon-sort pull-right" aria-hidden="true"></span></th>
-                            <th id="thUserPosition">Должность <span class="glyphicon glyphicon-sort pull-right" aria-hidden="true"></span></th>
+                            <th id="thUserName" class="cursor-pointer"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span> ФИО</th>
+                            <th id="thUserDepartment" class="cursor-pointer"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span> Подразделение</th>
+                            <th id="thUserPosition" class="cursor-pointer"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span> Должность</th>
                         </thead>
                         {% for probationer in probationer_list %}
                         <tr>
