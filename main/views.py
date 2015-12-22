@@ -39,11 +39,13 @@ def prepare_admin_page(request):
     user_list = UserProfile.objects.filter(
         Q(user_type=UserProfile.OPERATOR, company=request.user.company) | Q(user_type=UserProfile.PROBATIONER, company=request.user.company)
     )
+    position_list = Position.objects.all()
     return render(
         request,
         "main/admin_profile.html",
         {
             "user_list": user_list,
+            "position_list": position_list
         }
     )
 
@@ -1084,6 +1086,19 @@ def add_position(request):
     if "name" in request.POST:
         position = Position.objects.create(name=request.POST["name"])
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
+def edit_position(request, id):
+    try:
+        position = Position.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    if "name" in request.POST:
+        position.name = request.POST["name"]
+        position.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 
 @login_required

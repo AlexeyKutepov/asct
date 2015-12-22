@@ -213,7 +213,7 @@
                         {% for position in position_list %}
                         <tr>
                             <td>{{ position.name }}</td>
-                            <td>
+                            <td width="110px">
                                 <form id="formDeletePosition{{ forloop.counter }}" action="{% url "delete_position" id=position.id %}" method="post">
                                     {% csrf_token %}
                                     <!-- Modal dialog delete -->
@@ -236,9 +236,43 @@
                                         </div>
                                     </div>
                                 </form>
+                                <form id="formEditPosition{{ forloop.counter }}" action="{% url "edit_position" id=position.id %}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                    <div id="modalEditPosition{{ forloop.counter }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalEditPositionLabel">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                            aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title" id="modalEditPositionLabel">Редактирование должности</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group">
+                                                                <label>Название должности</label>
+                                                                <input type="text" class="form-control" name="name" placeholder="Название должности" value="{{ position.name }}" >
+                                                          </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                                                    <button type="submit" name="save" class="btn btn-primary">Сохранить</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <button id="btnEdit{{ forloop.counter }}" type="button" data-toggle="modal"
+                                        data-target="#modalEditPosition{{ forloop.counter }}" class="btn btn-primary"
+                                        title="Редактировать тему">
+                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                </button>
 
                                 <button id="buttonDeletePosition{{ forloop.counter }}" type="button" data-toggle="modal"
-                                        data-target="#modalDeletePosition{{ forloop.counter }}" class="btn btn-danger pull-right"
+                                        data-target="#modalDeletePosition{{ forloop.counter }}" class="btn btn-danger"
                                         title="Удалить должность">
                                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                                 </button>
