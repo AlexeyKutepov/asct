@@ -910,20 +910,12 @@ def probationer_theme_settings(request, id):
         scheduled_theme.save()
     sub_theme_list = SubTheme.objects.filter(parent_theme=scheduled_theme.theme)
     scheduled_sub_theme_list = ScheduledSubTheme.objects.filter(sub_theme__in=sub_theme_list, user=request.user, scheduled_theme=scheduled_theme)
-    file_dict = {}
-    for sub_theme in sub_theme_list:
-        try:
-            file = File.objects.filter(sub_theme=sub_theme)[0]
-        except:
-            continue
-        file_dict[sub_theme.id] = file.id
     return render(
         request,
         "main/probationer_theme_settings.html",
         {
             "scheduled_theme": scheduled_theme,
             "scheduled_sub_theme_list": scheduled_sub_theme_list,
-            "file_dict": file_dict
         }
     )
 

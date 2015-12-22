@@ -72,21 +72,10 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% load poll_extras %}
-                                {% if item.sub_theme.id in file_dict and scheduled_theme.status != 'ASSIGNED' and scheduled_theme.status != 'COMPLETED' and item.status != 'ASSIGNED' and item.status != 'COMPLETED' %}
-                                    <form id="formDownloadFile{{ forloop.counter }}" action="{% url "download_file" id=file_dict|get_item:item.sub_theme.id %}" method="post">
-                                    {% csrf_token %}
-                                    </form>
-                                    <button id="btnDownloadFile{{ forloop.counter }}" type="button" class="btn btn-primary"
-                                            title="Скачать учебные материалы" onclick="document.getElementById('formDownloadFile{{ forloop.counter }}').submit();">
-                                        <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
-                                    </button>
-                                {% else %}
-                                    <button id="btnDownloadFile{{ forloop.counter }}" type="button" class="btn btn-primary"
-                                            title="Скачать учебные материалы" disabled>
-                                        <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
-                                    </button>
-                                {% endif %}
+                                <a href="{% url "manage_files" id=item.sub_theme.id %}"><button type="button" class="btn btn-success"
+                                        title="Учебные материалы">
+                                    <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                                </button></a>
                             </td>
                             <td>
                                 {% if scheduled_theme.status == 'IN_WORK' %}
