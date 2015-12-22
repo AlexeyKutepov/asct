@@ -50,10 +50,10 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Удаление журнала</h4>
+                        <h4 class="modal-title" id="myModalLabel">Удаление программы</h4>
                     </div>
                     <div class="modal-body">
-                        Вы действительно хотите удалить журнал "{{ journal.name }}"?
+                        Вы действительно хотите удалить программу "{{ journal.name }}"?
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Нет</button>
@@ -71,14 +71,14 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Редактирование журнала</h4>
+                        <h4 class="modal-title" id="myModalLabel">Редактирование программы</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label>Название журнала</label>
-                                    <input type="text" class="form-control" name="name" placeholder="Название журнала" value="{{ journal.name }}" >
+                                    <label>Название программы</label>
+                                    <input type="text" class="form-control" name="name" placeholder="Название программы" value="{{ journal.name }}" >
                               </div>
                             </div>
                         </div>
@@ -125,14 +125,14 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Дублирование журнала</h4>
+                        <h4 class="modal-title" id="myModalLabel">Дублирование программы</h4>
                     </div>
                         <div class="modal-body">
                         {% if user.user_type == "CURATOR" %}
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label><b>Выберите компанию для копии журнала</b></label>
+                                    <label><b>Выберите компанию для копии программы</b></label>
                                     <p><select name="company" class="selectpicker">
                                         {% for company in company_list %}
                                             <option value="{{ company.id }}">{{ company.name }}</option>
@@ -200,11 +200,11 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="pull-right">
-                <input id="buttonEditJournal" type="button" class="btn btn-primary" value="Редактировать журнал" data-toggle="modal" data-target="#modalEditJournal"/>
+                <input id="buttonEditJournal" type="button" class="btn btn-primary" value="Редактировать программу" data-toggle="modal" data-target="#modalEditJournal"/>
                 {% if user.user_type == "CURATOR" %}
-                <input id="buttonCloneJournal" type="button" class="btn btn-primary" value="Дублировать журнал" data-toggle="modal" data-target="#modalCloneJournal"/>
+                <input id="buttonCloneJournal" type="button" class="btn btn-primary" value="Дублировать программу" data-toggle="modal" data-target="#modalCloneJournal"/>
                 {% endif %}
-                <input id="buttonDeleteJournal" type="button" class="btn btn-danger" value="Удалить журнал" data-toggle="modal" data-target="#modalDeleteJournal"/>
+                <input id="buttonDeleteJournal" type="button" class="btn btn-danger" value="Удалить программу" data-toggle="modal" data-target="#modalDeleteJournal"/>
             </div>
         </div>
     </div>

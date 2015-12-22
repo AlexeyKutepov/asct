@@ -5,7 +5,7 @@
 {% block dashboard %}
     <div class="row">
         <div class="col-lg-12">
-            <h3 class="page-header">Создание нового журнала</h3>
+            <h3 class="page-header">Создание новой программы</h3>
         </div>
     </div>
     <form id="formCreateJournal" action="{% url "create_journal" %}" method="post" enctype="multipart/form-data">
@@ -13,9 +13,9 @@
         <div class="row">
             <div class="col-lg-11">
                 <div class="form-group">
-                    <label for="inputFirstName">* Название журнала</label>
+                    <label for="inputFirstName">* Название программы</label>
                     <input type="text" class="form-control" id="inputName" name="name"
-                           placeholder="Название журнала" required>
+                           placeholder="Название программы" required>
                 </div>
             </div>
             {% if user.user_type == "CURATOR" %}

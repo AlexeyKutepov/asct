@@ -402,7 +402,7 @@ def clone_journal(request, id):
         )
     result = {
         "status": "success",
-        "message": "Журнал \"" + journal.name + "\" дублирован для компании \"" + company.name + "\""
+        "message": "Программа \"" + journal.name + "\" дублирована для компании \"" + company.name + "\""
     }
     return render(request, "alert.html", result)
 
@@ -902,7 +902,7 @@ def delete_journal(request, id):
     journal.delete()
     result = {
             "status": "success",
-            "message": "Журнал " + name + " успешно удалён!"
+            "message": "Программа " + name + " успешно удалёна!"
         }
     return render(request, "alert.html", result)
 
