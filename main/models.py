@@ -246,6 +246,9 @@ class File(models.Model):
     # Sub theme
     sub_theme = models.ForeignKey(SubTheme, blank=True, null=True)
 
+    def __str__(self):
+        return self.file.name[6:]
+
 
 class Test(models.Model):
     """

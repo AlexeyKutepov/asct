@@ -502,20 +502,12 @@ def theme_settings(request, id):
             scheduled_theme.status = ScheduledTheme.OVERDUE
             scheduled_theme.save()
     exam_list = ThemeExam.objects.filter(theme=theme)
-    file_dict = {}
-    for sub_theme in sub_theme_list:
-        try:
-            file = File.objects.filter(sub_theme=sub_theme)[0]
-        except:
-            continue
-        file_dict[sub_theme.id] = file.id
     return render(
         request,
         "main/theme_settings.html",
         {
             "theme": theme,
             "sub_theme_list": sub_theme_list,
-            "file_dict": file_dict,
             "scheduled_theme_list": scheduled_theme_list,
             "exam_list": exam_list
         }
@@ -997,18 +989,30 @@ def upload_file_to_sub_theme(request):
             sub_theme = SubTheme.objects.get(id=request.POST["subThemeId"])
         except:
             return HttpResponseRedirect(reverse("index"))
-        file = File.objects.filter(sub_theme=sub_theme)
-        if len(file) == 0:
-            if "file" in request.FILES:
-                uploaded_file = request.FILES["file"]
-                file = File.objects.create(
-                    file=uploaded_file,
-                    sub_theme=sub_theme
-                )
+        if "file" in request.FILES:
+            uploaded_file = request.FILES["file"]
+            file = File.objects.create(
+                file=uploaded_file,
+                sub_theme=sub_theme
+            )
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-        return HttpResponseRedirect(reverse("theme_settings", args=[sub_theme.parent_theme.id,]))
-    else:
-        return HttpResponseRedirect(reverse("index"))
+
+@login_required
+def manage_files(request, id):
+    try:
+        sub_theme = SubTheme.objects.get(id=id)
+        file_list = File.objects.filter(sub_theme=sub_theme)
+    except:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return render(
+        request,
+        "main/manage_files.html",
+        {
+            "sub_theme": sub_theme,
+            "file_list": file_list
+        }
+    )
 
 
 @login_required
@@ -1031,14 +1035,7 @@ def delete_file(request, id):
     except:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     uploaded_file.delete()
-    if "subThemeId" in request.POST:
-        try:
-            sub_theme = SubTheme.objects.get(id=request.POST["subThemeId"])
-        except:
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    else:
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    return HttpResponseRedirect(reverse("theme_settings", args=[sub_theme.parent_theme.id,]))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
@@ -1825,3 +1822,4 @@ def schedule_test_to_user(request):
         return HttpResponseRedirect(reverse("user_info", args=[user.id,]))
     else:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+

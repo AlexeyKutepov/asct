@@ -163,86 +163,10 @@
                                 <td>{{ sub_theme.name }}</td>
                                 <td>{{ sub_theme.description }}</td>
                                 <td>
-                                {% load poll_extras %}
-                                    {% if sub_theme.id in file_dict %}
-                                        <form id="formDownloadFile{{ forloop.counter }}" action="{% url "download_file" id=file_dict|get_item:sub_theme.id %}" method="post">
-                                        {% csrf_token %}
-                                        </form>
-                                        <form action="{% url "delete_file" id=file_dict|get_item:sub_theme.id %}" method="post">
-                                        {% csrf_token %}
-                                            <div class="modal fade" id="modalRemoveFile{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                                                    aria-hidden="true">&times;</span></button>
-                                                            <h4 class="modal-title" id="myModalLabel">Удаление учебных материалов</h4>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            Удалить загруженные учебные материалы для подтемы "{{ sub_theme.name }}"?
-                                                            <input name="subThemeId" type="text" value="{{ sub_theme.id }}" hidden>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-primary" data-dismiss="modal">Нет</button>
-                                                            <button type="submit" name="delete" class="btn btn-default">Да</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                        <button id="btnUploadFile{{ forloop.counter }}" type="button" data-toggle="modal"
-                                            data-target="#modalUploadFile{{ forloop.counter }}" class="btn btn-success"
-                                            title="Загрузить учебные материалы" disabled>
-                                            <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
-                                        </button>
-                                        <button id="btnDownloadFile{{ forloop.counter }}" type="button" class="btn btn-primary"
-                                                title="Скачать учебные материалы" onclick="document.getElementById('formDownloadFile{{ forloop.counter }}').submit();">
-                                            <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
-                                        </button>
-                                        <button id="btnRemoveFile{{ forloop.counter }}" type="button" data-toggle="modal"
-                                                data-target="#modalRemoveFile{{ forloop.counter }}" class="btn btn-danger"
-                                                title="Удалить учебные материалы">
-                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                        </button>
-                                    {% else %}
-                                        <form enctype="multipart/form-data" action="{% url "upload_file_to_sub_theme" %}" method="post">
-                                        {% csrf_token %}
-                                            <div class="modal fade" id="modalUploadFile{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                                                    aria-hidden="true">&times;</span></button>
-                                                            <h4 class="modal-title" id="myModalLabel">Загрузка учебных материалов</h4>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <p>Загрузка учебных материалов для подтемы "{{ sub_theme.name }}"</p>
-                                                            <input name="file" type="file" required>
-                                                            <input name="subThemeId" type="text" value="{{ sub_theme.id }}" hidden>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                                                            <button type="submit" name="delete" class="btn btn-primary">Загрузить</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                        <button id="btnUploadFile{{ forloop.counter }}" type="button" data-toggle="modal"
-                                            data-target="#modalUploadFile{{ forloop.counter }}" class="btn btn-success"
-                                            title="Загрузить учебные материалы">
-                                            <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
-                                        </button>
-                                        <button id="btnDownloadFile{{ forloop.counter }}" type="button" class="btn btn-primary"
-                                                title="Скачать учебные материалы" disabled>
-                                            <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
-                                        </button>
-                                        <button id="btnRemoveFile{{ forloop.counter }}" type="button" data-toggle="modal"
-                                                data-target="#modalRemoveFile{{ forloop.counter }}" class="btn btn-danger"
-                                                title="Удалить учебные материалы" disabled>
-                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                        </button>
-                                    {% endif %}
+                                    <a href="{% url "manage_files" id=sub_theme.id %}"><button type="button" class="btn btn-success"
+                                            title="Учебные материалы">
+                                        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                                    </button></a>
                                 </td>
                                 <td>
                                     <form action="{% url "delete_sub_theme" id=sub_theme.id %}" method="post">
