@@ -89,7 +89,7 @@ def user_settings(request, id):
             "alert.html",
             {
                 "status": "success",
-                "message": "Изменения сохранены"
+                "message": "Изменения профиля пользователя успешно сохранены! Профиль пользователя: <a href=\"" + request.META.get('HTTP_REFERER') + "\">" + user_data.get_full_name() + "</a>"
             }
         )
     else:
