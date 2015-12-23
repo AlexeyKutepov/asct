@@ -284,7 +284,7 @@
                         <th>Назначена</th>
                         <th>Срок</th>
                         <th>Прогресс</th>
-                        <th>Действия</th>
+                        <th width="110px">Действия</th>
                     </thead>
                     <tbody>
                     {% for item in scheduled_theme_list %}
@@ -343,7 +343,7 @@
                             <form id="formEditScheduledTheme{{ forloop.counter }}" action="{% url "edit_scheduled_theme" id=item.id %}" method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                                 <div id="modalEditScheduledTheme{{ forloop.counter }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalEditScheduledThemeLabel">
-                                    <div class="modal-dialog modal-lg">
+                                    <div class="modal-dialog modal-sm">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -352,7 +352,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 <div class="row">
-                                                    <div class="col-lg-6">
+                                                    <div class="col-lg-12">
                                                         <div class="form-group">
                                                             <label for="inputDateTo"><b>Срок до</b></label>
                                                             <input id="inputDateTo" name="dateTo" type="date" class="form-control" required>
