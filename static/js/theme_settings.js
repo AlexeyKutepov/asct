@@ -74,7 +74,8 @@ $(document).ready(function () {
         }
     });
 
-    $("#aStudy").click(function() {
+    $("#aStudy").click(function(e) {
+        e.preventDefault();
         $("#liStudy").addClass( "active" );
         $("#liExam").removeClass( "active" );
         $("#divStudy").show();
@@ -82,7 +83,8 @@ $(document).ready(function () {
         window.localStorage.setItem("tab", "study")
     });
 
-    $("#aExam").click(function() {
+    $("#aExam").click(function(e) {
+        e.preventDefault();
         $("#liStudy").removeClass( "active" );
         $("#liExam").addClass( "active" );
         $("#divStudy").hide();
