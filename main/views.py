@@ -671,6 +671,30 @@ def schedule_theme_to_user(request):
 
 
 @login_required
+def cancel_theme(request, id):
+    try:
+        scheduled_theme = ScheduledTheme.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    scheduled_theme.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
+def edit_scheduled_theme(request, id):
+    try:
+        scheduled_theme = ScheduledTheme.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    if "dateTo" in request.POST:
+        scheduled_theme.date_to = request.POST["dateTo"]
+        if scheduled_theme.status == ScheduledTheme.OVERDUE:
+            scheduled_theme.status = ScheduledTheme.ASSIGNED
+        scheduled_theme.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
 def schedule_exam(request, id):
     if request.user.user_type == UserProfile.PROBATIONER:
         result = {
@@ -1028,17 +1052,6 @@ def delete_file(request, id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     uploaded_file.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-@login_required
-def cancel_theme(request, id):
-    try:
-        scheduled_theme = ScheduledTheme.objects.get(id=id)
-    except:
-        return HttpResponseRedirect(reverse("index"))
-    scheduled_theme.delete()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
 
 @login_required
 def edit_theme(request, id):

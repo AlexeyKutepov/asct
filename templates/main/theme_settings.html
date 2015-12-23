@@ -340,6 +340,39 @@
                                     </div>
                                 </div>
                             </form>
+                            <form id="formEditScheduledTheme{{ forloop.counter }}" action="{% url "edit_scheduled_theme" id=item.id %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                                <div id="modalEditScheduledTheme{{ forloop.counter }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalEditScheduledThemeLabel">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                        aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="modalEditScheduledThemeLabel">Изменение срока изучения темы</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group">
+                                                            <label for="inputDateTo"><b>Срок до</b></label>
+                                                            <input id="inputDateTo" name="dateTo" type="date" class="form-control" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                                                <button type="submit" name="save" class="btn btn-primary">Сохранить</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <button id="btnEditScheduledTheme{{ forloop.counter }}" type="button" data-toggle="modal"
+                                    data-target="#modalEditScheduledTheme{{ forloop.counter }}" class="btn btn-primary"
+                                    title="Редактировать">
+                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            </button>
                             <button id="btnDel{{ forloop.counter }}" type="button" data-toggle="modal"
                                     data-target="#modalCancel{{ forloop.counter }}" class="btn btn-danger"
                                     title="Отменить тему">
