@@ -18,7 +18,8 @@ $(document).ready(function () {
         }
     }
 
-    $("#aStudy").click(function() {
+    $("#aStudy").click(function(e) {
+        e.preventDefault();
         $("#liStudy").addClass( "active" );
         $("#liExam").removeClass( "active" );
         $("#liTest").removeClass( "active" );
@@ -28,7 +29,8 @@ $(document).ready(function () {
         window.localStorage.setItem("tab", "study")
     });
 
-    $("#aExam").click(function() {
+    $("#aExam").click(function(e) {
+        e.preventDefault();
         $("#liStudy").removeClass( "active" );
         $("#liTest").removeClass( "active" );
         $("#liExam").addClass( "active" );
@@ -38,7 +40,8 @@ $(document).ready(function () {
         window.localStorage.setItem("tab", "exam")
     });
 
-    $("#aTest").click(function() {
+    $("#aTest").click(function(e) {
+        e.preventDefault();
         $("#liStudy").removeClass( "active" );
         $("#liTest").addClass( "active" );
         $("#liExam").removeClass( "active" );
