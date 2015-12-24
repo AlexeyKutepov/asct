@@ -856,6 +856,7 @@ def user_info(request, id):
             "message": "Пользователь не найден"
             }
         return render(request, "alert.html", result)
+    examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER), company=user_data.company)
     scheduled_theme_list = ScheduledTheme.objects.filter(user=user_data)
     for scheduled_theme in scheduled_theme_list:
         if scheduled_theme.date_to < timezone.now() and scheduled_theme.status != ScheduledTheme.COMPLETED and scheduled_theme.status != ScheduledTheme.OVERDUE:
@@ -874,7 +875,8 @@ def user_info(request, id):
             "user_data": user_data,
             "scheduled_theme_list": scheduled_theme_list,
             "exam_list": exam_list,
-            "test_list": test_list
+            "test_list": test_list,
+            "examiner_list": examiner_list
         }
     )
 
