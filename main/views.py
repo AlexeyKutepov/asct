@@ -491,6 +491,10 @@ def theme_settings(request, id):
         theme = Theme.objects.get(id=id)
     except:
         return HttpResponseRedirect(reverse("index"))
+    if theme:
+        examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER), company=theme.journal.company)
+    else:
+        examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER))
     sub_theme_list = SubTheme.objects.filter(parent_theme=theme)
     if request.user.user_type == UserProfile.CURATOR:
         scheduled_theme_list = ScheduledTheme.objects.filter(theme=theme)
@@ -509,7 +513,8 @@ def theme_settings(request, id):
             "theme": theme,
             "sub_theme_list": sub_theme_list,
             "scheduled_theme_list": scheduled_theme_list,
-            "exam_list": exam_list
+            "exam_list": exam_list,
+            "examiner_list": examiner_list
         }
     )
 
@@ -720,6 +725,42 @@ def schedule_exam(request, id):
             send_mail(
                 'Вам назначен зачёт в ASCT',
                 'Здравствуйте ' + user.first_name + '! \n \n Вам назначен зачёт по теме: \"' + theme.name
+                + '\" \n\n Дата и время проведения зачёта: ' + theme_exam.datetime.replace('T', ' ')
+                + ' \n\n Место проведения зачёта: ' + request.POST["place"]
+                + ' \n\n Экзаменатор: ' + examiner.get_full_name()
+                ,
+                getattr(settings, "EMAIL_HOST_USER", None),
+                [user.email],
+                fail_silently=False
+            )
+        except:
+            pass
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
+def edit_exam(request, id):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
+    if "save" in request.POST:
+        try:
+            theme_exam = ThemeExam.objects.get(id=id)
+            user = UserProfile.objects.get(id=request.POST["user"])
+            examiner = UserProfile.objects.get(id=request.POST["examiner"])
+        except:
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        theme_exam.examiner = examiner
+        theme_exam.datetime = request.POST["datetime"]
+        theme_exam.place = request.POST["place"]
+        theme_exam.save()
+        try:
+            send_mail(
+                'Изменение информации по зачёту в ASCT',
+                'Здравствуйте ' + user.first_name + '! \n \n Информация по зачёту была изменена. Актуальная информация:  \n \n Зачёт по теме: \"' + theme_exam.theme.name
                 + '\" \n\n Дата и время проведения зачёта: ' + theme_exam.datetime.replace('T', ' ')
                 + ' \n\n Место проведения зачёта: ' + request.POST["place"]
                 + ' \n\n Экзаменатор: ' + examiner.get_full_name()
@@ -1827,4 +1868,3 @@ def schedule_test_to_user(request):
         return HttpResponseRedirect(reverse("user_info", args=[user.id,]))
     else:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-

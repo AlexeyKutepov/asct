@@ -53,6 +53,7 @@ urlpatterns = patterns('',
         url(r'^edit/position/(?P<id>\d+)/$', views.edit_position, name="edit_position"),
         url(r'^delete/position/(?P<id>\d+)/$', views.delete_position, name="delete_position"),
         url(r'^set/result/(?P<id>\d+)/$', views.set_result, name="set_result"),
+        url(r'^edit/exam/(?P<id>\d+)/$', views.edit_exam, name="edit_exam"),
         url(r'^cancel/exam/(?P<id>\d+)/$', views.cancel_exam, name="cancel_exam"),
 
         # Тесты
