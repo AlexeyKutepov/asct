@@ -18,7 +18,7 @@ urlpatterns = patterns('',
         url(r'^get/theme/list/by/journal/$', views.get_theme_list_by_journal),
         url(r'^get/test/list/by/journal/$', views.get_test_list_by_journal),
 
-        url(r'^create/new/company', views.create_new_company, name="create_new_company"),
+        url(r'^create/new/company/$', views.create_new_company, name="create_new_company"),
         url(r'^edit/company/(?P<id>\d+)/$', views.edit_company, name="edit_company"),
         url(r'^edit/company/save/$', views.edit_company_save, name="edit_company_save"),
         url(r'^delete/company/(?P<id>\d+)/$', views.delete_company, name="delete_company"),
@@ -55,6 +55,7 @@ urlpatterns = patterns('',
         url(r'^set/result/(?P<id>\d+)/$', views.set_result, name="set_result"),
         url(r'^edit/exam/(?P<id>\d+)/$', views.edit_exam, name="edit_exam"),
         url(r'^cancel/exam/(?P<id>\d+)/$', views.cancel_exam, name="cancel_exam"),
+        url(r'^reports/$', views.reports, name="reports"),
 
         # Тесты
         url(r'^create/new/test/', views.create_new_test, name='create_new_test'),

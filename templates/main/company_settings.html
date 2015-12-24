@@ -56,10 +56,12 @@
                         <table id="tableDepartmentList" class="table table-hover">
                             {% for department in department_list %}
                             <tr>
-                                <td>{{ department }}<input type="hidden" name="department" value="{{ department }}"/></td>
-                                <td><button name="buttonDelete" type="button" class="btn btn-danger pull-right" title="Удалить подразделение">
-                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                </button>
+                                <td>{{ department }}</td>
+                                <td>
+                                    <input type="hidden" name="department" value="{{ department }}"/>
+                                    <button name="buttonDelete" type="button" class="btn btn-danger pull-right" title="Удалить подразделение">
+                                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                    </button>
                                 </td>
                             </tr>
                             {% endfor %}

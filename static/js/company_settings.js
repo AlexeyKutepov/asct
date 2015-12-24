@@ -12,7 +12,7 @@ $(document).ready(function () {
 
         if (isAdd) {
             $("#tableDepartmentList").append(
-                    "<tr><td>" + $("#inputDepartment").val() + "<input type=\"hidden\" name=\"department\" value=\"" + $("#inputDepartment").val() + "\" /></td><td><button name=\"buttonDelete\" type=\"button\" class=\"btn btn-danger pull-right\" title=\"Удалить подразделение\"><span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></button></td></tr>"
+                    "<tr><td>" + $("#inputDepartment").val() + "</td><td><input type=\"hidden\" name=\"department\" value=\"" + $("#inputDepartment").val() + "\" /><button name=\"buttonDelete\" type=\"button\" class=\"btn btn-danger pull-right\" title=\"Удалить подразделение\"><span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></button></td></tr>"
             );
         }
         $("#inputDepartment").val("");

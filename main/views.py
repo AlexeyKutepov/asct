@@ -1181,6 +1181,16 @@ def cancel_exam(request, id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+@login_required
+def reports(request):
+    return render(
+        request,
+        "main/reports.html",
+        {
+        }
+    )
+
+
 """
 Тесты
 """

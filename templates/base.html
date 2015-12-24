@@ -123,6 +123,9 @@
                         {% block menu %}
                         <li>
                             <a href="{% url "index" %}"><i class="fa fa-dashboard fa-fw"></i> Рабочий стол</a>
+                            {% if user.user_type != 'PROBATIONER' %}
+                                <a href="{% url "reports" %}"><i class="fa fa-file-text-o"></i> Отчёты</a>
+                            {% endif %}
                         </li>
                         {% endblock %}
                     </ul>
