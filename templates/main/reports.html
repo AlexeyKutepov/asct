@@ -76,7 +76,7 @@
                             <td><b>
                                 {% for exam in exam_list %}
                                     {% if exam.theme == theme.theme.id %}
-                                        {{ exam.result }}
+                                        {{ exam.result|default:"" }}
                                     {% endif %}
                                 {% endfor %}
                             </b></td>
