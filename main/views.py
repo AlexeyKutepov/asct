@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import SuspiciousOperation
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
-from django.db.models import Q
+from django.db.models import Q, Max
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from asct import settings
@@ -1181,12 +1181,47 @@ def cancel_exam(request, id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-@login_required
-def reports(request):
+def prepare_probationer_report(request, probationer_list):
+    try:
+        user_data = UserProfile.objects.get(id=request.POST["probationer"])
+        scheduled_theme_list = ScheduledTheme.objects.filter(user=user_data)
+        scheduled_sub_theme_list = ScheduledSubTheme.objects.filter(user=user_data)
+        exam_list = ThemeExam.objects.values('theme').annotate(result=Max('result')).order_by()
+    except:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     return render(
         request,
         "main/reports.html",
         {
+            "probationer_list": probationer_list,
+            "user_data": user_data,
+            "scheduled_theme_list": scheduled_theme_list,
+            "scheduled_sub_theme_list": scheduled_sub_theme_list,
+            "exam_list": exam_list,
+            "show_probationer_report": True
+        }
+    )
+
+
+@login_required
+def reports(request):
+    if request.user.user_type == UserProfile.PROBATIONER:
+       result = {
+           "status": "danger",
+           "message": "Доступ запрещён"
+           }
+       return render(request, "alert.html", result)
+    elif request.user.user_type == UserProfile.CURATOR:
+        probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER)
+    else:
+        probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company)
+    if "probationer_report" in request.POST:
+        return prepare_probationer_report(request, probationer_list)
+    return render(
+        request,
+        "main/reports.html",
+        {
+            "probationer_list": probationer_list,
         }
     )
 

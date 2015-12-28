@@ -21,6 +21,92 @@
         </li>
     </ul>
     <p></p>
+    <div id="divProbationerReport">
+        <div class="row">
+            <div class="col-lg-6">
+                <h5>Выберите испытуемого</h5>
+            </div>
+        </div>
+        <div class="row">
+            <form id="formProbationerReport" action="{% url "reports" %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <select name="probationer" class="selectpicker" data-width="100%" data-live-search="true" required>
+                            {% for probationer in probationer_list %}
+                                {% if user_data == probationer %}
+                                    <option value="{{ probationer.id }}" selected>{{ probationer.get_full_name }}</option>
+                                {% else %}
+                                    <option value="{{ probationer.id }}">{{ probationer.get_full_name }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <button type="submit" name="probationer_report" class="btn btn-success">Сформировать</button>
+                </div>
+            </form>
+        </div>
+    <p></p>
+    {% if show_probationer_report %}
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th colspan="4" style="text-align: center;">
+                                <p>{{ user_data.get_full_name }}
+                                <p>{{ user_data.company }}, {{ user_data.department }}
+                                <p>{{ user_data.position }}
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>№</th>
+                            <th>Название</th>
+                            <th>Оценка</th>
+                            <th>Экзаменатор</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for theme in scheduled_theme_list %}
+                        <tr>
+                            <td><b>{{ forloop.counter }}</b></td>
+                            <td><b>{{ theme.theme.name }}</b></td>
+                            <td><b>
+                                {% for exam in exam_list %}
+                                    {% if exam.theme == theme.theme.id %}
+                                        {{ exam.result }}
+                                    {% endif %}
+                                {% endfor %}
+                            </b></td>
+                            <td><b></b></td>
+                        </tr>
+                        {% for sub_theme in scheduled_sub_theme_list %}
+                            {% if sub_theme.scheduled_theme == theme %}
+                            <tr>
+                                <td></td>
+                                <td>{{ sub_theme.sub_theme.name }}</td>
+                                <td>
+                                    {% if sub_theme.status == "COMPLETED" %}
+                                    <i class="fa fa-check"></i>
+                                    {% endif %}
+                                </td>
+                                <td></td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+    </div>
+    <div id="divDepartmentReport"></div>
+    <div id="divExamListReport"></div>
+    <div id="divCompanyReport"></div>
+    <div id="divAllCompanyReport"></div>
 {% endblock %}
 {% block scripts %}
     <script src="/static/js/bootstrap-select.js"></script>
