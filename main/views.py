@@ -1186,7 +1186,7 @@ def prepare_probationer_report(request, probationer_list):
         user_data = UserProfile.objects.get(id=request.POST["probationer"])
         scheduled_theme_list = ScheduledTheme.objects.filter(user=user_data)
         scheduled_sub_theme_list = ScheduledSubTheme.objects.filter(user=user_data)
-        exam_list = ThemeExam.objects.filter(user=user_data).values('theme', 'examiner').annotate(result=Max('result')).order_by()
+        exam_list = ThemeExam.objects.filter(user=user_data).values('theme').annotate(result=Max('result')).order_by()
     except:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     return render(
