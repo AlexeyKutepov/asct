@@ -26,9 +26,8 @@ class Counter:
         self.counter = 0
 
 
-@login_required
 def test_page(request):
-    return render(request, "base.html")
+    return render(request, "test_page.html")
 
 
 def prepare_curator_page(request):
