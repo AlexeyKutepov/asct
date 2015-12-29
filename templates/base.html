@@ -90,7 +90,7 @@
                     <ul class="nav" id="side-menu">
                         <li class="sidebar-photo">
                             {% if user.photo %}
-                                <img src="{{ MEDIA_URL }}{{ user.photo }}" alt="Фото" width="200px" height="auto">
+                                <img src="{{ MEDIA_URL }}{{ user.photo }}" alt="Фото" width="200px" height="auto" style="height:auto !important;">
                             {% else %}
                                 <img src="holder.js/200x200">
                             {% endif %}

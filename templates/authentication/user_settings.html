@@ -23,7 +23,7 @@
                 {% if user_data.photo %}
                     <img id="impPreview"
                          src="{{ MEDIA_URL }}{{ user_data.photo }}"
-                         alt="Photo" width="200" height="auto">
+                         alt="Photo" width="200" height="auto" style="height:auto !important;">
                     <p></p>
                     <input id="inputPhoto" name="photo" type="file" accept="image/*" onchange="onPreview(this)">
                 {% else %}
