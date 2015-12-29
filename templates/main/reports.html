@@ -84,7 +84,7 @@
                     </thead>
                     <tbody>
                     {% for theme in scheduled_theme_list %}
-                        {% if theme.theme.journal = journal %}
+                        {% if theme.theme.journal == journal %}
                         <tr>
                             <td><b>{{ forloop.counter }}</b></td>
                             <td><b>{{ theme.theme.name }}</b></td>
