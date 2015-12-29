@@ -75,12 +75,18 @@
                             <td><b>{{ theme.theme.name }}</b></td>
                             <td><b>
                                 {% for exam in exam_list %}
-                                    {% if exam.theme == theme.theme.id %}
+                                    {% if exam.theme == theme.theme %}
                                         {{ exam.result|default:"" }}
                                     {% endif %}
                                 {% endfor %}
                             </b></td>
-                            <td><b></b></td>
+                            <td><b>
+                                {% for exam in exam_list %}
+                                    {% if exam.theme == theme.theme %}
+                                        {{ exam.examiner.get_full_name|default:"" }}
+                                    {% endif %}
+                                {% endfor %}
+                            </b></td>
                         </tr>
                         {% for sub_theme in scheduled_sub_theme_list %}
                             {% if sub_theme.scheduled_theme == theme %}
