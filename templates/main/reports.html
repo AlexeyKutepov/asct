@@ -55,24 +55,47 @@
                 <table class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th colspan="4" style="text-align: center;">
+                            <th colspan="5" style="text-align: center;">
                                 <p>{{ user_data.get_full_name }}
                                 <p>{{ user_data.company }}, {{ user_data.department }}
                                 <p>{{ user_data.position }}
                             </th>
                         </tr>
+                    </thead>
+                </table>
+            {% for journal in journal_list %}
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                Учебная программа
+                            </th>
+                            <th colspan="3">
+                                {{ journal.name }}
+                            </th>
+                        </tr>
                         <tr>
                             <th>№</th>
                             <th>Название</th>
+                            <th>Прогресс</th>
                             <th>Оценка</th>
                             <th>Экзаменатор</th>
                         </tr>
                     </thead>
                     <tbody>
                     {% for theme in scheduled_theme_list %}
+                        {% if theme.theme.journal = journal %}
                         <tr>
                             <td><b>{{ forloop.counter }}</b></td>
                             <td><b>{{ theme.theme.name }}</b></td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ theme.progress }}"
+                                         aria-valuemin="0" aria-valuemax="100" style="width: {{ theme.progress }}%;">
+                                        <span class="sr-only">{{ theme.progress }}% Complete</span>
+                                    </div>
+                                </div>
+                            </td>
                             <td><b>
                                 {% for exam in exam_list %}
                                     {% if exam.theme == theme.theme %}
@@ -93,6 +116,7 @@
                             <tr>
                                 <td></td>
                                 <td>{{ sub_theme.sub_theme.name }}</td>
+                                <td></td>
                                 <td>
                                     {% if sub_theme.status == "COMPLETED" %}
                                     <i class="fa fa-check"></i>
@@ -102,9 +126,11 @@
                             </tr>
                             {% endif %}
                         {% endfor %}
+                        {% endif %}
                     {% endfor %}
                     </tbody>
                 </table>
+            {% endfor %}
             </div>
         </div>
     {% endif %}

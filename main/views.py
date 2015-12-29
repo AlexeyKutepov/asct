@@ -1186,6 +1186,10 @@ def prepare_probationer_report(request, probationer_list):
         user_data = UserProfile.objects.get(id=request.POST["probationer"])
         scheduled_theme_list = ScheduledTheme.objects.filter(user=user_data)
         scheduled_sub_theme_list = ScheduledSubTheme.objects.filter(user=user_data)
+        journal_list = []
+        for item in scheduled_theme_list:
+            if item.theme.journal not in journal_list:
+                journal_list.append(item.theme.journal)
         max_exam_list = ThemeExam.objects.filter(user=user_data).values('theme').annotate(result=Max('result')).order_by()
         exam_list = []
         for item in max_exam_list:
@@ -1204,6 +1208,7 @@ def prepare_probationer_report(request, probationer_list):
             "scheduled_theme_list": scheduled_theme_list,
             "scheduled_sub_theme_list": scheduled_sub_theme_list,
             "exam_list": exam_list,
+            "journal_list": journal_list,
             "show_probationer_report": True
         }
     )
