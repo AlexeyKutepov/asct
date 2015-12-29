@@ -15,6 +15,17 @@ from main.models import UserProfile, Company, Department, Journal, Theme, SubThe
     File, Position, ThemeExam, Test, TestImage, TestJournal, Progress
 
 
+class Counter:
+    counter = 0
+
+    def increment(self):
+        self.counter += 1
+        return self.counter
+
+    def set_to_zero(self):
+        self.counter = 0
+
+
 @login_required
 def test_page(request):
     return render(request, "base.html")
@@ -1196,9 +1207,9 @@ def prepare_probationer_report(request, probationer_list):
             exam_list.append(
                 ThemeExam.objects.filter(user=user_data, theme=item['theme']).latest('result')
             )
-
     except:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    counter = Counter()
     return render(
         request,
         "main/reports.html",
@@ -1209,7 +1220,8 @@ def prepare_probationer_report(request, probationer_list):
             "scheduled_sub_theme_list": scheduled_sub_theme_list,
             "exam_list": exam_list,
             "journal_list": journal_list,
-            "show_probationer_report": True
+            "show_probationer_report": True,
+            "counter": counter
         }
     )
 

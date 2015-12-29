@@ -3,6 +3,7 @@
     <link href="/static/css/bootstrap-select.min.css" rel="stylesheet">
 {% endblock %}
 {% block dashboard %}
+    {% load poll_extras %}
     <div class="row">
         <div class="col-lg-12">
             <h3 class="page-header">Отчёты</h3>
@@ -85,51 +86,52 @@
                     <tbody>
                     {% for theme in scheduled_theme_list %}
                         {% if theme.theme.journal == journal %}
-                        <tr>
-                            <td><b>{{ forloop.counter }}</b></td>
-                            <td><b>{{ theme.theme.name }}</b></td>
-                            <td>
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ theme.progress }}"
-                                         aria-valuemin="0" aria-valuemax="100" style="width: {{ theme.progress }}%;">
-                                        <span class="sr-only">{{ theme.progress }}% Complete</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><b>
-                                {% for exam in exam_list %}
-                                    {% if exam.theme == theme.theme %}
-                                        {{ exam.result|default:"" }}
-                                    {% endif %}
-                                {% endfor %}
-                            </b></td>
-                            <td><b>
-                                {% for exam in exam_list %}
-                                    {% if exam.theme == theme.theme %}
-                                        {{ exam.examiner.get_full_name|default:"" }}
-                                    {% endif %}
-                                {% endfor %}
-                            </b></td>
-                        </tr>
-                        {% for sub_theme in scheduled_sub_theme_list %}
-                            {% if sub_theme.scheduled_theme == theme %}
                             <tr>
-                                <td></td>
-                                <td>{{ sub_theme.sub_theme.name }}</td>
-                                <td></td>
+                                <td><b>{{ counter.increment }}</b></td>
+                                <td><b>{{ theme.theme.name }}</b></td>
                                 <td>
-                                    {% if sub_theme.status == "COMPLETED" %}
-                                    <i class="fa fa-check"></i>
-                                    {% endif %}
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ theme.progress }}"
+                                             aria-valuemin="0" aria-valuemax="100" style="width: {{ theme.progress }}%;">
+                                            <span class="sr-only">{{ theme.progress }}% Complete</span>
+                                        </div>
+                                    </div>
                                 </td>
-                                <td></td>
+                                <td><b>
+                                    {% for exam in exam_list %}
+                                        {% if exam.theme == theme.theme %}
+                                            {{ exam.result|default:"" }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </b></td>
+                                <td><b>
+                                    {% for exam in exam_list %}
+                                        {% if exam.theme == theme.theme %}
+                                            {{ exam.examiner.get_full_name|default:"" }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </b></td>
                             </tr>
-                            {% endif %}
-                        {% endfor %}
+                            {% for sub_theme in scheduled_sub_theme_list %}
+                                {% if sub_theme.scheduled_theme == theme %}
+                                <tr>
+                                    <td></td>
+                                    <td>{{ sub_theme.sub_theme.name }}</td>
+                                    <td></td>
+                                    <td>
+                                        {% if sub_theme.status == "COMPLETED" %}
+                                        <i class="fa fa-check"></i>
+                                        {% endif %}
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
                         {% endif %}
                     {% endfor %}
                     </tbody>
                 </table>
+                <div hidden>{{ counter.set_to_zero }}</div>
             {% endfor %}
             </div>
         </div>
