@@ -1047,7 +1047,10 @@ def sub_theme_completed(request, id):
     scheduled_sub_theme_list = ScheduledSubTheme.objects.filter(scheduled_theme=scheduled_sub_theme.scheduled_theme)
     scheduled_sub_theme_list_completed = ScheduledSubTheme.objects.filter(scheduled_theme=scheduled_sub_theme.scheduled_theme, status=ScheduledSubTheme.COMPLETED)
     scheduled_sub_theme.scheduled_theme.progress = int((100 / len(scheduled_sub_theme_list)) * len(scheduled_sub_theme_list_completed))
+    if scheduled_sub_theme.scheduled_theme.progress == 100:
+        scheduled_sub_theme.scheduled_theme.status = ScheduledTheme.COMPLETED
     scheduled_sub_theme.scheduled_theme.save()
+
     return HttpResponseRedirect(reverse("probationer_theme_settings", args=[scheduled_sub_theme.scheduled_theme.id,]))
 
 
