@@ -139,10 +139,33 @@
     </div>
     <div id="divDepartmentReport"></div>
     <div id="divExamListReport"></div>
-    <div id="divCompanyReport"></div>
+    <div id="divCompanyReport">
+        <div class="row">
+            <div class="col-lg-6">
+                <h5>Выберите компанию</h5>
+            </div>
+        </div>
+        <div class="row">
+            <form id="formCompanyReport" action="{% url "reports" %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <select name="company" class="selectpicker" data-width="100%" data-live-search="true" required>
+                            {% for company in company_list %}
+                                <option value="{{ company.id }}">{{ company.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <button type="submit" name="company_report" class="btn btn-success">Сформировать</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <div id="divAllCompanyReport"></div>
 {% endblock %}
 {% block scripts %}
     <script src="/static/js/bootstrap-select.js"></script>
-    <script src="/static/js/reports.js"></script>
+    <script src="/static/js/reports/reports.js"></script>
 {% endblock %}
