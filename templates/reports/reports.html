@@ -137,9 +137,9 @@
         </div>
     {% endif %}
     </div>
-    <div id="divDepartmentReport"></div>
-    <div id="divExamListReport"></div>
-    <div id="divCompanyReport">
+    <div id="divDepartmentReport" hidden></div>
+    <div id="divExamListReport" hidden></div>
+    <div id="divCompanyReport" hidden>
         <div class="row">
             <div class="col-lg-6">
                 <h5>Выберите компанию</h5>
@@ -163,7 +163,7 @@
             </form>
         </div>
     </div>
-    <div id="divAllCompanyReport"></div>
+    <div id="divAllCompanyReport" hidden></div>
 {% endblock %}
 {% block scripts %}
     <script src="/static/js/bootstrap-select.js"></script>
