@@ -162,6 +162,40 @@
                 </div>
             </form>
         </div>
+        <p></p>
+{#    {% if show_probationer_report %}#}
+        <div class="row">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Название компании</th>
+                        <th colspan="6">Критерии</th>
+                    </tr>
+                    <tr>
+                        <th>{{ company.name }}</th>
+                        <th width="12%">Всего испытуемых</th>
+                        <th width="12%">Всего испытуемых, завершивших обучение</th>
+                        <th width="12%">Всего обучаемых испытуемых</th>
+                        <th width="12%">Прогресс</th>
+                        <th width="12%">Зачеты</th>
+                        <th width="12%">Средняя оценка</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+                <tfoot>
+                    <th>Итого по группе компаний</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tfoot>
+            </table>
+        </div>
+{#    {% endif %}#}
     </div>
     <div id="divAllCompanyReport" hidden></div>
 {% endblock %}
