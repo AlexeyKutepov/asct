@@ -163,7 +163,7 @@
             </form>
         </div>
         <p></p>
-{#    {% if show_probationer_report %}#}
+    {% if show_company_report %}
         <div class="row">
             <table class="table table-bordered table-hover">
                 <thead>
@@ -188,24 +188,52 @@
                             <td>{{ data.probationer_count }}</td>
                             <td>{{ data.completed_probationer_count }}</td>
                             <td>{{ data.not_completed_probationer_count }}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ data.theme_progress }}"
+                                         aria-valuemin="0" aria-valuemax="100" style="width: {{ data.theme_progress }}%;">
+                                        <span class="sr-only">{{ data.theme_progress }}% Complete</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ data.exam_progress }}"
+                                         aria-valuemin="0" aria-valuemax="100" style="width: {{ data.exam_progress }}%;">
+                                        <span class="sr-only">{{ data.exam_progress }}% Complete</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ data.assessment }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
                 <tfoot>
-                    <th>Итого по группе компаний</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
+                    <th>Итого</th>
+                    <th>{{ in_total.probationer_count }}</th>
+                    <th>{{ in_total.completed_probationer_count }}</th>
+                    <th>{{ in_total.not_completed_probationer_count }}</th>
+                    <th>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="{{ in_total.theme_progress }}"
+                                 aria-valuemin="0" aria-valuemax="100" style="width: {{ in_total.theme_progress }}%;">
+                                <span class="sr-only">{{ in_total.theme_progress }}% Complete</span>
+                            </div>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="{{ in_total.exam_progress }}"
+                                 aria-valuemin="0" aria-valuemax="100" style="width: {{ in_total.exam_progress }}%;">
+                                <span class="sr-only">{{ in_total.exam_progress }}% Complete</span>
+                            </div>
+                        </div>
+                    </th>
+                    <th>{{ in_total.assessment }}</th>
                 </tfoot>
             </table>
         </div>
-{#    {% endif %}#}
+    {% endif %}
     </div>
     <div id="divAllCompanyReport" hidden></div>
 {% endblock %}
