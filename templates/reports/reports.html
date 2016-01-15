@@ -182,7 +182,17 @@
                     </tr>
                 </thead>
                 <tbody>
-
+                    {% for data in company_report_data %}
+                        <tr>
+                            <td>{{ data.department_name }}</td>
+                            <td>{{ data.probationer_count }}</td>
+                            <td>{{ data.completed_probationer_count }}</td>
+                            <td>{{ data.not_completed_probationer_count }}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
                 <tfoot>
                     <th>Итого по группе компаний</th>

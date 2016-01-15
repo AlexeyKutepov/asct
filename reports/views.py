@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
-from main.models import UserProfile, ScheduledTheme, ScheduledSubTheme, ThemeExam, Company
+from main.models import UserProfile, ScheduledTheme, ScheduledSubTheme, ThemeExam, Company, Department
 
 
 class Counter:
@@ -18,7 +18,7 @@ class Counter:
         self.counter = 0
 
 
-def prepare_probationer_report(request, probationer_list):
+def prepare_probationer_report(request, probationer_list, company_list):
     try:
         user_data = UserProfile.objects.get(id=request.POST["probationer"])
         scheduled_theme_list = ScheduledTheme.objects.filter(user=user_data)
@@ -41,6 +41,7 @@ def prepare_probationer_report(request, probationer_list):
         "reports/reports.html",
         {
             "probationer_list": probationer_list,
+            "company_list": company_list,
             "user_data": user_data,
             "scheduled_theme_list": scheduled_theme_list,
             "scheduled_sub_theme_list": scheduled_sub_theme_list,
@@ -48,6 +49,44 @@ def prepare_probationer_report(request, probationer_list):
             "journal_list": journal_list,
             "show_probationer_report": True,
             "counter": counter
+        }
+    )
+
+
+def prepare_company_report(request, probationer_list, company_list):
+    try:
+        company = Company.objects.get(id=request.POST["company"])
+        department_list = Department.objects.filter(company=company)
+    except:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    company_report_data = []
+    for department in department_list:
+        probationer_data_list = UserProfile.objects.filter(department=department, user_type=UserProfile.PROBATIONER)
+        if len(probationer_data_list) == 0:
+            continue
+        else:
+            completed_probationer_count = 0
+            for probationer_data in probationer_data_list:
+                theme_list = ScheduledTheme.objects.filter(user=probationer_data)
+                completed_theme_list = ScheduledTheme.objects.filter(user=probationer_data, status=ScheduledTheme.COMPLETED)
+                if len(theme_list) == len(completed_theme_list):
+                    completed_probationer_count += 1
+            result = {
+                "department_name": department.name,
+                "probationer_count": len(probationer_data_list),
+                "completed_probationer_count": completed_probationer_count,
+                "not_completed_probationer_count": len(probationer_data_list) - completed_probationer_count,
+            }
+            company_report_data.append(result)
+
+    return render(
+        request,
+        "reports/reports.html",
+        {
+            "probationer_list": probationer_list,
+            "company_list": company_list,
+            "company": company,
+            "company_report_data": company_report_data
         }
     )
 
@@ -67,7 +106,9 @@ def reports(request):
         probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company)
         company_list = [request.user.company,]
     if "probationer_report" in request.POST:
-        return prepare_probationer_report(request, probationer_list)
+        return prepare_probationer_report(request, probationer_list, company_list)
+    elif "company_report" in request.POST:
+        return prepare_company_report(request, probationer_list, company_list)
     return render(
         request,
         "reports/reports.html",
