@@ -19,6 +19,13 @@ class Counter:
 
 
 def prepare_probationer_report(request, probationer_list, company_list):
+    """
+    Формирование отчёта "Ведомость сотрудника"
+    :param request:
+    :param probationer_list: список испытуемых для селектора
+    :param company_list: список компаний для селектора
+    :return:
+    """
     try:
         user_data = UserProfile.objects.get(id=request.POST["probationer"])
         scheduled_theme_list = ScheduledTheme.objects.filter(user=user_data)
@@ -27,7 +34,8 @@ def prepare_probationer_report(request, probationer_list, company_list):
         for item in scheduled_theme_list:
             if item.theme.journal not in journal_list:
                 journal_list.append(item.theme.journal)
-        max_exam_list = ThemeExam.objects.filter(user=user_data).values('theme').annotate(result=Max('result')).order_by()
+        max_exam_list = ThemeExam.objects.filter(user=user_data).values('theme').annotate(
+            result=Max('result')).order_by()
         exam_list = []
         for item in max_exam_list:
             exam_list.append(
@@ -54,6 +62,13 @@ def prepare_probationer_report(request, probationer_list, company_list):
 
 
 def prepare_company_report(request, probationer_list, company_list):
+    """
+    Формирование отчёта "Мгновенный срез по компании"
+    :param request:
+    :param probationer_list: список испытуемых для селектора
+    :param company_list: список компаний для селектора
+    :return:
+    """
     try:
         company = Company.objects.get(id=request.POST["company"])
         department_list = Department.objects.filter(company=company)
@@ -81,7 +96,8 @@ def prepare_company_report(request, probationer_list, company_list):
             assessment = 0
             for probationer_data in probationer_data_list:
                 theme_list = ScheduledTheme.objects.filter(user=probationer_data)
-                completed_theme_list = ScheduledTheme.objects.filter(user=probationer_data, status=ScheduledTheme.COMPLETED)
+                completed_theme_list = ScheduledTheme.objects.filter(user=probationer_data,
+                                                                     status=ScheduledTheme.COMPLETED)
                 if len(theme_list) == len(completed_theme_list):
                     completed_probationer_count += 1
                     in_total_completed_probationer_count += 1
@@ -105,18 +121,18 @@ def prepare_company_report(request, probationer_list, company_list):
                 "probationer_count": len(probationer_data_list),
                 "completed_probationer_count": completed_probationer_count,
                 "not_completed_probationer_count": len(probationer_data_list) - completed_probationer_count,
-                "theme_progress": completed_theme_count/theme_count * 100 if theme_count else 0,
-                "exam_progress": completed_exam_count/exam_count * 100 if completed_exam_count else 0,
-                "assessment": assessment/completed_exam_count if completed_exam_count else 0,
+                "theme_progress": completed_theme_count / theme_count * 100 if theme_count else 0,
+                "exam_progress": completed_exam_count / exam_count * 100 if completed_exam_count else 0,
+                "assessment": assessment / completed_exam_count if completed_exam_count else 0,
             }
             company_report_data.append(result)
     in_total = {
-         "probationer_count": in_total_probationer_count,
-         "completed_probationer_count": in_total_completed_probationer_count,
-         "not_completed_probationer_count": in_total_probationer_count - in_total_completed_probationer_count,
-         "theme_progress": in_total_completed_theme_count/in_total_theme_count * 100 if in_total_theme_count else 0,
-         "exam_progress": in_total_completed_exam_count/in_total_exam_count * 100 if in_total_completed_exam_count else 0,
-         "assessment": in_total_assessment/in_total_completed_exam_count if in_total_completed_exam_count else 0,
+        "probationer_count": in_total_probationer_count,
+        "completed_probationer_count": in_total_completed_probationer_count,
+        "not_completed_probationer_count": in_total_probationer_count - in_total_completed_probationer_count,
+        "theme_progress": in_total_completed_theme_count / in_total_theme_count * 100 if in_total_theme_count else 0,
+        "exam_progress": in_total_completed_exam_count / in_total_exam_count * 100 if in_total_completed_exam_count else 0,
+        "assessment": in_total_assessment / in_total_completed_exam_count if in_total_completed_exam_count else 0,
     }
 
     return render(
@@ -134,6 +150,13 @@ def prepare_company_report(request, probationer_list, company_list):
 
 
 def prepare_all_company_report(request, probationer_list, company_list):
+    """
+    Формирование отчёта "Мгновенный срез по группе компаний"
+    :param request:
+    :param probationer_list: список испытуемых для селектора
+    :param company_list: список компаний для селектора
+    :return:
+    """
     all_company_report_data = []
     for company in company_list:
         try:
@@ -162,7 +185,8 @@ def prepare_all_company_report(request, probationer_list, company_list):
                 assessment = 0
                 for probationer_data in probationer_data_list:
                     theme_list = ScheduledTheme.objects.filter(user=probationer_data)
-                    completed_theme_list = ScheduledTheme.objects.filter(user=probationer_data, status=ScheduledTheme.COMPLETED)
+                    completed_theme_list = ScheduledTheme.objects.filter(user=probationer_data,
+                                                                         status=ScheduledTheme.COMPLETED)
                     if len(theme_list) == len(completed_theme_list):
                         in_total_completed_probationer_count += 1
                         completed_probationer_count += 1
@@ -186,18 +210,18 @@ def prepare_all_company_report(request, probationer_list, company_list):
                     "probationer_count": len(probationer_data_list),
                     "completed_probationer_count": completed_probationer_count,
                     "not_completed_probationer_count": len(probationer_data_list) - completed_probationer_count,
-                    "theme_progress": completed_theme_count/theme_count * 100 if theme_count else 0,
-                    "exam_progress": completed_exam_count/exam_count * 100 if completed_exam_count else 0,
-                    "assessment": assessment/completed_exam_count if completed_exam_count else 0,
+                    "theme_progress": completed_theme_count / theme_count * 100 if theme_count else 0,
+                    "exam_progress": completed_exam_count / exam_count * 100 if completed_exam_count else 0,
+                    "assessment": assessment / completed_exam_count if completed_exam_count else 0,
                 }
                 company_report_data.append(result)
         in_total = {
-             "probationer_count": in_total_probationer_count,
-             "completed_probationer_count": in_total_completed_probationer_count,
-             "not_completed_probationer_count": in_total_probationer_count - in_total_completed_probationer_count,
-             "theme_progress": in_total_completed_theme_count/in_total_theme_count * 100 if in_total_theme_count else 0,
-             "exam_progress": in_total_completed_exam_count/in_total_exam_count * 100 if in_total_completed_exam_count else 0,
-             "assessment": in_total_assessment/in_total_completed_exam_count if in_total_completed_exam_count else 0,
+            "probationer_count": in_total_probationer_count,
+            "completed_probationer_count": in_total_completed_probationer_count,
+            "not_completed_probationer_count": in_total_probationer_count - in_total_completed_probationer_count,
+            "theme_progress": in_total_completed_theme_count / in_total_theme_count * 100 if in_total_theme_count else 0,
+            "exam_progress": in_total_completed_exam_count / in_total_exam_count * 100 if in_total_completed_exam_count else 0,
+            "assessment": in_total_assessment / in_total_completed_exam_count if in_total_completed_exam_count else 0,
         }
         all_company_report_data.append(
             {
@@ -220,6 +244,13 @@ def prepare_all_company_report(request, probationer_list, company_list):
 
 
 def prepare_exam_list_report(request, probationer_list, company_list):
+    """
+    Формирование отчёта "Зачётный лист сотрудника"
+    :param request:
+    :param probationer_list: список испытуемых для селектора
+    :param company_list: список компаний для селектора
+    :return:
+    """
     try:
         user_data = UserProfile.objects.get(id=request.POST["probationer"])
         journal_list = Journal.objects.filter(company=user_data.company)
@@ -251,20 +282,39 @@ def prepare_exam_list_report(request, probationer_list, company_list):
     )
 
 
+def prepare_test_report(request, probationer_list, company_list):
+    """
+    Формирование отчёта "План-график назначенных тестов"
+    :param request:
+    :param probationer_list: список испытуемых для селектора
+    :param company_list: список компаний для селектора
+    :return:
+    """
+    return render(
+        request,
+        "reports/reports.html",
+        {
+            "probationer_list": probationer_list,
+            "company_list": company_list,
+            "show_exam_list_report": True,
+        }
+    )
+
+
 @login_required
 def reports(request):
     if request.user.user_type == UserProfile.PROBATIONER:
-       result = {
-           "status": "danger",
-           "message": "Доступ запрещён"
-           }
-       return render(request, "alert.html", result)
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+        }
+        return render(request, "alert.html", result)
     elif request.user.user_type == UserProfile.CURATOR:
         probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER)
         company_list = Company.objects.all()
     else:
         probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company)
-        company_list = [request.user.company,]
+        company_list = [request.user.company, ]
     if "probationer_report" in request.POST:
         return prepare_probationer_report(request, probationer_list, company_list)
     elif "company_report" in request.POST:
@@ -273,6 +323,8 @@ def reports(request):
         return prepare_all_company_report(request, probationer_list, company_list)
     elif "exam_list_report" in request.POST:
         return prepare_exam_list_report(request, probationer_list, company_list)
+    elif "test_report" in request.POST:
+        return prepare_test_report(request, probationer_list, company_list)
     return render(
         request,
         "reports/reports.html",

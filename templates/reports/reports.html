@@ -415,7 +415,15 @@
     {% endif %}
     </div>
     <div id="divTestReport" hidden>
-
+        <div class="row">
+            <form id="formTestReport" action="{% url "reports" %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="col-lg-4">
+                    <button type="submit" name="test_report" class="btn btn-success">Сформировать</button>
+                </div>
+            </form>
+        </div>
+        <p></p>
     </div>
 {% endblock %}
 {% block scripts %}
