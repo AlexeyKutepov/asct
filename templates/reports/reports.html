@@ -424,6 +424,36 @@
             </form>
         </div>
         <p></p>
+        {% if show_test_report %}
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <th>№</th>
+                    <th>Испытуемый</th>
+                    <th>Компания</th>
+                    <th>Отдел</th>
+                    <th>Должность</th>
+                    <th>Учебная программа</th>
+                    <th>Тест</th>
+                    <th>Дата</th>
+                    <th>Оценка, %</th>
+                </thead>
+                <tbody>
+                    {% for test in test_list %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ test.user.get_full_name }}</td>
+                            <td>{{ test.user.company }}</td>
+                            <td>{{ test.user.department }}</td>
+                            <td>{{ test.user.position }}</td>
+                            <td>{{ test.test.journal.name }}</td>
+                            <td>{{ test.test.name }}</td>
+                            <td>{{ test.date_to|date:"d.m.Y" }}</td>
+                            <td>{{ test.result }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
     </div>
 {% endblock %}
 {% block scripts %}

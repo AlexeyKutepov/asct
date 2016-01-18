@@ -4,7 +4,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
-from main.models import UserProfile, ScheduledTheme, ScheduledSubTheme, ThemeExam, Company, Department, Journal
+from main.models import UserProfile, ScheduledTheme, ScheduledSubTheme, ThemeExam, Company, Department, Journal, \
+    TestJournal
 
 
 class Counter:
@@ -290,13 +291,18 @@ def prepare_test_report(request, probationer_list, company_list):
     :param company_list: список компаний для селектора
     :return:
     """
+    try:
+        test_list = TestJournal.objects.all()
+    except:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     return render(
         request,
         "reports/reports.html",
         {
             "probationer_list": probationer_list,
             "company_list": company_list,
-            "show_exam_list_report": True,
+            "test_list": test_list,
+            "show_test_report": True,
         }
     )
 
