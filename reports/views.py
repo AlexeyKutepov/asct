@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
-from main.models import UserProfile, ScheduledTheme, ScheduledSubTheme, ThemeExam, Company, Department
+from main.models import UserProfile, ScheduledTheme, ScheduledSubTheme, ThemeExam, Company, Department, Journal
 
 
 class Counter:
@@ -219,6 +219,38 @@ def prepare_all_company_report(request, probationer_list, company_list):
     )
 
 
+def prepare_exam_list_report(request, probationer_list, company_list):
+    try:
+        user_data = UserProfile.objects.get(id=request.POST["probationer"])
+        journal_list = Journal.objects.filter(company=user_data.company)
+        exam_list = ThemeExam.objects.filter(user=user_data)
+    except:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    result_journal_list = []
+    for journal in journal_list:
+        isHasExam = False
+        for exam in exam_list:
+            if exam.theme.journal == journal:
+                isHasExam = True
+                break
+        if isHasExam:
+            result_journal_list.append(journal)
+    if len(result_journal_list) == 0:
+        result_journal_list = None
+    return render(
+        request,
+        "reports/reports.html",
+        {
+            "probationer_list": probationer_list,
+            "company_list": company_list,
+            "user_data": user_data,
+            "journal_list": result_journal_list,
+            "exam_list": exam_list,
+            "show_exam_list_report": True,
+        }
+    )
+
+
 @login_required
 def reports(request):
     if request.user.user_type == UserProfile.PROBATIONER:
@@ -239,6 +271,8 @@ def reports(request):
         return prepare_company_report(request, probationer_list, company_list)
     elif "all_company_report" in request.POST:
         return prepare_all_company_report(request, probationer_list, company_list)
+    elif "exam_list_report" in request.POST:
+        return prepare_exam_list_report(request, probationer_list, company_list)
     return render(
         request,
         "reports/reports.html",
