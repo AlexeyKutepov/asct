@@ -12,44 +12,65 @@ $(document).ready(function () {
             $("#liExamListReport").removeClass( "active" );
             $("#liCompanyReport").removeClass( "active" );
             $("#liAllCompanyReport").removeClass( "active" );
+            $("#liTestReport").removeClass( "active" );
             $("#divProbationerReport").hide();
             $("#divDepartmentReport").show();
             $("#divExamListReport").hide();
             $("#divCompanyReport").hide();
             $("#divAllCompanyReport").hide();
+            $("#divTestReport").hide();
         } else if (tab == "examListReport") {
             $("#liProbationerReport").removeClass( "active" );
             $("#liDepartmentReport").removeClass( "active" );
             $("#liExamListReport").addClass( "active" );
             $("#liCompanyReport").removeClass( "active" );
             $("#liAllCompanyReport").removeClass( "active" );
+            $("#liTestReport").removeClass( "active" );
             $("#divProbationerReport").hide();
             $("#divDepartmentReport").hide();
             $("#divExamListReport").show();
             $("#divCompanyReport").hide();
             $("#divAllCompanyReport").hide();
+            $("#divTestReport").hide();
         } else if (tab == "companyReport") {
             $("#liProbationerReport").removeClass( "active" );
             $("#liDepartmentReport").removeClass( "active" );
             $("#liExamListReport").removeClass( "active" );
             $("#liCompanyReport").addClass( "active" );
             $("#liAllCompanyReport").removeClass( "active" );
+            $("#liTestReport").removeClass( "active" );
             $("#divProbationerReport").hide();
             $("#divDepartmentReport").hide();
             $("#divExamListReport").hide();
             $("#divCompanyReport").show();
             $("#divAllCompanyReport").hide();
+            $("#divTestReport").hide();
         } else if (tab == "allCompanyReport") {
             $("#liProbationerReport").removeClass( "active" );
             $("#liDepartmentReport").removeClass( "active" );
             $("#liExamListReport").removeClass( "active" );
             $("#liCompanyReport").removeClass( "active" );
             $("#liAllCompanyReport").addClass( "active" );
+            $("#liTestReport").removeClass( "active" );
             $("#divProbationerReport").hide();
             $("#divDepartmentReport").hide();
             $("#divExamListReport").hide();
             $("#divCompanyReport").hide();
             $("#divAllCompanyReport").show();
+            $("#divTestReport").hide();
+        } else if (tab == "testReport") {
+            $("#liProbationerReport").removeClass( "active" );
+            $("#liDepartmentReport").removeClass( "active" );
+            $("#liExamListReport").removeClass( "active" );
+            $("#liCompanyReport").removeClass( "active" );
+            $("#liAllCompanyReport").removeClass( "active" );
+            $("#liTestReport").addClass( "active" );
+            $("#divProbationerReport").hide();
+            $("#divDepartmentReport").hide();
+            $("#divExamListReport").hide();
+            $("#divCompanyReport").hide();
+            $("#divAllCompanyReport").hide();
+            $("#divTestReport").show();
         }
     }
 
@@ -60,11 +81,13 @@ $(document).ready(function () {
         $("#liExamListReport").removeClass( "active" );
         $("#liCompanyReport").removeClass( "active" );
         $("#liAllCompanyReport").removeClass( "active" );
+        $("#liTestReport").removeClass( "active" );
         $("#divProbationerReport").show();
         $("#divDepartmentReport").hide();
         $("#divExamListReport").hide();
         $("#divCompanyReport").hide();
         $("#divAllCompanyReport").hide();
+        $("#divTestReport").hide();
         window.localStorage.setItem("tab", "probationerReport")
     });
 
@@ -75,11 +98,13 @@ $(document).ready(function () {
         $("#liExamListReport").removeClass( "active" );
         $("#liCompanyReport").removeClass( "active" );
         $("#liAllCompanyReport").removeClass( "active" );
+        $("#liTestReport").removeClass( "active" );
         $("#divProbationerReport").hide();
         $("#divDepartmentReport").show();
         $("#divExamListReport").hide();
         $("#divCompanyReport").hide();
         $("#divAllCompanyReport").hide();
+        $("#divTestReport").hide();
         window.localStorage.setItem("tab", "departmentReport")
     });
 
@@ -90,11 +115,13 @@ $(document).ready(function () {
         $("#liExamListReport").addClass( "active" );
         $("#liCompanyReport").removeClass( "active" );
         $("#liAllCompanyReport").removeClass( "active" );
+        $("#liTestReport").removeClass( "active" );
         $("#divProbationerReport").hide();
         $("#divDepartmentReport").hide();
         $("#divExamListReport").show();
         $("#divCompanyReport").hide();
         $("#divAllCompanyReport").hide();
+        $("#divTestReport").hide();
         window.localStorage.setItem("tab", "examListReport")
     });
 
@@ -105,11 +132,13 @@ $(document).ready(function () {
         $("#liExamListReport").removeClass( "active" );
         $("#liCompanyReport").addClass( "active" );
         $("#liAllCompanyReport").removeClass( "active" );
+        $("#liTestReport").removeClass( "active" );
         $("#divProbationerReport").hide();
         $("#divDepartmentReport").hide();
         $("#divExamListReport").hide();
         $("#divCompanyReport").show();
         $("#divAllCompanyReport").hide();
+        $("#divTestReport").hide();
         window.localStorage.setItem("tab", "companyReport")
     });
 
@@ -120,12 +149,31 @@ $(document).ready(function () {
         $("#liExamListReport").removeClass( "active" );
         $("#liCompanyReport").removeClass( "active" );
         $("#liAllCompanyReport").addClass( "active" );
+        $("#liTestReport").removeClass( "active" );
         $("#divProbationerReport").hide();
         $("#divDepartmentReport").hide();
         $("#divExamListReport").hide();
         $("#divCompanyReport").hide();
         $("#divAllCompanyReport").show();
+        $("#divTestReport").hide();
         window.localStorage.setItem("tab", "allCompanyReport")
+    });
+
+    $("#aTestReport").click(function(e) {
+        e.preventDefault();
+        $("#liProbationerReport").removeClass( "active" );
+        $("#liDepartmentReport").removeClass( "active" );
+        $("#liExamListReport").removeClass( "active" );
+        $("#liCompanyReport").removeClass( "active" );
+        $("#liAllCompanyReport").removeClass( "active" );
+        $("#liTestReport").addClass( "active" );
+        $("#divProbationerReport").hide();
+        $("#divDepartmentReport").hide();
+        $("#divExamListReport").hide();
+        $("#divCompanyReport").hide();
+        $("#divAllCompanyReport").hide();
+        $("#divTestReport").show();
+        window.localStorage.setItem("tab", "testReport")
     });
 
 });

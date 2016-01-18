@@ -20,6 +20,8 @@
         </li>
         <li id="liAllCompanyReport" role="presentation"><a id="aAllCompanyReport" href="#">Мгновенный срез по группе компаний</a>
         </li>
+        <li id="liTestReport" role="presentation"><a id="aTestReport" href="#">План-график назначенных тестов</a>
+        </li>
     </ul>
     <p></p>
     <div id="divProbationerReport">
@@ -411,6 +413,9 @@
         </div>
         {% endfor %}
     {% endif %}
+    </div>
+    <div id="divTestReport" hidden>
+
     </div>
 {% endblock %}
 {% block scripts %}
