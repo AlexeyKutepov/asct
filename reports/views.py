@@ -133,6 +133,92 @@ def prepare_company_report(request, probationer_list, company_list):
     )
 
 
+def prepare_all_company_report(request, probationer_list, company_list):
+    all_company_report_data = []
+    for company in company_list:
+        try:
+            department_list = Department.objects.filter(company=company)
+        except:
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        company_report_data = []
+        in_total_completed_probationer_count = 0
+        in_total_probationer_count = 0
+        in_total_theme_count = 0
+        in_total_completed_theme_count = 0
+        in_total_exam_count = 0
+        in_total_completed_exam_count = 0
+        in_total_assessment = 0
+        for department in department_list:
+            probationer_data_list = UserProfile.objects.filter(department=department, user_type=UserProfile.PROBATIONER)
+            if len(probationer_data_list) == 0:
+                continue
+            else:
+                in_total_probationer_count += len(probationer_data_list)
+                completed_probationer_count = 0
+                theme_count = 0
+                completed_theme_count = 0
+                exam_count = 0
+                completed_exam_count = 0
+                assessment = 0
+                for probationer_data in probationer_data_list:
+                    theme_list = ScheduledTheme.objects.filter(user=probationer_data)
+                    completed_theme_list = ScheduledTheme.objects.filter(user=probationer_data, status=ScheduledTheme.COMPLETED)
+                    if len(theme_list) == len(completed_theme_list):
+                        in_total_completed_probationer_count += 1
+                        completed_probationer_count += 1
+                    theme_count += len(theme_list)
+                    in_total_theme_count += len(theme_list)
+                    completed_theme_count += len(completed_theme_list)
+                    in_total_completed_theme_count += len(completed_theme_list)
+
+                    exam_list = ThemeExam.objects.filter(user=probationer_data)
+                    exam_count += len(exam_list)
+                    in_total_exam_count += len(exam_list)
+                    for exam in exam_list:
+                        if exam.result:
+                            completed_exam_count += 1
+                            in_total_completed_exam_count += 1
+                            assessment += exam.result
+                            in_total_assessment += exam.result
+
+                result = {
+                    "department_name": department.name,
+                    "probationer_count": len(probationer_data_list),
+                    "completed_probationer_count": completed_probationer_count,
+                    "not_completed_probationer_count": len(probationer_data_list) - completed_probationer_count,
+                    "theme_progress": completed_theme_count/theme_count * 100 if theme_count else 0,
+                    "exam_progress": completed_exam_count/exam_count * 100 if completed_exam_count else 0,
+                    "assessment": assessment/completed_exam_count if completed_exam_count else 0,
+                }
+                company_report_data.append(result)
+        in_total = {
+             "probationer_count": in_total_probationer_count,
+             "completed_probationer_count": in_total_completed_probationer_count,
+             "not_completed_probationer_count": in_total_probationer_count - in_total_completed_probationer_count,
+             "theme_progress": in_total_completed_theme_count/in_total_theme_count * 100 if in_total_theme_count else 0,
+             "exam_progress": in_total_completed_exam_count/in_total_exam_count * 100 if in_total_completed_exam_count else 0,
+             "assessment": in_total_assessment/in_total_completed_exam_count if in_total_completed_exam_count else 0,
+        }
+        all_company_report_data.append(
+            {
+                "company": company,
+                "report": company_report_data,
+                "in_total": in_total
+            }
+        )
+
+    return render(
+        request,
+        "reports/reports.html",
+        {
+            "probationer_list": probationer_list,
+            "company_list": company_list,
+            "all_company_report_data": all_company_report_data,
+            "show_all_company_report": True,
+        }
+    )
+
+
 @login_required
 def reports(request):
     if request.user.user_type == UserProfile.PROBATIONER:
@@ -151,6 +237,8 @@ def reports(request):
         return prepare_probationer_report(request, probationer_list, company_list)
     elif "company_report" in request.POST:
         return prepare_company_report(request, probationer_list, company_list)
+    elif "all_company_report" in request.POST:
+        return prepare_all_company_report(request, probationer_list, company_list)
     return render(
         request,
         "reports/reports.html",
