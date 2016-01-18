@@ -283,6 +283,7 @@ class TestJournal(models.Model):
     STATUS = (
         (ASSIGNED, 'ASSIGNED'),
         (COMPLETED, 'COMPLETED'),
+        (OVERDUE, 'OVERDUE'),
     )
     # The user, who was complete the test
     user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)

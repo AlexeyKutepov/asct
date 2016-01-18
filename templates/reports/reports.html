@@ -435,6 +435,7 @@
                     <th>Учебная программа</th>
                     <th>Тест</th>
                     <th>Дата</th>
+                    <th>Статус</th>
                     <th>Оценка, %</th>
                 </thead>
                 <tbody>
@@ -448,6 +449,13 @@
                             <td>{{ test.test.journal.name }}</td>
                             <td>{{ test.test.name }}</td>
                             <td>{{ test.date_to|date:"d.m.Y" }}</td>
+                            {% if test.status == "ASSIGNED" %}
+                                <td>Назначен</td>
+                            {% elif test.status == "COMPLETED" %}
+                                <td>Пройден</td>
+                            {% else %}
+                                <td>Просрочен</td>
+                            {% endif %}
                             <td>{{ test.result }}</td>
                         </tr>
                     {% endfor %}
