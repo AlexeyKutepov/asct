@@ -59,7 +59,7 @@
                     <thead>
                         <tr>
                             <th colspan="5" style="text-align: center;">
-                                <p>{{ user_data.get_full_name }}
+                                <p><a href="{% url "user_info" id=user_data.id %}">{{ user_data.get_full_name }}</a>
                                 <p>{{ user_data.company }}, {{ user_data.department }}
                                 <p>{{ user_data.position }}
                             </th>
@@ -190,14 +190,18 @@
                         {% for result in result_list %}
                             <tr>
                                 <td>{{ forloop.counter }}</td>
-                                <td>{{ result.user }}</td>
+                                <td><a href="{% url "user_info" id=result.user.id %}">{{ result.user.get_full_name }}</a></td>
                                 <td>
+                                    {% if result.progress == "Темы не назначены" %}
+                                    Темы не назначены
+                                    {% else %}
                                     <div class="progress">
                                         <div class="progress-bar" role="progressbar" aria-valuenow="{{ result.progress }}"
                                              aria-valuemin="0" aria-valuemax="100" style="width: {{ result.progress }}%;">
                                             <span class="sr-only">{{ result.progress }}% Complete</span>
                                         </div>
                                     </div>
+                                    {% endif %}
                                 </td>
                                 <td>{{ result.assessment }}</td>
                             </tr>
@@ -205,8 +209,15 @@
                     </tbody>
                     <tfoot>
                         <th colspan="2">Итого</th>
-                        <th></th>
-                        <th></th>
+                        <th>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="{{ in_total_progress }}"
+                                     aria-valuemin="0" aria-valuemax="100" style="width: {{ in_total_progress }}%;">
+                                    <span class="sr-only">{{ in_total_progress }}% Complete</span>
+                                </div>
+                            </div>
+                        </th>
+                        <th>{{ in_total_assessment }}</th>
                     </tfoot>
                 </table>
             </div>
@@ -249,7 +260,7 @@
                     <tbody>
                         <tr>
                             <td width="20%"><b>ФИО сотрудника</b></td>
-                            <td>{{ user_data.get_full_name }}</td>
+                            <td><a href="{% url "user_info" id=user_data.id %}">{{ user_data.get_full_name }}</a></td>
                         </tr>
                         <tr>
                             <td width="20%"><b>Компания</b></td>
@@ -515,7 +526,7 @@
                     {% for test in test_list %}
                         <tr>
                             <td>{{ forloop.counter }}</td>
-                            <td>{{ test.user.get_full_name }}</td>
+                            <td><a href="{% url "user_info" id=test.user.id %}">{{ test.user.get_full_name }}</a></td>
                             <td>{{ test.user.company }}</td>
                             <td>{{ test.user.department }}</td>
                             <td>{{ test.user.position }}</td>
