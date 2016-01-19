@@ -139,7 +139,28 @@
         </div>
     {% endif %}
     </div>
-    <div id="divDepartmentReport" hidden></div>
+    <div id="divDepartmentReport" hidden>
+        <div class="row">
+            <div class="form-group col-lg-2">
+                <select id="selectCompany" name="company" class="selectpicker">
+                    {% for company in company_list %}
+                       <option value="{{ company.id }}">{{ company.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-lg-2">
+                <select id="selectDepartment" name="department" class="selectpicker">
+                </select>
+            </div>
+            <form id="formExamListReport" action="{% url "reports" %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="col-lg-4">
+                    <button type="submit" name="exam_list_report" class="btn btn-success">Сформировать</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
     <div id="divExamListReport" hidden>
     <div>
         <div class="row">

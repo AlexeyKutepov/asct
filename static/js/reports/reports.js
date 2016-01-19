@@ -176,7 +176,44 @@ $(document).ready(function () {
         window.localStorage.setItem("tab", "testReport")
     });
 
+    $('.selectpicker').selectpicker({
+        style: 'btn-default',
+        size: 4
+    });
+
+    $("#selectCompany").change(function() {
+        $.ajax({
+            type: "POST",
+            url: "/get/department/list/",
+            data: {
+                csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+                id: $(this).val()
+            },
+            success: function (data) {
+                $('#selectDepartment')
+                    .find('option')
+                    .remove()
+                    .end()
+                    .selectpicker('refresh')
+                ;
+                var departmentList = data["department_list"];
+                for (var i = 0; i < departmentList.length; i++) {
+                    $('#selectDepartment').append($("<option/>", {
+                        value: departmentList[i]["id"],
+                        text: departmentList[i]["name"]
+                    })).selectpicker('refresh');
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Error: " + errorThrown + xhr.status + xhr.responseText);
+            }
+        });
+    });
+
+    $("#selectCompany").trigger( "change" );
+
 });
+
 
 /**
  * Проверяем доступность локального хранилища
