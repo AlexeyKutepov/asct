@@ -307,6 +307,24 @@ def prepare_test_report(request, probationer_list, company_list):
     )
 
 
+def prepare_department_report(request, probationer_list, company_list):
+    """
+    Формирование отчёта "Ведомость подразделения"
+    :param request:
+    :param probationer_list: список испытуемых для селектора
+    :param company_list: список компаний для селектора
+    :return:
+    """
+    return render(
+        request,
+        "reports/reports.html",
+        {
+            "probationer_list": probationer_list,
+            "company_list": company_list
+        }
+    )
+
+
 @login_required
 def reports(request):
     if request.user.user_type == UserProfile.PROBATIONER:
@@ -323,6 +341,8 @@ def reports(request):
         company_list = [request.user.company, ]
     if "probationer_report" in request.POST:
         return prepare_probationer_report(request, probationer_list, company_list)
+    elif "department_report" in request.POST:
+        return prepare_department_report(request, probationer_list, company_list)
     elif "company_report" in request.POST:
         return prepare_company_report(request, probationer_list, company_list)
     elif "all_company_report" in request.POST:

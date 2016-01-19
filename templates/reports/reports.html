@@ -152,14 +152,17 @@
                 <select id="selectDepartment" name="department" class="selectpicker">
                 </select>
             </div>
-            <form id="formExamListReport" action="{% url "reports" %}" method="post" enctype="multipart/form-data">
+            <form id="formDepartmentReport" action="{% url "reports" %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="col-lg-4">
-                    <button type="submit" name="exam_list_report" class="btn btn-success">Сформировать</button>
+                    <button type="submit" name="department_report" class="btn btn-success">Сформировать</button>
                 </div>
             </form>
         </div>
+        <p></p>
+        {% if show_department_report %}
 
+        {% endif %}
     </div>
     <div id="divExamListReport" hidden>
     <div>
