@@ -141,19 +141,19 @@
     </div>
     <div id="divDepartmentReport" hidden>
         <div class="row">
-            <div class="form-group col-lg-2">
-                <select id="selectCompany" name="company" class="selectpicker">
-                    {% for company in company_list %}
-                       <option value="{{ company.id }}">{{ company.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="form-group col-lg-2">
-                <select id="selectDepartment" name="department" class="selectpicker">
-                </select>
-            </div>
             <form id="formDepartmentReport" action="{% url "reports" %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
+            {% csrf_token %}
+                <div class="form-group col-lg-2">
+                    <select id="selectCompany" name="company" class="selectpicker">
+                        {% for company in company_list %}
+                           <option value="{{ company.id }}">{{ company.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-lg-2">
+                    <select id="selectDepartment" name="department" class="selectpicker">
+                    </select>
+                </div>
                 <div class="col-lg-4">
                     <button type="submit" name="department_report" class="btn btn-success">Сформировать</button>
                 </div>
@@ -161,7 +161,42 @@
         </div>
         <p></p>
         {% if show_department_report %}
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table table-bordered table-hover">
+                    <tbody>
+                        <tr>
+                            <td width="15%"><b>Компания</b></td>
+                            <td>{{ department.company }}</td>
+                        </tr>
+                        <tr>
+                            <td width="15%"><b>Подразделение</b></td>
+                            <td>{{ department.name }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <th>№</th>
+                        <th width="45%">ФИО</th>
+                        <th width="30%">Прогресс</th>
+                        <th width="20%">Оценка</th>
+                    </thead>
+                    <tbody>
 
+                    </tbody>
+                    <tfoot>
+                        <th colspan="2">Итого</th>
+                        <th></th>
+                        <th></th>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
         {% endif %}
     </div>
     <div id="divExamListReport" hidden>

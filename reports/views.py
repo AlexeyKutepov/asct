@@ -315,12 +315,20 @@ def prepare_department_report(request, probationer_list, company_list):
     :param company_list: список компаний для селектора
     :return:
     """
+    try:
+        department = Department.objects.get(id=request.POST["department"])
+        user_list = UserProfile.objects.filter(department=department, user_type=UserProfile.PROBATIONER)
+
+    except:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     return render(
         request,
         "reports/reports.html",
         {
             "probationer_list": probationer_list,
-            "company_list": company_list
+            "company_list": company_list,
+            "department": department,
+            "show_department_report": True
         }
     )
 
