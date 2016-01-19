@@ -318,9 +318,30 @@ def prepare_department_report(request, probationer_list, company_list):
     try:
         department = Department.objects.get(id=request.POST["department"])
         user_list = UserProfile.objects.filter(department=department, user_type=UserProfile.PROBATIONER)
-
     except:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    result_list = []
+    for user in user_list:
+        theme_sub_list = ScheduledSubTheme.objects.filter(user=user)
+        completed_sub_theme_list = ScheduledSubTheme.objects.filter(user=user,
+                                                             status=ScheduledSubTheme.COMPLETED)
+        exam_list = ThemeExam.objects.filter(user=user)
+        assessment = 0
+        assessment_count = 0
+        for exam in exam_list:
+            if exam.result:
+                assessment += exam.result
+                assessment_count += 1
+        assessment = assessment/assessment_count if assessment_count != 0 else 0
+        result_list.append(
+            {
+                "user": user.get_full_name,
+                "progress": len(completed_sub_theme_list) / len(theme_sub_list) * 100 if len(theme_sub_list) else 0,
+                "assessment": assessment
+            }
+        )
+
+
     return render(
         request,
         "reports/reports.html",
@@ -328,6 +349,7 @@ def prepare_department_report(request, probationer_list, company_list):
             "probationer_list": probationer_list,
             "company_list": company_list,
             "department": department,
+            "result_list": result_list,
             "show_department_report": True
         }
     )
