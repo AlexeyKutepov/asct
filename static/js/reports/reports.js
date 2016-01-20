@@ -198,10 +198,19 @@ $(document).ready(function () {
                 ;
                 var departmentList = data["department_list"];
                 for (var i = 0; i < departmentList.length; i++) {
-                    $('#selectDepartment').append($("<option/>", {
-                        value: departmentList[i]["id"],
-                        text: departmentList[i]["name"]
-                    })).selectpicker('refresh');
+                    if ($('#departmentId').val() == departmentList[i]["id"]) {
+                        $('#selectDepartment').append($("<option/>", {
+                            value: departmentList[i]["id"],
+                            text: departmentList[i]["name"]
+                        })).selectpicker('refresh');
+                        $('#selectDepartment').val(departmentList[i]["id"]);
+                        $('#selectDepartment').selectpicker('refresh');
+                    } else {
+                        $('#selectDepartment').append($("<option/>", {
+                            value: departmentList[i]["id"],
+                            text: departmentList[i]["name"]
+                        })).selectpicker('refresh');
+                    }
                 }
             },
             error: function (xhr, textStatus, errorThrown) {
