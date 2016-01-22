@@ -62,8 +62,13 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="inputDateTo"><b>Срок до</b></label>
-                                    <input id="inputDateTo" name="dateTo" type="date" class="form-control" required>
+                                    <label for="datepickerThemeDateTo"><b>Срок до</b></label>
+                                    <div class='input-group date' id='datepickerThemeDateTo'>
+                                        <input type='text' name="dateTo" class="form-control" required/>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -97,8 +102,13 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="inputExamDate"><b>Дата и время проведения зачёта</b></label>
-                                    <input id="inputExamDate" name="datetime" type="datetime-local" class="form-control" required>
+                                    <label><b>Дата и время проведения зачёта</b></label>
+                                    <div class='input-group date' id='datetimepickerExamDateTo'>
+                                        <input type='text' name="datetime" class="form-control" required/>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -354,8 +364,13 @@
                                                 <div class="row">
                                                     <div class="col-lg-12">
                                                         <div class="form-group">
-                                                            <label for="inputDateTo"><b>Срок до</b></label>
-                                                            <input id="inputDateTo" name="dateTo" type="date" class="form-control" value="{{ item.date_to|date:"Y-m-d" }}" required>
+                                                            <label for="datepickerChangeThemeDateTo{{ forloop.counter }}"><b>Срок до</b></label>
+                                                            <div class='input-group date' id='datepickerChangeThemeDateTo{{ forloop.counter }}'>
+                                                                <input type='text' name="dateTo" class="form-control" value="{{ item.date_to|date:"d.m.Y" }}" required/>
+                                                                <span class="input-group-addon">
+                                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                                </span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -450,7 +465,12 @@
                                                             <div class="col-lg-12">
                                                                 <div class="form-group">
                                                                     <label><b>Дата и время проведения зачёта</b></label>
-                                                                    <input name="datetime" type="datetime-local" class="form-control" value="{{ exam.datetime|date:"Y-m-d" }}T{{ exam.datetime|date:"H:i" }}" required>
+                                                                    <div class='input-group date' id='datetimepickerChangeExamDateTo{{ forloop.counter }}'>
+                                                                        <input type='text' name="datetime" class="form-control" value="{{ exam.datetime|date:"d.m.Y H:i" }}" required/>
+                                                                        <span class="input-group-addon">
+                                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                                        </span>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
