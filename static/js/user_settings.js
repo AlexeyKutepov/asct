@@ -54,3 +54,10 @@ $(document).ready(function () {
         });
     });
 });
+
+$(function () {
+    $('#datetimepickerDateOfBirth').datetimepicker({
+                format: 'DD.MM.YYYY',
+                locale: 'ru'
+            });
+});

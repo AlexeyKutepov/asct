@@ -1,3 +1,4 @@
+import datetime
 import random
 import string
 from django.contrib import auth
@@ -69,7 +70,7 @@ def user_settings(request, id):
         user_data.last_name = request.POST["lastName"]
         user_data.first_name = request.POST["firstName"]
         user_data.middle_name = request.POST["middleName"]
-        user_data.date_of_birth = request.POST["dateOfBirth"]
+        user_data.date_of_birth = datetime.datetime.strptime(request.POST["dateOfBirth"], "%d.%m.%Y")
         user_data.gender = request.POST["gender"]
         if "company" in request.POST:
             company = Company.objects.get(id=request.POST["company"])
@@ -150,7 +151,7 @@ def create_new_user(request):
         user = auth.get_user_model().objects.create_user(
             email=email,
             password=password,
-            date_of_birth=request.POST["dateOfBirth"],
+            date_of_birth=datetime.datetime.strptime(request.POST["dateOfBirth"], "%d.%m.%Y"),
             last_name=request.POST["lastName"],
             first_name=request.POST["firstName"],
             middle_name=request.POST["middleName"],

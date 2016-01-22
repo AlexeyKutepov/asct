@@ -99,7 +99,12 @@
                 <div class="row">
                     <div class="form-group">
                         <label for="inputDateOfBirth"><b>* Дата рождения:</b></label>
-                        <input id="inputDateOfBirth" name="dateOfBirth" type="date" class="form-control" value="{{ user_data.date_of_birth|date:"Y-m-d" }}" required>
+                        <div class='input-group date' id='datetimepickerDateOfBirth'>
+                            <input type='text' name="dateOfBirth" class="form-control" value="{{ user_data.date_of_birth|date:"d.m.Y" }}" required/>
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <label class="control-label" for="divGender">Пол:</label>
