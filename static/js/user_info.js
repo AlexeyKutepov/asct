@@ -237,6 +237,20 @@ $(document).ready(function () {
 
 });
 
+
+$(function () {
+    $('div[id^="datepicker"]').datetimepicker({
+                format: 'DD.MM.YYYY',
+                locale: 'ru'
+            });
+});
+
+$(function () {
+    $('div[id^="datetimepicker"]').datetimepicker({
+                locale: 'ru'
+            });
+});
+
 /**
  * Проверяем доступность локального хранилища
  * @returns {boolean}

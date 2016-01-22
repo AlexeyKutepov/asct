@@ -1,3 +1,4 @@
+import datetime
 from django.utils import timezone
 from mimetypes import MimeTypes
 import pickle
@@ -604,14 +605,14 @@ def schedule_theme(request, id):
         except:
             return HttpResponseRedirect(reverse("index"))
         scheduled_theme = ScheduledTheme.objects.create(
-            date_to=request.POST["dateTo"],
+            date_to=datetime.datetime.strptime(request.POST["dateTo"], "%d.%m.%Y"),
             user=user,
             theme=theme
         )
         sub_theme_list = SubTheme.objects.filter(parent_theme=theme)
         for item in sub_theme_list:
             ScheduledSubTheme.objects.create(
-                date_to=request.POST["dateTo"],
+                date_to=datetime.datetime.strptime(request.POST["dateTo"], "%d.%m.%Y"),
                 user=user,
                 sub_theme=item,
                 scheduled_theme=scheduled_theme
@@ -646,14 +647,14 @@ def schedule_theme_to_user(request):
         except:
             return HttpResponseRedirect(reverse("index"))
         scheduled_theme = ScheduledTheme.objects.create(
-            date_to=request.POST["dateTo"],
+            date_to=datetime.datetime.strptime(request.POST["dateTo"], "%d.%m.%Y"),
             user=user,
             theme=theme
         )
         sub_theme_list = SubTheme.objects.filter(parent_theme=theme)
         for item in sub_theme_list:
             ScheduledSubTheme.objects.create(
-                date_to=request.POST["dateTo"],
+                date_to=datetime.datetime.strptime(request.POST["dateTo"], "%d.%m.%Y"),
                 user=user,
                 sub_theme=item,
                 scheduled_theme=scheduled_theme
@@ -690,7 +691,7 @@ def edit_scheduled_theme(request, id):
     except:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     if "dateTo" in request.POST:
-        scheduled_theme.date_to = request.POST["dateTo"]
+        scheduled_theme.date_to = datetime.datetime.strptime(request.POST["dateTo"], "%d.%m.%Y")
         if scheduled_theme.status == ScheduledTheme.OVERDUE:
             scheduled_theme.status = ScheduledTheme.ASSIGNED
         scheduled_theme.save()
@@ -716,14 +717,14 @@ def schedule_exam(request, id):
             user=user,
             examiner=examiner,
             theme=theme,
-            datetime=request.POST["datetime"],
+            datetime=datetime.datetime.strptime(request.POST["datetime"], "%d.%m.%Y %H:%M"),
             place=request.POST["place"],
         )
         try:
             send_mail(
                 'Вам назначен зачёт в ASCT',
                 'Здравствуйте ' + user.first_name + '! \n \n Вам назначен зачёт по теме: \"' + theme.name
-                + '\" \n\n Дата и время проведения зачёта: ' + theme_exam.datetime.replace('T', ' ')
+                + '\" \n\n Дата и время проведения зачёта: ' + str(theme_exam.datetime).replace('T', ' ')
                 + ' \n\n Место проведения зачёта: ' + request.POST["place"]
                 + ' \n\n Экзаменатор: ' + examiner.get_full_name()
                 ,
@@ -752,14 +753,14 @@ def edit_exam(request, id):
         except:
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         theme_exam.examiner = examiner
-        theme_exam.datetime = request.POST["datetime"]
+        theme_exam.datetime = datetime.datetime.strptime(request.POST["datetime"], "%d.%m.%Y %H:%M")
         theme_exam.place = request.POST["place"]
         theme_exam.save()
         try:
             send_mail(
                 'Изменение информации по зачёту в ASCT',
                 'Здравствуйте ' + user.first_name + '! \n \n Информация по зачёту была изменена. Актуальная информация:  \n \n Зачёт по теме: \"' + theme_exam.theme.name
-                + '\" \n\n Дата и время проведения зачёта: ' + theme_exam.datetime.replace('T', ' ')
+                + '\" \n\n Дата и время проведения зачёта: ' + str(theme_exam.datetime).replace('T', ' ')
                 + ' \n\n Место проведения зачёта: ' + request.POST["place"]
                 + ' \n\n Экзаменатор: ' + examiner.get_full_name()
                 ,
@@ -1600,7 +1601,7 @@ def schedule_test(request, id):
         except:
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         scheduled_test = TestJournal.objects.create(
-            date_to=request.POST["dateTo"],
+            date_to=datetime.datetime.strptime(request.POST["dateTo"], "%d.%m.%Y"),
             user=user,
             test=test
         )
@@ -1854,7 +1855,7 @@ def schedule_test_to_user(request):
         except:
             return HttpResponseRedirect(reverse("index"))
         scheduled_test = TestJournal.objects.create(
-            date_to=request.POST["dateTo"],
+            date_to=datetime.datetime.strptime(request.POST["dateTo"], "%d.%m.%Y"),
             user=user,
             test=test
         )
