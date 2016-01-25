@@ -1652,7 +1652,7 @@ def start_test(request, id):
         journal = TestJournal.objects.get(id=id)
     except:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    if request.user.is_authenticated():
+    if request.user.is_authenticated() and journal.user == request.user:
         progress = Progress.objects.filter(user=request.user, test=journal.test)
         if not progress:
             Progress.objects.get_or_create(
@@ -1670,7 +1670,13 @@ def start_test(request, id):
             progress.result_list = None
             progress.current_result = 0
             progress.save()
-    return HttpResponseRedirect(reverse("next_question", args=[id, 1]))
+        return HttpResponseRedirect(reverse("next_question", args=[id, 1]))
+    else:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+            }
+        return render(request, "alert.html", result)
 
 
 @login_required
