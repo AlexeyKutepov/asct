@@ -622,7 +622,7 @@ def schedule_theme(request, id):
                 'Вам назначена тема в ASCT',
                 'Здравствуйте ' + user.first_name + '! \n \n Вам назначена тема для изучения: \"' + theme.name
                 + '\" \n\n Срок до ' + request.POST["dateTo"]
-                + '\" \n\n Для изучения перейдите по ссылке: ' + request.build_absolute_uri(reverse("probationer_theme_settings", args=[scheduled_theme.id,])),
+                + ' \n\n Для изучения перейдите по ссылке: ' + request.build_absolute_uri(reverse("probationer_theme_settings", args=[scheduled_theme.id,])),
                 getattr(settings, "EMAIL_HOST_USER", None),
                 [user.email],
                 fail_silently=False
@@ -666,7 +666,7 @@ def schedule_theme_to_user(request):
                 'Вам назначена тема в ASCT',
                 'Здравствуйте ' + user.first_name + '! \n \n Вам назначена тема для изучения: \"' + theme.name
                 + '\" \n\n Срок до ' + request.POST["dateTo"]
-                + '\" \n\n Для изучения перейдите по ссылке: ' + request.build_absolute_uri(reverse("probationer_theme_settings", args=[scheduled_theme.id,])),
+                + ' \n\n Для изучения перейдите по ссылке: ' + request.build_absolute_uri(reverse("probationer_theme_settings", args=[scheduled_theme.id,])),
                 getattr(settings, "EMAIL_HOST_USER", None),
                 [user.email],
                 fail_silently=False
@@ -1612,7 +1612,8 @@ def schedule_test(request, id):
         try:
             send_mail(
                 'Вам назначен тест в ASCT',
-                'Здравствуйте ' + user.first_name + '! \n \n Вам назначен тест: \"' + test.name + '\" \n\n Срок до ' + request.POST["dateTo"],
+                'Здравствуйте ' + user.first_name + '! \n \n Вам назначен тест: \"' + test.name + '\" \n\n Срок до ' + request.POST["dateTo"]
+                + ' \n\n Для прохождения теста перейдите по ссылке: ' + request.build_absolute_uri(reverse("start_test", args=[scheduled_test.id,])),
                 getattr(settings, "EMAIL_HOST_USER", None),
                 [user.email],
                 fail_silently=False
@@ -1867,7 +1868,8 @@ def schedule_test_to_user(request):
         try:
             send_mail(
                 'Вам назначен тест в ASCT',
-                'Здравствуйте ' + user.first_name + '! \n \n Вам назначен тест: \"' + test.name + '\" \n\n Срок до ' + request.POST["dateTo"],
+                'Здравствуйте ' + user.first_name + '! \n \n Вам назначен тест: \"' + test.name + '\" \n\n Срок до ' + request.POST["dateTo"]
+                + ' \n\n Для прохождения теста перейдите по ссылке: ' + request.build_absolute_uri(reverse("start_test", args=[scheduled_test.id, ])),
                 getattr(settings, "EMAIL_HOST_USER", None),
                 [user.email],
                 fail_silently=False
