@@ -620,7 +620,9 @@ def schedule_theme(request, id):
         try:
             send_mail(
                 'Вам назначена тема в ASCT',
-                'Здравствуйте ' + user.first_name + '! \n \n Вам назначена тема для изучения: \"' + theme.name + '\" \n\n Срок до ' + request.POST["dateTo"],
+                'Здравствуйте ' + user.first_name + '! \n \n Вам назначена тема для изучения: \"' + theme.name
+                + '\" \n\n Срок до ' + request.POST["dateTo"]
+                + '\" \n\n Для изучения перейдите по ссылке: ' + request.build_absolute_uri(reverse("probationer_theme_settings", args=[scheduled_theme.id,])),
                 getattr(settings, "EMAIL_HOST_USER", None),
                 [user.email],
                 fail_silently=False
@@ -662,7 +664,9 @@ def schedule_theme_to_user(request):
         try:
             send_mail(
                 'Вам назначена тема в ASCT',
-                'Здравствуйте ' + user.first_name + '! \n \n Вам назначена тема для изучения: \"' + theme.name + '\" \n\n Срок до ' + request.POST["dateTo"],
+                'Здравствуйте ' + user.first_name + '! \n \n Вам назначена тема для изучения: \"' + theme.name
+                + '\" \n\n Срок до ' + request.POST["dateTo"]
+                + '\" \n\n Для изучения перейдите по ссылке: ' + request.build_absolute_uri(reverse("probationer_theme_settings", args=[scheduled_theme.id,])),
                 getattr(settings, "EMAIL_HOST_USER", None),
                 [user.email],
                 fail_silently=False
