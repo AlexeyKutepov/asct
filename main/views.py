@@ -871,6 +871,26 @@ def user_info(request, id):
         if test.date_to < timezone.now() and test.status != TestJournal.COMPLETED and test.status != TestJournal.OVERDUE:
             test.status = TestJournal.OVERDUE
             test.save()
+    assessment = None
+    assessment_count = 0
+    for exam in exam_list:
+        if exam.result:
+            if not assessment:
+                assessment = 0
+            assessment += exam.result
+            assessment_count += 1
+    if not assessment or assessment_count == 0:
+        assessment = "Нет данных"
+    else:
+        assessment = assessment/assessment_count
+
+    sub_theme_list = ScheduledSubTheme.objects.filter(user=user_data)
+    completed_sub_theme_list = ScheduledSubTheme.objects.filter(user=user_data,
+                                                         status=ScheduledSubTheme.COMPLETED)
+    if len(sub_theme_list) != 0:
+        progress = len(completed_sub_theme_list) / len(sub_theme_list) * 100 if len(sub_theme_list) else 0
+    else:
+        progress = "Темы не назначены"
     return render(
         request,
         "main/user_info.html",
@@ -879,7 +899,9 @@ def user_info(request, id):
             "scheduled_theme_list": scheduled_theme_list,
             "exam_list": exam_list,
             "test_list": test_list,
-            "examiner_list": examiner_list
+            "examiner_list": examiner_list,
+            "assessment": round(assessment, 2),
+            "progress": round(progress, 2)
         }
     )
 

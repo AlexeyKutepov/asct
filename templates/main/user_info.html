@@ -23,22 +23,40 @@
                      alt="Photo" width="200" height="200">
             {% endif %}
         </div>
-        <div class="col-lg-4">
-            <h4><b>ФИО: </b>{{ user_data.get_full_name | default:"" }}</h4>
-            <p><b>Компания: </b>{{ user_data.company | default:"" }}</p>
-            <p><b>Подразделение: </b>{{ user_data.department | default:"" }}</p>
-            <p><b>Должность: </b>{{ user_data.position | default:"" }}</p>
-            {% if user_data.user_type == "CURATOR" %}
-            <p><b>Тип пользователя: </b>Куратор</p>
-            {% elif user_data.user_type == "ADMIN" %}
-            <p><b>Тип пользователя: </b>Администратор</p>
-            {% elif user_data.user_type == "OPERATOR" %}
-            <p><b>Тип пользователя: </b>Оператор</p>
-            {% else %}
-            <p><b>Тип пользователя: </b>Испытуемый</p>
-            {% endif %}
+        <div class="col-lg-6">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h4><b>ФИО: </b>{{ user_data.get_full_name | default:"" }}</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <p><b>Компания: </b>{{ user_data.company | default:"" }}</p>
+                    <p><b>Подразделение: </b>{{ user_data.department | default:"" }}</p>
+                    <p><b>Должность: </b>{{ user_data.position | default:"" }}</p>
+                    {% if user_data.user_type == "CURATOR" %}
+                    <p><b>Тип пользователя: </b>Куратор</p>
+                    {% elif user_data.user_type == "ADMIN" %}
+                    <p><b>Тип пользователя: </b>Администратор</p>
+                    {% elif user_data.user_type == "OPERATOR" %}
+                    <p><b>Тип пользователя: </b>Оператор</p>
+                    {% else %}
+                    <p><b>Тип пользователя: </b>Испытуемый</p>
+                    {% endif %}
+                </div>
+                <div class="col-lg-6">
+                    <p><b>Средний балл (зачёты): </b>{{ assessment }}</p>
+                    <p><b>Прогресс: </b> {{ progress }}%</p>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress }}"
+                             aria-valuemin="0" aria-valuemax="100" style="width: {{ progress }}%;">
+                            <span class="sr-only">{{ progress }}% Complete</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-lg-5">
+        <div class="col-lg-3">
             <a href="{% url "user_settings" id=user_data.id %}"><input type="button" class="btn btn-default pull-right" value="Редактировать профиль пользователя"/></a>
         </div>
     </div>
@@ -522,7 +540,7 @@
                             <th>Назначен</th>
                             <th>Срок</th>
                             <th>Статус</th>
-                            <th>Результат</th>
+                            <th>Результат, %</th>
                             <th width="100px">Действия</th>
                         </thead>
                         <tbody>
