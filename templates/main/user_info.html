@@ -45,14 +45,18 @@
                     {% endif %}
                 </div>
                 <div class="col-lg-6">
+                    {% if assessment %}
                     <p><b>Средний балл (зачёты): </b>{{ assessment }}</p>
-                    <p><b>Прогресс: </b> {{ progress }}%</p>
+                    {% endif %}
+                {% if progress %}
+                    <p><b>Прогресс: </b> {{ progress }} %</p>
                     <div class="progress">
                         <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress }}"
                              aria-valuemin="0" aria-valuemax="100" style="width: {{ progress }}%;">
                             <span class="sr-only">{{ progress }}% Complete</span>
                         </div>
                     </div>
+                {% endif %}
                 </div>
             </div>
         </div>

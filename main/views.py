@@ -880,17 +880,17 @@ def user_info(request, id):
             assessment += exam.result
             assessment_count += 1
     if not assessment or assessment_count == 0:
-        assessment = "Нет данных"
+        assessment = None
     else:
-        assessment = assessment/assessment_count
+        assessment = round(assessment/assessment_count, 2)
 
     sub_theme_list = ScheduledSubTheme.objects.filter(user=user_data)
     completed_sub_theme_list = ScheduledSubTheme.objects.filter(user=user_data,
                                                          status=ScheduledSubTheme.COMPLETED)
     if len(sub_theme_list) != 0:
-        progress = len(completed_sub_theme_list) / len(sub_theme_list) * 100 if len(sub_theme_list) else 0
+        progress = round(len(completed_sub_theme_list) / len(sub_theme_list) * 100 if len(sub_theme_list) else 0, 2)
     else:
-        progress = "Темы не назначены"
+        progress = None
     return render(
         request,
         "main/user_info.html",
@@ -900,8 +900,8 @@ def user_info(request, id):
             "exam_list": exam_list,
             "test_list": test_list,
             "examiner_list": examiner_list,
-            "assessment": round(assessment, 2),
-            "progress": round(progress, 2)
+            "assessment": assessment,
+            "progress": progress
         }
     )
 
