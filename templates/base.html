@@ -63,8 +63,16 @@
                 </b></a>
             </div>
             <!-- /.navbar-header -->
+            <ul class="nav navbar-top-links navbar-left">
+                <li>
+                    <a href="{% url "index" %}"><i class="fa fa-dashboard fa-fw"></i> Рабочий стол</a>
+                </li>
+                {% if user.user_type != 'PROBATIONER' %}
+                    <li><a href="{% url "reports" %}"><i class="fa fa-file-text-o"></i> Отчёты</a></li>
+                {% endif %}
+            </ul>
             <ul class="nav navbar-top-links navbar-right">
-                <!-- /.dropdown -->
+                 <!-- /.dropdown -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
@@ -74,10 +82,6 @@
                         <li><a href="{% url "user_settings" id=user.id %}"><i class="fa fa-user fa-fw"></i> Профиль</a>
                         <li class="divider"></li>
                         {% endif %}
-{#                        </li>#}
-{#                        <li><a href=""><i class="fa fa-gear fa-fw"></i> Настройки</a>#}
-{#                        </li>#}
-
                         <li><a href="{% url "logout" %}"><i class="fa fa-sign-out fa-fw"></i> Выход</a>
                         </li>
                     </ul>
@@ -122,14 +126,6 @@
                                 <b>(Испытуемый)</b>
                             </li>
                         {% endif %}
-                        {% block menu %}
-                        <li>
-                            <a href="{% url "index" %}"><i class="fa fa-dashboard fa-fw"></i> Рабочий стол</a>
-                            {% if user.user_type != 'PROBATIONER' %}
-                                <a href="{% url "reports" %}"><i class="fa fa-file-text-o"></i> Отчёты</a>
-                            {% endif %}
-                        </li>
-                        {% endblock %}
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
