@@ -64,6 +64,11 @@
             </div>
             <!-- /.navbar-header -->
             <ul class="nav navbar-top-links navbar-left">
+                {% block backbutton %}
+                <li>
+                    <a onclick="history.go(-1);"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span> Назад</a>
+                </li>
+                {% endblock %}
                 <li>
                     <a href="{% url "index" %}"><i class="fa fa-dashboard fa-fw"></i> Рабочий стол</a>
                 </li>
@@ -72,6 +77,8 @@
                 {% endif %}
             </ul>
             <ul class="nav navbar-top-links navbar-right">
+
+                <li>{{ user.get_full_name }}</li>
                  <!-- /.dropdown -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -91,45 +98,45 @@
             </ul>
             <!-- /.navbar-top-links -->
 
-            <div class="navbar-default sidebar" role="navigation">
-                <div class="sidebar-nav navbar-collapse">
-                    <ul class="nav" id="side-menu">
-                        <li class="sidebar-photo">
-                            {% if user.photo %}
-                                <img src="{{ MEDIA_URL }}{{ user.photo }}" alt="Фото" width="200px" height="auto" style="height:auto !important;">
-                            {% else %}
-                                <img src="holder.js/200x200">
-                            {% endif %}
-                        </li>
-                        <li class="sidebar-name" style="text-align: center">
-                            <b>{{ user.get_full_name }}</b>
-                        </li>
-                        {% if user.position %}
-                            <li class="sidebar-name" style="text-align: center">
-                                <b>{{ user.position }}</b>
-                            </li>
-                        {% endif %}
-                        {% if user.user_type == 'CURATOR' %}
-                            <li class="sidebar-name" style="text-align: center">
-                                <b>(Куратор)</b>
-                            </li>
-                        {% elif user.user_type == 'ADMIN' %}
-                            <li class="sidebar-name" style="text-align: center">
-                                <b>(Администратор)</b>
-                            </li>
-                        {% elif user.user_type == 'OPERATOR' %}
-                            <li class="sidebar-name" style="text-align: center">
-                                <b >(Оператор)</b>
-                            </li>
-                        {% elif user.user_type == 'PROBATIONER' %}
-                            <li class="sidebar-name" style="text-align: center">
-                                <b>(Испытуемый)</b>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </div>
-                <!-- /.sidebar-collapse -->
-            </div>
+{#            <div class="navbar-default sidebar" role="navigation">#}
+{#                <div class="sidebar-nav navbar-collapse">#}
+{#                    <ul class="nav" id="side-menu">#}
+{#                        <li class="sidebar-photo">#}
+{#                            {% if user.photo %}#}
+{#                                <img src="{{ MEDIA_URL }}{{ user.photo }}" alt="Фото" width="200px" height="auto" style="height:auto !important;">#}
+{#                            {% else %}#}
+{#                                <img src="holder.js/200x200">#}
+{#                            {% endif %}#}
+{#                        </li>#}
+{#                        <li class="sidebar-name" style="text-align: center">#}
+{#                            <b>{{ user.get_full_name }}</b>#}
+{#                        </li>#}
+{#                        {% if user.position %}#}
+{#                            <li class="sidebar-name" style="text-align: center">#}
+{#                                <b>{{ user.position }}</b>#}
+{#                            </li>#}
+{#                        {% endif %}#}
+{#                        {% if user.user_type == 'CURATOR' %}#}
+{#                            <li class="sidebar-name" style="text-align: center">#}
+{#                                <b>(Куратор)</b>#}
+{#                            </li>#}
+{#                        {% elif user.user_type == 'ADMIN' %}#}
+{#                            <li class="sidebar-name" style="text-align: center">#}
+{#                                <b>(Администратор)</b>#}
+{#                            </li>#}
+{#                        {% elif user.user_type == 'OPERATOR' %}#}
+{#                            <li class="sidebar-name" style="text-align: center">#}
+{#                                <b >(Оператор)</b>#}
+{#                            </li>#}
+{#                        {% elif user.user_type == 'PROBATIONER' %}#}
+{#                            <li class="sidebar-name" style="text-align: center">#}
+{#                                <b>(Испытуемый)</b>#}
+{#                            </li>#}
+{#                        {% endif %}#}
+{#                    </ul>#}
+{#                </div>#}
+{#                <!-- /.sidebar-collapse -->#}
+{#            </div>#}
             <!-- /.navbar-static-side -->
         </nav>
         <div id="page-wrapper">
