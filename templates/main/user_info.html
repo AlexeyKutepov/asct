@@ -4,6 +4,11 @@
         <link href="/static/css/bootstrap-select.min.css" rel="stylesheet">
     {% endif %}
 {% endblock %}
+{% block backbutton %}
+<li>
+    <a href="{% url "index" %}"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span> Назад</a>
+</li>
+{% endblock %}
 {% block dashboard %}
     {% csrf_token %}
     <div class="row">

@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block style %}
 {% endblock %}
+{% block backbutton %}
+<li>
+    <a href="{% url "theme_settings" id=sub_theme.parent_theme.id %}"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span> Назад</a>
+</li>
+{% endblock %}
 {% block dashboard %}
     <div class="row">
         <div class="col-lg-12">
