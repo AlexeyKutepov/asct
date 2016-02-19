@@ -30,6 +30,29 @@
                 </div>
             </div>
             {% endif %}
+            {% if department_list %}
+            <div class="col-lg-11">
+                <label for="selectDepartment"><b>Подразделение</b></label>
+                <div class="row">
+                    <div class="col-lg-2">
+                        <div class="form-group">
+                            <p><select id="selectDepartment" name="department" class="selectpicker">
+                                {% for department in department_list %}
+                                    <option value="{{ department.id }}">{{ department }}</option>
+                                {% endfor %}
+                            </select></p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="checkbox">
+                          <label>
+                            <input id="checkboxBindDepartment" type="checkbox" name="bindDepartment" checked> Привязать к подразделению
+                          </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
             <div class="col-lg-11">
                 <div class="form-group">
                     <label for="inputDescription">Описание</label>
@@ -48,4 +71,5 @@
 {% endblock %}
 {% block scripts %}
     <script src="/static/js/bootstrap-select.js"></script>
+    <script src="/static/js/create_journal.js"></script>
 {% endblock %}

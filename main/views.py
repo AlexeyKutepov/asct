@@ -319,7 +319,19 @@ def create_journal(request):
             company_list = Company.objects.all()
         else:
             company_list = []
-        return render(request, "main/create_journal.html", {"company_list": company_list})
+        if request.user.company.id:
+            company = Company.objects.get(id=request.user.company.id)
+            department_list = Department.objects.filter(company=company)
+        else:
+            department_list = []
+        return render(
+            request,
+            "main/create_journal.html",
+            {
+                "company_list": company_list,
+                "department_list": department_list
+            }
+        )
 
 
 @login_required
