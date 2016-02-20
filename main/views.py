@@ -307,11 +307,16 @@ def create_journal(request):
                 company = request.user.company
         else:
             company = request.user.company
+        if "bindDepartment" in request.POST and request.POST["bindDepartment"] == 'on' and "department" in request.POST:
+            department = Department.objects.get(id=request.POST["department"])
+        else:
+            department = None
         journal = Journal.objects.create(
             name=request.POST["name"],
             description=request.POST["description"],
             owner=request.user,
-            company=company
+            company=company,
+            department=department
         )
         return HttpResponseRedirect(reverse("journal_settings", args=[journal.id, ]))
     else:

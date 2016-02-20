@@ -151,6 +151,8 @@ class Journal(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
     # Company
     company = models.ForeignKey(Company, blank=True, null=True)
+    # Department
+    department = models.ForeignKey(Department, blank=True, null=True)
 
 
 
