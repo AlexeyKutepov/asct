@@ -361,6 +361,10 @@ def edit_journal(request, id):
             journal.company = company
         except:
             pass
+    if "bindDepartment" in request.POST and request.POST["bindDepartment"] == 'on' and "department" in request.POST:
+        journal.department = Department.objects.get(id=request.POST["department"])
+    else:
+        journal.department = None
     journal.save()
     return HttpResponseRedirect(reverse("journal_settings", args=[journal.id,]))
 
@@ -441,6 +445,7 @@ def journal_settings(request, id):
         company_list = Company.objects.all()
     else:
         company_list = []
+    department_list = Department.objects.filter(company=journal.company)
     return render(
         request,
         "main/journal_settings.html",
@@ -448,7 +453,8 @@ def journal_settings(request, id):
             "journal": journal,
             "theme_list": theme_list,
             "company_list": company_list,
-            "test_list": test_list
+            "test_list": test_list,
+            "department_list": department_list
         }
     )
 
