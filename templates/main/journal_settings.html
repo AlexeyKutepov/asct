@@ -94,7 +94,11 @@
                                     <label for="selectCompany"><b>Компания</b></label>
                                     <p><select id="selectCompany" name="company" class="selectpicker">
                                         {% for company in company_list %}
+                                            {% if journal.company == company %}
+                                            <option value="{{ company.id }}" selected>{{ company.name }}</option>
+                                            {% else %}
                                             <option value="{{ company.id }}">{{ company.name }}</option>
+                                            {% endif %}
                                         {% endfor %}
                                     </select>
                                 </div>
