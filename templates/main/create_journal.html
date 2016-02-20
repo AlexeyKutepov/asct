@@ -24,7 +24,11 @@
                     <label for="selectCompany"><b>Компания</b></label>
                     <p><select id="selectCompany" name="company" class="selectpicker">
                         {% for company in company_list %}
-                            <option value="{{ company.id }}">{{ company.name }}</option>
+                            {% if company == user.company %}
+                                <option value="{{ company.id }}" selected>{{ company }}</option>
+                            {% else %}
+                                <option value="{{ company.id }}">{{ company }}</option>
+                            {% endif %}
                         {% endfor %}
                     </select>
                 </div>
