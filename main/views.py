@@ -141,7 +141,7 @@ def get_journal_list(request):
         except:
             user = None
         if user and request.user.user_type != UserProfile.PROBATIONER:
-            journal_list = Journal.objects.filter(company=user.company)
+            journal_list = Journal.objects.filter(Q(company=user.company) & (Q(department=user.department) | Q(department=None)))
         else:
             journal_list = []
     elif request.user.user_type == UserProfile.CURATOR:
@@ -802,7 +802,17 @@ def get_probationer_list(request):
         except:
             theme = None
         if theme:
-            probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=theme.journal.company)
+            if theme.journal.department:
+                probationer_list = UserProfile.objects.filter(
+                    Q(user_type=UserProfile.PROBATIONER)
+                    & Q(company=theme.journal.company)
+                    & Q(department=theme.journal.department)
+                )
+            else:
+                probationer_list = UserProfile.objects.filter(
+                    user_type=UserProfile.PROBATIONER,
+                    company=theme.journal.company
+                )
         else:
             probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER)
         result = {}
@@ -820,7 +830,17 @@ def get_probationer_list(request):
         except:
             test = None
         if test:
-            probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=test.journal.company)
+            if test.journal.department:
+                probationer_list = UserProfile.objects.filter(
+                    Q(user_type=UserProfile.PROBATIONER)
+                    & Q(company=test.journal.company)
+                    & Q(department=test.journal.department)
+                )
+            else:
+                probationer_list = UserProfile.objects.filter(
+                    user_type=UserProfile.PROBATIONER,
+                    company=test.journal.company
+                )
         else:
             probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER)
         result = {}
