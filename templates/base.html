@@ -77,7 +77,13 @@
                 <li><img class="img-circle"
                          src="{{ MEDIA_URL }}{{ user.photo }}"
                          alt="Photo" width="45" height="45"></li>
-                <li>{{ user.get_full_name }}</li>
+                <li>{{ user.get_full_name }}
+                    {% if user.user_type == 'CURATOR' %}(Куратор)
+                    {% elif user.user_type == 'ADMIN' %}(Администратор)
+                    {% elif user.user_type == 'OPERATOR' %}(Оператор)
+                    {% elif user.user_type == 'PROBATIONER' %}(Испытуемый)
+                    {% endif %}
+                </li>
                  <!-- /.dropdown -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">

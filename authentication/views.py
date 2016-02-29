@@ -178,7 +178,13 @@ def create_new_user(request):
         }
         return render(request, "alert.html", result)
     else:
-        company_list = Company.objects.all()
+        if request.user.user_type == UserProfile.CURATOR:
+            company_list = Company.objects.all()
+        else:
+            company_list = [
+                Company.objects.get(id=request.user.company.id)
+            ]
+
         if company_list:
             department_list = Department.objects.filter(company=company_list[0])
         else:
