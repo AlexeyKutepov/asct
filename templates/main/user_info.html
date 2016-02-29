@@ -58,7 +58,7 @@
                     <div class="progress">
                         <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress }}"
                              aria-valuemin="0" aria-valuemax="100" style="width: {{ progress }}%;">
-                            <span class="sr-only">{{ progress }}% Complete</span>
+                            {{ progress }}%
                         </div>
                     </div>
                 {% endif %}
@@ -293,7 +293,7 @@
                                         <div class="progress">
                                             <div class="progress-bar" role="progressbar" aria-valuenow="{{ item.progress }}"
                                                  aria-valuemin="0" aria-valuemax="100" style="width: {{ item.progress }}%;">
-                                                <span class="sr-only">{{ item.progress }}% Complete</span>
+                                                {{ item.progress }}%
                                             </div>
                                         </div>
                                     </td>

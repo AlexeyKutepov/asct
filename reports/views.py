@@ -122,8 +122,8 @@ def prepare_company_report(request, probationer_list, company_list):
                 "probationer_count": len(probationer_data_list),
                 "completed_probationer_count": completed_probationer_count,
                 "not_completed_probationer_count": len(probationer_data_list) - completed_probationer_count,
-                "theme_progress": completed_theme_count / theme_count * 100 if theme_count else 0,
-                "exam_progress": completed_exam_count / exam_count * 100 if completed_exam_count else 0,
+                "theme_progress": round(completed_theme_count / theme_count * 100, 1) if theme_count else 0,
+                "exam_progress": round(completed_exam_count / exam_count * 100, 1) if completed_exam_count else 0,
                 "assessment": assessment / completed_exam_count if completed_exam_count else 0,
             }
             company_report_data.append(result)
@@ -131,8 +131,8 @@ def prepare_company_report(request, probationer_list, company_list):
         "probationer_count": in_total_probationer_count,
         "completed_probationer_count": in_total_completed_probationer_count,
         "not_completed_probationer_count": in_total_probationer_count - in_total_completed_probationer_count,
-        "theme_progress": in_total_completed_theme_count / in_total_theme_count * 100 if in_total_theme_count else 0,
-        "exam_progress": in_total_completed_exam_count / in_total_exam_count * 100 if in_total_completed_exam_count else 0,
+        "theme_progress": round(in_total_completed_theme_count / in_total_theme_count * 100, 1) if in_total_theme_count else 0,
+        "exam_progress": round(in_total_completed_exam_count / in_total_exam_count * 100, 1) if in_total_completed_exam_count else 0,
         "assessment": in_total_assessment / in_total_completed_exam_count if in_total_completed_exam_count else 0,
     }
 
@@ -211,8 +211,8 @@ def prepare_all_company_report(request, probationer_list, company_list):
                     "probationer_count": len(probationer_data_list),
                     "completed_probationer_count": completed_probationer_count,
                     "not_completed_probationer_count": len(probationer_data_list) - completed_probationer_count,
-                    "theme_progress": completed_theme_count / theme_count * 100 if theme_count else 0,
-                    "exam_progress": completed_exam_count / exam_count * 100 if completed_exam_count else 0,
+                    "theme_progress": round(completed_theme_count / theme_count * 100, 1) if theme_count else 0,
+                    "exam_progress": round(completed_exam_count / exam_count * 100, 1) if completed_exam_count else 0,
                     "assessment": assessment / completed_exam_count if completed_exam_count else 0,
                 }
                 company_report_data.append(result)
@@ -220,8 +220,8 @@ def prepare_all_company_report(request, probationer_list, company_list):
             "probationer_count": in_total_probationer_count,
             "completed_probationer_count": in_total_completed_probationer_count,
             "not_completed_probationer_count": in_total_probationer_count - in_total_completed_probationer_count,
-            "theme_progress": in_total_completed_theme_count / in_total_theme_count * 100 if in_total_theme_count else 0,
-            "exam_progress": in_total_completed_exam_count / in_total_exam_count * 100 if in_total_completed_exam_count else 0,
+            "theme_progress": round(in_total_completed_theme_count / in_total_theme_count * 100, 1) if in_total_theme_count else 0,
+            "exam_progress": round(in_total_completed_exam_count / in_total_exam_count * 100, 1) if in_total_completed_exam_count else 0,
             "assessment": in_total_assessment / in_total_completed_exam_count if in_total_completed_exam_count else 0,
         }
         all_company_report_data.append(
@@ -342,7 +342,7 @@ def prepare_department_report(request, probationer_list, company_list):
                 in_total_assessment_count += 1
         assessment = assessment/assessment_count if assessment_count != 0 else "Нет оценок по зачётам"
         if len(theme_sub_list) != 0:
-            progress = len(completed_sub_theme_list) / len(theme_sub_list) * 100 if len(theme_sub_list) else 0
+            progress = round(len(completed_sub_theme_list) / len(theme_sub_list) * 100, 1) if len(theme_sub_list) else 0
         else:
             progress = "Темы не назначены"
         result_list.append(
@@ -363,7 +363,7 @@ def prepare_department_report(request, probationer_list, company_list):
             "company_list": company_list,
             "department": department,
             "result_list": result_list,
-            "in_total_progress": in_total_completed_sub_theme_list_count / in_sub_theme_list_count * 100 if in_sub_theme_list_count else 0,
+            "in_total_progress": round(in_total_completed_sub_theme_list_count / in_sub_theme_list_count * 100, 1) if in_sub_theme_list_count else 0,
             "in_total_assessment": in_total_assessment,
             "show_department_report": True
         }
