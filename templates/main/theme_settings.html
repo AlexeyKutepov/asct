@@ -2,11 +2,6 @@
 {% block style %}
 <link href="/static/css/bootstrap-select.min.css" rel="stylesheet">
 {% endblock %}
-{% block backbutton %}
-<li>
-    <a href="{% url "journal_settings" id=theme.journal.id %}"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span> Назад</a>
-</li>
-{% endblock %}
 {% block dashboard %}
     <form id="formCreateSubTheme" action="{% url "create_sub_theme" %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}

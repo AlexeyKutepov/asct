@@ -1,9 +1,4 @@
 {% extends "base.html" %}
-{% block backbutton %}
-<li>
-    <a href="{% url "test_settings" id=journal.test.id %}"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span> Назад</a>
-</li>
-{% endblock %}
 {% block dashboard %}
 {% load poll_extras %}
 <div class="row">

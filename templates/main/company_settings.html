@@ -1,9 +1,4 @@
 {% extends "base.html" %}
-{% block backbutton %}
-<li>
-    <a href="{% url "index" %}"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span> Назад</a>
-</li>
-{% endblock %}
 {% block dashboard %}
     <div class="row">
         <div class="col-lg-12">
@@ -44,7 +39,7 @@
     {% endif %}
         {% csrf_token %}
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-12">
                 <div class="form-group">
                     <input type="hidden" name="companyId" value="{{ company.id|default:"" }}"/>
                     <label for="inputCompany">Название компании</label>
@@ -52,7 +47,9 @@
                            placeholder="Введите название компании..." value="{{ company.name|default:"" }}" required>
                 </div>
             </div>
-            <div class="col-lg-6">
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         Подразделения
@@ -83,8 +80,13 @@
                 </div>
             </div>
         </div>
+{#        <div class="row">#}
+{#            <div class="col-lg-12">#}
+{#                <a href="{% url "add_department" %}"><input id="buttonAddDepartment" type="button" class="btn btn-primary pull-right" value="Добавить подразделение"/></a>#}
+{#            </div>#}
+{#        </div>#}
         <div class="row">
-            <div class="col-lg-offset-4 col-lg-12">
+            <div class="col-lg-offset-5 col-lg-12">
                 <a href="{% url "index" %}"><input type="button" class="btn btn-default" value="Отмена"/></a>
                 <button id="btnSubmit" type="submit" class="btn btn-success" name="save">Сохранить</button>
             </div>

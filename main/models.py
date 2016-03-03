@@ -51,6 +51,7 @@ class Position(models.Model):
 class Department(models.Model):
     name = models.TextField()
     company = models.ForeignKey(Company)
+    position = models.ManyToManyField(Position, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -153,7 +154,6 @@ class Journal(models.Model):
     company = models.ForeignKey(Company, blank=True, null=True)
     # Department
     department = models.ForeignKey(Department, blank=True, null=True)
-
 
 
 class Theme(models.Model):

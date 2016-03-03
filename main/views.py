@@ -266,6 +266,11 @@ def edit_company_save(request):
 
 
 @login_required
+def add_department(request):
+    return render(request, "main/department_settings.html")
+
+
+@login_required
 def delete_company(request, id):
     if request.user.user_type == UserProfile.PROBATIONER:
         result = {
