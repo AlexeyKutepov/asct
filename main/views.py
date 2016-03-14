@@ -267,7 +267,26 @@ def edit_company_save(request):
 
 @login_required
 def add_department(request):
-    return render(request, "main/department_settings.html")
+    try:
+        company = Company.objects.get(id=request.POST["companyId"])
+    except:
+        result = {
+            "status": "danger",
+            "message": "Ошибка выполнения операции!"
+        }
+        return render(request, "alert.html", result)
+    if "name" in request.POST:
+        department_list_in_base = Department.objects.filter(company=company, name=request.POST["name"])
+        if len(department_list_in_base) == 0:
+            Department.objects.create(name=request.POST["name"], company=company)
+        else:
+            result = {
+                "status": "danger",
+                "message": "Ошибка выполнения операции! Подразделение " + request.POST["name"] + " уже существует в компании " + company.name
+            }
+            return render(request, "alert.html", result)
+
+    return HttpResponseRedirect(reverse("edit_company", args=[company.id, ]))
 
 
 @login_required

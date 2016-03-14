@@ -1,5 +1,36 @@
 {% extends "base.html" %}
 {% block dashboard %}
+     <form id="formAddDepartment" action="{% url "add_department" %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+        <div id="modalAddDepartment" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalAddDepartment">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Добавить новое подразделение</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label>Название подразделения</label>
+                                    <input type="text" class="form-control" name="name" placeholder="Название подразделения">
+                                    <input type="hidden" name="companyId" value="{{ company.id }}"/>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                        <button type="submit" name="save" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
     <div class="row">
         <div class="col-lg-12">
             <h3 class="page-header">{{ title }}</h3>
@@ -42,9 +73,20 @@
             <div class="col-lg-12">
                 <div class="form-group">
                     <input type="hidden" name="companyId" value="{{ company.id|default:"" }}"/>
-                    <label for="inputCompany">Название компании</label>
-                    <input type="text" class="form-control" id="inputCompany" name="company"
-                           placeholder="Введите название компании..." value="{{ company.name|default:"" }}" required>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="inputCompany">Название компании</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-11">
+                            <input type="text" class="form-control" id="inputCompany" name="company"
+                                   placeholder="Введите название компании..." value="{{ company.name|default:"" }}" required>
+                        </div>
+                        <div class="col-lg-1">
+                            <button id="btnSubmit" type="submit" class="btn btn-success pull-right" name="save">Сохранить</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -69,28 +111,28 @@
                             {% endfor %}
                         </table>
                     </div>
-                    <div class="panel-footer input-group custom-search-form">
-                        <input id="inputDepartment" type="text" class="form-control" placeholder="Введите название подразделения...">
-                        <span class="input-group-btn">
-                            <button id="buttonDepartmentAdd" class="btn btn-success" type="button">
-                                Добавить
-                            </button>
-                        </span>
-                    </div>
+{#                    <div class="panel-footer input-group custom-search-form">#}
+{#                        <input id="inputDepartment" type="text" class="form-control" placeholder="Введите название подразделения...">#}
+{#                        <span class="input-group-btn">#}
+{#                            <button id="buttonDepartmentAdd" class="btn btn-success" type="button">#}
+{#                                Добавить#}
+{#                            </button>#}
+{#                        </span>#}
+{#                    </div>#}
                 </div>
             </div>
         </div>
-{#        <div class="row">#}
-{#            <div class="col-lg-12">#}
-{#                <a href="{% url "add_department" %}"><input id="buttonAddDepartment" type="button" class="btn btn-primary pull-right" value="Добавить подразделение"/></a>#}
-{#            </div>#}
-{#        </div>#}
         <div class="row">
-            <div class="col-lg-offset-5 col-lg-12">
-                <a href="{% url "index" %}"><input type="button" class="btn btn-default" value="Отмена"/></a>
-                <button id="btnSubmit" type="submit" class="btn btn-success" name="save">Сохранить</button>
+            <div class="col-lg-offset-1 col-lg-6">
+               <input id="buttonAddDepartment" type="button" class="btn btn-primary pull-right" value="Добавить подразделение" data-toggle="modal" data-target="#modalAddDepartment"/>
             </div>
         </div>
+{#        <div class="row">#}
+{#            <div class="col-lg-offset-5 col-lg-12">#}
+{#                <a href="{% url "index" %}"><input type="button" class="btn btn-default" value="Отмена"/></a>#}
+{#                <button id="btnSubmit" type="submit" class="btn btn-success" name="save">Сохранить</button>#}
+{#            </div>#}
+{#        </div>#}
     </form>
 {% endblock %}
 {% block scripts %}
