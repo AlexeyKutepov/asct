@@ -294,6 +294,7 @@ def department_settings(request, id):
     department = Department.objects.get(id=id)
     position_list = Position.objects.all()
     if "save" in request.POST:
+        department.name = request.POST["department"]
         in_department_list = request.POST.getlist("inDepartment")
         i = 0
         for position in position_list:
