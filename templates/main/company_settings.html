@@ -36,9 +36,6 @@
             <h3 class="page-header">{{ title }}</h3>
         </div>
     </div>
-    {% if isCreate %}
-    <form id="formUserSettings" action="{% url "create_new_company" %}" method="post" enctype="multipart/form-data">
-    {% else %}
     <form action="{% url "delete_company" id=company.id %}" method="post">
         {% csrf_token %}
         <div class="modal fade" id="modalDeleteCompany" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -67,7 +64,6 @@
     </div>
     <p></p>
     <form id="formUserSettings" action="{% url "edit_company_save" %}" method="post" enctype="multipart/form-data">
-    {% endif %}
         {% csrf_token %}
         <div class="row">
             <div class="col-lg-12">
@@ -90,73 +86,58 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        Подразделения
-                    </div>
-                    <div class="panel-body user-panel">
-                        <table id="tableDepartmentList" class="table table-hover">
-                            {% for department in department_list %}
-                            <tr>
-                                <td>{{ department }}</td>
-                                <td>
-                                    <form id="formDeleteDepartment{{ forloop.counter }}" action="{% url "delete_department" id=department.id %}" method="post">
-                                        {% csrf_token %}
-                                        <!-- Modal dialog delete -->
-                                        <div class="modal fade" id="modalDeleteDepartment{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                                                aria-hidden="true">&times;</span></button>
-                                                        <h4 class="modal-title" id="myModalLabel">Удаление подразделения</h4>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Вы действительно хотите удалить подразделение "{{ department.name }}"?
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Нет</button>
-                                                        <button type="submit" name="delete" class="btn btn-default">Да</button>
-                                                    </div>
+    </form>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Подразделения
+                </div>
+                <div class="panel-body user-panel">
+                    <table id="tableDepartmentList" class="table table-hover">
+                        {% for department in department_list %}
+                        <tr>
+                            <td>{{ department }}</td>
+                            <td>
+                                <form id="formDeleteDepartment{{ forloop.counter }}" action="{% url "delete_department" id=department.id %}" method="post">
+                                    {% csrf_token %}
+                                    <!-- Modal dialog delete -->
+                                    <div class="modal fade" id="modalDeleteDepartment{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                            aria-hidden="true">&times;</span></button>
+                                                    <h4 class="modal-title" id="myModalLabel">Удаление подразделения</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Вы действительно хотите удалить подразделение "{{ department.name }}"?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Нет</button>
+                                                    <button type="submit" name="delete" class="btn btn-default">Да</button>
                                                 </div>
                                             </div>
                                         </div>
-                                    </form>
+                                    </div>
+                                </form>
 
-                                    <button name="buttonDelete" type="button" class="btn btn-danger pull-right" title="Удалить подразделение" data-toggle="modal" data-target="#modalDeleteDepartment{{ forloop.counter }}">
-                                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                    </button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
-{#                    <div class="panel-footer input-group custom-search-form">#}
-{#                        <input id="inputDepartment" type="text" class="form-control" placeholder="Введите название подразделения...">#}
-{#                        <span class="input-group-btn">#}
-{#                            <button id="buttonDepartmentAdd" class="btn btn-success" type="button">#}
-{#                                Добавить#}
-{#                            </button>#}
-{#                        </span>#}
-{#                    </div>#}
+                                <button name="buttonDelete" type="button" class="btn btn-danger pull-right" title="Удалить подразделение" data-toggle="modal" data-target="#modalDeleteDepartment{{ forloop.counter }}">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-offset-1 col-lg-6">
-               <input id="buttonAddDepartment" type="button" class="btn btn-primary pull-right" value="Добавить подразделение" data-toggle="modal" data-target="#modalAddDepartment"/>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-offset-1 col-lg-6">
+           <input id="buttonAddDepartment" type="button" class="btn btn-primary pull-right" value="Добавить подразделение" data-toggle="modal" data-target="#modalAddDepartment"/>
         </div>
-{#        <div class="row">#}
-{#            <div class="col-lg-offset-5 col-lg-12">#}
-{#                <a href="{% url "index" %}"><input type="button" class="btn btn-default" value="Отмена"/></a>#}
-{#                <button id="btnSubmit" type="submit" class="btn btn-success" name="save">Сохранить</button>#}
-{#            </div>#}
-{#        </div>#}
-    </form>
+    </div>
 {% endblock %}
 {% block scripts %}
-{#    <script src="/static/js/company_settings.js"></script>#}
 {% endblock %}
