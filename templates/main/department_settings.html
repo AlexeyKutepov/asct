@@ -5,28 +5,37 @@
             <h3 class="page-header">Редактирование подразделения</h3>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    Должности подразделения
-                </div>
-                <div class="panel-body user-panel">
-                    <table id="tableDepartmentList" class="table table-hover">
-                        {% for position in position_list %}
-                        <tr>
-                            <td width="50px">
-                                <input name="inDepartment" value="{{ forloop.counter }}" type="checkbox"
-                                    {% if position in department_position_list %}checked{% endif %}>
-                            </td>
-                            <td>{{ position }}</td>
-                        </tr>
-                        {% endfor %}
-                    </table>
+    <form id="formEditDepartment" action="{% url "department_settings" id=department.id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Должности подразделения
+                    </div>
+                    <div class="panel-body user-panel">
+                        <table id="tableDepartmentList" class="table table-hover">
+                            {% for position in position_list %}
+                            <tr>
+                                <td width="50px">
+                                    <input name="inDepartment" value="{{ forloop.counter0 }}" type="checkbox"
+                                        {% if position in department_position_list %}checked{% endif %}>
+                                </td>
+                                <td>{{ position }}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="col-lg-offset-5 col-lg-12">
+                <a href="{% url "edit_company" id=department.company.id %}"><input type="button" class="btn btn-default" value="Отмена"/></a>
+                <button id="btnSubmit" type="submit" class="btn btn-success" name="save">Сохранить</button>
+            </div>
+        </div>
+    </form>
 
 {% endblock %}
 {% block scripts %}

@@ -293,15 +293,33 @@ def add_department(request):
 def department_settings(request, id):
     department = Department.objects.get(id=id)
     position_list = Position.objects.all()
-
-    return render(
-        request,
-        "main/department_settings.html",
-        {
-            "position_list": position_list,
-            "department_position_list": department.position.all()
+    if "save" in request.POST:
+        in_department_list = request.POST.getlist("inDepartment")
+        i = 0
+        for position in position_list:
+            if str(i) in in_department_list:
+                if not position in department.position.all():
+                    department.position.add(position)
+            else:
+                if position in department.position.all():
+                    department.position.remove(position)
+            i += 1
+        department.save()
+        result = {
+            "status": "success",
+            "message": "Изменения успешно сохранены!"
         }
-    )
+        return render(request, "alert.html", result)
+    else:
+        return render(
+            request,
+            "main/department_settings.html",
+            {
+                "department": department,
+                "position_list": position_list,
+                "department_position_list": department.position.all()
+            }
+        )
 
 
 @login_required
