@@ -291,7 +291,17 @@ def add_department(request):
 
 @login_required
 def department_settings(request, id):
-    return render(request, "main/department_settings.html")
+    department = Department.objects.get(id=id)
+    position_list = Position.objects.all()
+
+    return render(
+        request,
+        "main/department_settings.html",
+        {
+            "position_list": position_list,
+            "department_position_list": department.position.all()
+        }
+    )
 
 
 @login_required

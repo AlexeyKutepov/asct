@@ -5,6 +5,28 @@
             <h3 class="page-header">Редактирование подразделения</h3>
         </div>
     </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Должности подразделения
+                </div>
+                <div class="panel-body user-panel">
+                    <table id="tableDepartmentList" class="table table-hover">
+                        {% for position in position_list %}
+                        <tr>
+                            <td width="50px">
+                                <input name="inDepartment" value="{{ forloop.counter }}" type="checkbox"
+                                    {% if position in department_position_list %}checked{% endif %}>
+                            </td>
+                            <td>{{ position }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
 {% block scripts %}
