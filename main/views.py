@@ -290,6 +290,11 @@ def add_department(request):
 
 
 @login_required
+def department_settings(request, id):
+    return render(request, "main/department_settings.html")
+
+
+@login_required
 def delete_department(request, id):
     department = Department.objects.get(id=id)
     company = department.company
