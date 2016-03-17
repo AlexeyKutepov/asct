@@ -47,6 +47,37 @@ $(document).ready(function () {
                         text: departmentList[i]["name"]
                     })).selectpicker('refresh');
                 }
+                $("#selectDepartment").trigger( "change" );
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Error: " + errorThrown + xhr.status + xhr.responseText);
+            }
+        });
+    });
+
+    $("#selectDepartment").change(function() {
+        $.ajax({
+            type: "POST",
+            url: "/get/position/list/",
+            data: {
+                csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+                id: $(this).val()
+            },
+            success: function (data) {
+                $('#selectPosition')
+                    .find('option')
+                    .remove()
+                    .end()
+                    .selectpicker('refresh')
+                ;
+                var positionList = data["position_list"];
+                $('#selectPosition').attr('disabled', positionList.length == 0).selectpicker('refresh');
+                for (var i = 0; i < positionList.length; i++) {
+                    $('#selectPosition').append($("<option/>", {
+                        value: positionList[i]["id"],
+                        text: positionList[i]["name"]
+                    })).selectpicker('refresh');
+                }
             },
             error: function (xhr, textStatus, errorThrown) {
                 console.log("Error: " + errorThrown + xhr.status + xhr.responseText);

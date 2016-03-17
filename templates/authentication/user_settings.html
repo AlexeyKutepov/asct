@@ -160,7 +160,7 @@
                 <div class="row">
                     <div class="form-group">
                         <label for="selectPosition"><b>Должность</b></label>
-                        <p><select id="selectPosition" name="position" class="selectpicker">
+                        <p><select id="selectPosition" name="position" class="selectpicker" {% if not position_list %} disabled {% endif %}>
                             {% for position in position_list %}
                                 {% if position == user_data.position %}
                                     <option value="{{ position.id }}" selected>{{ position }}</option>

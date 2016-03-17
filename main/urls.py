@@ -9,6 +9,7 @@ urlpatterns = patterns('',
         url(r'^$', views.index, name='index'),
 
         url(r'^get/department/list/$', views.get_department_list),
+        url(r'^get/position/list/$', views.get_position_list),
         url(r'^get/journal/list/$', views.get_journal_list),
         url(r'^get/user/list/by/department/$', views.get_user_list_by_department),
         url(r'^get/user/list/by/theme/$', views.get_user_list_by_theme),

@@ -114,6 +114,22 @@ def get_department_list(request):
     else:
         return JsonResponse({"department_list": []})
 
+@login_required
+def get_position_list(request):
+    if "id" in request.POST:
+        department = Department.objects.get(id=request.POST["id"])
+        result = {}
+        list = []
+        for position in department.position.all():
+            list.append({
+                "id": position.id,
+                "name": position.name
+            })
+        result["position_list"] = list
+        return JsonResponse(result)
+    else:
+        return JsonResponse({"position_list": []})
+
 
 @login_required
 def get_user_list_by_department(request):

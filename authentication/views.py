@@ -49,11 +49,14 @@ def user_settings(request, id):
             }
         return render(request, "alert.html", result)
     company_list = Company.objects.all()
-    position_list = Position.objects.all()
     if user_data.company:
         department_list = Department.objects.filter(company=user_data.company)
     else:
         department_list = []
+    if len(department_list) > 0:
+        position_list = department_list[0].position.all()
+    else:
+        position_list = []
     result = {
         "user_data": user_data,
         "company_list": company_list,
@@ -81,6 +84,8 @@ def user_settings(request, id):
         if "position" in request.POST:
             position = Position.objects.get(id=request.POST["position"])
             user_data.position = position
+        else:
+            user_data.position = None
         if "userType" in request.POST:
             user_data.user_type = request.POST["userType"]
         user_data.save()
@@ -189,7 +194,10 @@ def create_new_user(request):
             department_list = Department.objects.filter(company=company_list[0])
         else:
             department_list = []
-        position_list = Position.objects.all()
+        if len(department_list) > 0:
+            position_list = department_list[0].position.all()
+        else:
+            position_list = []
         return render(
             request,
             "authentication/user_settings.html",
