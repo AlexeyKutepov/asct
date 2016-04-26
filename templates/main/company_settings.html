@@ -97,7 +97,7 @@
                     <table id="tableDepartmentList" class="table table-hover">
                         {% for department in department_list %}
                         <tr>
-                            <td>{{ department }}</td>
+                            <td><a href="{% url "department_settings" id=department.id %}">{{ department }}</a></td>
                             <td width="100px">
                                 <form id="formDeleteDepartment{{ forloop.counter }}" action="{% url "delete_department" id=department.id %}" method="post">
                                     {% csrf_token %}
@@ -121,12 +121,6 @@
                                         </div>
                                     </div>
                                 </form>
-
-                                <a href="{% url "department_settings" id=department.id %}">
-                                <button id="btnEdit{{ forloop.counter }}" type="button" class="btn btn-primary"
-                                        title="Редактировать подразделение">
-                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                                </button></a>
 
                                 <button name="buttonDelete" type="button" class="btn btn-danger pull-right" title="Удалить подразделение" data-toggle="modal" data-target="#modalDeleteDepartment{{ forloop.counter }}">
                                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
