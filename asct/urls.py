@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('authentication.urls')),
     url(r'^reports/', include('reports.urls')),
+    url(r'^exam/', include('exam.urls')),
     url(r'^', include('main.urls')),
 ]
 

@@ -1,20 +1,19 @@
 import datetime
 from django.utils import timezone
 from mimetypes import MimeTypes
-import pickle
 from wsgiref.util import FileWrapper
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import SuspiciousOperation
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
-from django.db.models import Q, Max
+from django.db.models import Q
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from asct import settings
-from main.asct_test.asct_test import AsctTest, TestType, Question, CloseAnswer, Answer, AsctResult
 from authentication.models import UserProfile
 from main.models import Company, Department, Journal, Theme, SubTheme, ScheduledTheme, ScheduledSubTheme, \
-    File, Position, ThemeExam, Test, TestImage, TestJournal, Progress
+    File, Position, ThemeExam
+from exam.models import Test, TestJournal
+
 
 def test_page(request):
     return render(request, "test_page.html")
@@ -37,7 +36,8 @@ def prepare_curator_page(request):
 
 def prepare_admin_page(request):
     user_list = UserProfile.objects.filter(
-        Q(user_type=UserProfile.OPERATOR, company=request.user.company) | Q(user_type=UserProfile.PROBATIONER, company=request.user.company)
+        Q(user_type=UserProfile.OPERATOR, company=request.user.company) | Q(user_type=UserProfile.PROBATIONER,
+                                                                            company=request.user.company)
     )
     position_list = Position.objects.all()
     return render(
@@ -115,6 +115,7 @@ def get_department_list(request):
     else:
         return JsonResponse({"department_list": []})
 
+
 @login_required
 def get_position_list(request):
     if "id" in request.POST:
@@ -158,7 +159,8 @@ def get_journal_list(request):
         except:
             user = None
         if user and request.user.user_type != UserProfile.PROBATIONER:
-            journal_list = Journal.objects.filter(Q(company=user.company) & (Q(department=user.department) | Q(department=None)))
+            journal_list = Journal.objects.filter(
+                Q(company=user.company) & (Q(department=user.department) | Q(department=None)))
         else:
             journal_list = []
     elif request.user.user_type == UserProfile.CURATOR:
@@ -205,7 +207,7 @@ def create_new_company(request):
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
-            }
+        }
         return render(request, "alert.html", result)
 
 
@@ -215,7 +217,7 @@ def edit_company(request, id):
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
-            }
+        }
         return render(request, "alert.html", result)
     try:
         company = Company.objects.get(id=id)
@@ -240,7 +242,7 @@ def edit_company_save(request):
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
-            }
+        }
         return render(request, "alert.html", result)
     if "save" in request.POST:
         try:
@@ -267,11 +269,11 @@ def edit_company_save(request):
             department_list_in_base = Department.objects.filter(company=company)
             for department in department_list_in_base:
                 # ВАЖНЫЙ МОМЕНТ: перед удалением департамента нужно почистить юзеров от него, иначе они будут удалены
-                    user_list = UserProfile.objects.filter(department=department)
-                    for item in user_list:
-                        item.department = None
-                        item.save()
-                    department.delete()
+                user_list = UserProfile.objects.filter(department=department)
+                for item in user_list:
+                    item.department = None
+                    item.save()
+                department.delete()
         result = {
             "status": "success",
             "message": "Изменения успешно сохранены!"
@@ -299,7 +301,8 @@ def add_department(request):
         else:
             result = {
                 "status": "danger",
-                "message": "Ошибка выполнения операции! Подразделение " + request.POST["name"] + " уже существует в компании " + company.name
+                "message": "Ошибка выполнения операции! Подразделение " + request.POST[
+                    "name"] + " уже существует в компании " + company.name
             }
             return render(request, "alert.html", result)
 
@@ -360,7 +363,7 @@ def delete_company(request, id):
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
-            }
+        }
         return render(request, "alert.html", result)
     try:
         company = Company.objects.get(id=id)
@@ -374,9 +377,9 @@ def delete_company(request, id):
         item.save()
     company.delete()
     result = {
-            "status": "success",
-            "message": "Компания \"" + name + "\" удалена!"
-        }
+        "status": "success",
+        "message": "Компания \"" + name + "\" удалена!"
+    }
     return render(request, "alert.html", result)
 
 
@@ -386,7 +389,7 @@ def create_journal(request):
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
-            }
+        }
         return render(request, "alert.html", result)
     if "save" in request.POST:
         if "company" in request.POST:
@@ -434,7 +437,7 @@ def edit_journal(request, id):
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
-            }
+        }
         return render(request, "alert.html", result)
     try:
         journal = Journal.objects.get(id=id)
@@ -455,7 +458,7 @@ def edit_journal(request, id):
     else:
         journal.department = None
     journal.save()
-    return HttpResponseRedirect(reverse("journal_settings", args=[journal.id,]))
+    return HttpResponseRedirect(reverse("journal_settings", args=[journal.id, ]))
 
 
 @login_required
@@ -522,7 +525,7 @@ def journal_settings(request, id):
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
-            }
+        }
         return render(request, "alert.html", result)
     try:
         journal = Journal.objects.get(id=id)
@@ -554,7 +557,7 @@ def create_theme(request):
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
-            }
+        }
         return render(request, "alert.html", result)
     if "save" in request.POST:
         try:
@@ -567,7 +570,7 @@ def create_theme(request):
             owner=request.user,
             journal=journal
         )
-        return HttpResponseRedirect(reverse("journal_settings", args=[journal.id,]))
+        return HttpResponseRedirect(reverse("journal_settings", args=[journal.id, ]))
     else:
         return HttpResponseRedirect(reverse("index"))
 
@@ -578,7 +581,7 @@ def delete_theme(request, id):
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
-            }
+        }
         return render(request, "alert.html", result)
     try:
         theme = Theme.objects.get(id=id)
@@ -586,8 +589,7 @@ def delete_theme(request, id):
     except:
         return HttpResponseRedirect(reverse("index"))
     theme.delete()
-    return HttpResponseRedirect(reverse("journal_settings", args=[journal.id,]))
-
+    return HttpResponseRedirect(reverse("journal_settings", args=[journal.id, ]))
 
 
 @login_required
@@ -596,7 +598,7 @@ def theme_settings(request, id):
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
-            }
+        }
         return render(request, "alert.html", result)
     try:
         theme = Theme.objects.get(id=id)
@@ -636,7 +638,7 @@ def create_sub_theme(request):
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
-            }
+        }
         return render(request, "alert.html", result)
     if "save" in request.POST:
         try:
@@ -649,7 +651,7 @@ def create_sub_theme(request):
             owner=request.user,
             parent_theme=theme
         )
-        return HttpResponseRedirect(reverse("theme_settings", args=[theme.id,]))
+        return HttpResponseRedirect(reverse("theme_settings", args=[theme.id, ]))
     else:
         return HttpResponseRedirect(reverse("index"))
 
@@ -660,7 +662,7 @@ def delete_sub_theme(request, id):
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
-            }
+        }
         return render(request, "alert.html", result)
     try:
         sub_theme = SubTheme.objects.get(id=id)
@@ -668,7 +670,7 @@ def delete_sub_theme(request, id):
     except:
         return HttpResponseRedirect(reverse("index"))
     sub_theme.delete()
-    return HttpResponseRedirect(reverse("theme_settings", args=[theme.id,]))
+    return HttpResponseRedirect(reverse("theme_settings", args=[theme.id, ]))
 
 
 @login_required
@@ -708,7 +710,7 @@ def schedule_theme(request, id):
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
-            }
+        }
         return render(request, "alert.html", result)
     if "save" in request.POST:
         try:
@@ -734,14 +736,15 @@ def schedule_theme(request, id):
                 'Вам назначена тема в ASCT',
                 'Здравствуйте ' + user.first_name + '! \n \n Вам назначена тема для изучения: \"' + theme.name
                 + '\" \n\n Срок до ' + request.POST["dateTo"]
-                + ' \n\n Для изучения перейдите по ссылке: ' + request.build_absolute_uri(reverse("probationer_theme_settings", args=[scheduled_theme.id,])),
+                + ' \n\n Для изучения перейдите по ссылке: ' + request.build_absolute_uri(
+                    reverse("probationer_theme_settings", args=[scheduled_theme.id, ])),
                 getattr(settings, "EMAIL_HOST_USER", None),
                 [user.email],
                 fail_silently=False
             )
         except:
             pass
-        return HttpResponseRedirect(reverse("theme_settings", args=[theme.id,]))
+        return HttpResponseRedirect(reverse("theme_settings", args=[theme.id, ]))
     else:
         return HttpResponseRedirect(reverse("index"))
 
@@ -752,7 +755,7 @@ def schedule_theme_to_user(request):
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
-            }
+        }
         return render(request, "alert.html", result)
     if "save" in request.POST:
         try:
@@ -778,14 +781,15 @@ def schedule_theme_to_user(request):
                 'Вам назначена тема в ASCT',
                 'Здравствуйте ' + user.first_name + '! \n \n Вам назначена тема для изучения: \"' + theme.name
                 + '\" \n\n Срок до ' + request.POST["dateTo"]
-                + ' \n\n Для изучения перейдите по ссылке: ' + request.build_absolute_uri(reverse("probationer_theme_settings", args=[scheduled_theme.id,])),
+                + ' \n\n Для изучения перейдите по ссылке: ' + request.build_absolute_uri(
+                    reverse("probationer_theme_settings", args=[scheduled_theme.id, ])),
                 getattr(settings, "EMAIL_HOST_USER", None),
                 [user.email],
                 fail_silently=False
             )
         except:
             pass
-        return HttpResponseRedirect(reverse("user_info", args=[user.id,]))
+        return HttpResponseRedirect(reverse("user_info", args=[user.id, ]))
     else:
         return HttpResponseRedirect(reverse("index"))
 
@@ -820,7 +824,7 @@ def schedule_exam(request, id):
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
-            }
+        }
         return render(request, "alert.html", result)
     if "save" in request.POST:
         try:
@@ -859,7 +863,7 @@ def edit_exam(request, id):
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
-            }
+        }
         return render(request, "alert.html", result)
     if "save" in request.POST:
         try:
@@ -959,7 +963,8 @@ def get_examiner_list(request):
         except:
             theme = None
         if theme:
-            examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER), company=theme.journal.company)
+            examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER),
+                                                       company=theme.journal.company)
         else:
             examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER))
         result = {}
@@ -981,7 +986,7 @@ def user_info(request, id):
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
-            }
+        }
         return render(request, "alert.html", result)
     try:
         user_data = UserProfile.objects.get(id=id)
@@ -989,7 +994,7 @@ def user_info(request, id):
         result = {
             "status": "danger",
             "message": "Пользователь не найден"
-            }
+        }
         return render(request, "alert.html", result)
     examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER), company=user_data.company)
     scheduled_theme_list = ScheduledTheme.objects.filter(user=user_data)
@@ -1014,11 +1019,11 @@ def user_info(request, id):
     if not assessment or assessment_count == 0:
         assessment = None
     else:
-        assessment = round(assessment/assessment_count, 2)
+        assessment = round(assessment / assessment_count, 2)
 
     sub_theme_list = ScheduledSubTheme.objects.filter(user=user_data)
     completed_sub_theme_list = ScheduledSubTheme.objects.filter(user=user_data,
-                                                         status=ScheduledSubTheme.COMPLETED)
+                                                                status=ScheduledSubTheme.COMPLETED)
     if len(sub_theme_list) != 0:
         progress = round(len(completed_sub_theme_list) / len(sub_theme_list) * 100 if len(sub_theme_list) else 0, 2)
     else:
@@ -1108,7 +1113,7 @@ def delete_journal(request, id):
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
-            }
+        }
         return render(request, "alert.html", result)
     try:
         journal = Journal.objects.get(id=id)
@@ -1117,9 +1122,9 @@ def delete_journal(request, id):
     name = journal.name
     journal.delete()
     result = {
-            "status": "success",
-            "message": "Программа " + name + " успешно удалёна!"
-        }
+        "status": "success",
+        "message": "Программа " + name + " успешно удалёна!"
+    }
     return render(request, "alert.html", result)
 
 
@@ -1133,7 +1138,8 @@ def probationer_theme_settings(request, id):
         scheduled_theme.status = ScheduledTheme.OVERDUE
         scheduled_theme.save()
     sub_theme_list = SubTheme.objects.filter(parent_theme=scheduled_theme.theme)
-    scheduled_sub_theme_list = ScheduledSubTheme.objects.filter(sub_theme__in=sub_theme_list, user=request.user, scheduled_theme=scheduled_theme)
+    scheduled_sub_theme_list = ScheduledSubTheme.objects.filter(sub_theme__in=sub_theme_list, user=request.user,
+                                                                scheduled_theme=scheduled_theme)
     return render(
         request,
         "main/probationer_theme_settings.html",
@@ -1152,7 +1158,7 @@ def theme_in_work(request, id):
         return HttpResponseRedirect(reverse("index"))
     scheduled_theme.status = ScheduledTheme.IN_WORK
     scheduled_theme.save()
-    return HttpResponseRedirect(reverse("probationer_theme_settings", args=[id,]))
+    return HttpResponseRedirect(reverse("probationer_theme_settings", args=[id, ]))
 
 
 @login_required
@@ -1168,7 +1174,7 @@ def theme_completed(request, id):
     scheduled_theme.status = ScheduledTheme.COMPLETED
     scheduled_theme.progress = 100
     scheduled_theme.save()
-    return HttpResponseRedirect(reverse("probationer_theme_settings", args=[id,]))
+    return HttpResponseRedirect(reverse("probationer_theme_settings", args=[id, ]))
 
 
 @login_required
@@ -1179,7 +1185,7 @@ def sub_theme_in_work(request, id):
         return HttpResponseRedirect(reverse("index"))
     scheduled_sub_theme.status = ScheduledSubTheme.IN_WORK
     scheduled_sub_theme.save()
-    return HttpResponseRedirect(reverse("probationer_theme_settings", args=[scheduled_sub_theme.scheduled_theme.id,]))
+    return HttpResponseRedirect(reverse("probationer_theme_settings", args=[scheduled_sub_theme.scheduled_theme.id, ]))
 
 
 @login_required
@@ -1192,13 +1198,15 @@ def sub_theme_completed(request, id):
     scheduled_sub_theme.save()
 
     scheduled_sub_theme_list = ScheduledSubTheme.objects.filter(scheduled_theme=scheduled_sub_theme.scheduled_theme)
-    scheduled_sub_theme_list_completed = ScheduledSubTheme.objects.filter(scheduled_theme=scheduled_sub_theme.scheduled_theme, status=ScheduledSubTheme.COMPLETED)
-    scheduled_sub_theme.scheduled_theme.progress = int((100 / len(scheduled_sub_theme_list)) * len(scheduled_sub_theme_list_completed))
+    scheduled_sub_theme_list_completed = ScheduledSubTheme.objects.filter(
+        scheduled_theme=scheduled_sub_theme.scheduled_theme, status=ScheduledSubTheme.COMPLETED)
+    scheduled_sub_theme.scheduled_theme.progress = int(
+        (100 / len(scheduled_sub_theme_list)) * len(scheduled_sub_theme_list_completed))
     if scheduled_sub_theme.scheduled_theme.progress == 100:
         scheduled_sub_theme.scheduled_theme.status = ScheduledTheme.COMPLETED
     scheduled_sub_theme.scheduled_theme.save()
 
-    return HttpResponseRedirect(reverse("probationer_theme_settings", args=[scheduled_sub_theme.scheduled_theme.id,]))
+    return HttpResponseRedirect(reverse("probationer_theme_settings", args=[scheduled_sub_theme.scheduled_theme.id, ]))
 
 
 @login_required
@@ -1256,6 +1264,7 @@ def delete_file(request, id):
     uploaded_file.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
 @login_required
 def edit_theme(request, id):
     try:
@@ -1268,7 +1277,7 @@ def edit_theme(request, id):
     if "description" in request.POST:
         theme.description = request.POST["description"]
     theme.save()
-    return HttpResponseRedirect(reverse("journal_settings", args=[journal.id,]))
+    return HttpResponseRedirect(reverse("journal_settings", args=[journal.id, ]))
 
 
 @login_required
@@ -1283,7 +1292,7 @@ def edit_sub_theme(request, id):
     if "description" in request.POST:
         sub_theme.description = request.POST["description"]
     sub_theme.save()
-    return HttpResponseRedirect(reverse("theme_settings", args=[theme.id,]))
+    return HttpResponseRedirect(reverse("theme_settings", args=[theme.id, ]))
 
 
 @login_required
@@ -1303,7 +1312,6 @@ def edit_position(request, id):
         position.name = request.POST["name"]
         position.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
 
 
 @login_required
@@ -1339,703 +1347,3 @@ def cancel_exam(request, id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     exam.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-
-"""
-Тесты
-"""
-
-TYPE_LIST = [
-            "Содержит один или несколько правильных вариантов ответа",
-            "Содержит только один правильный вариант ответа",
-            "Вопрос со свободной формой ответа",
-        ]
-
-@login_required
-def create_new_test(request):
-    """
-    Создание нового теста
-    :param request:
-    :return:
-    """
-    if request.user.user_type == UserProfile.PROBATIONER:
-       result = {
-           "status": "danger",
-           "message": "Доступ запрещён"
-           }
-       return render(request, "alert.html", result)
-    if "save" and "name" and "description" in request.POST:
-        try:
-            journal = Journal.objects.get(id=request.POST["save"])
-        except:
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        test = Test.objects.create(
-            name=request.POST["name"],
-            description=request.POST["description"],
-            journal=journal,
-            author=request.user,
-        )
-        return HttpResponseRedirect(reverse("create_new_question", args=[test.id]))
-    else:
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-@login_required
-def create_new_question(request, id):
-    """
-    Создание нового вопроса для теста
-    :param request:
-    :param id: id of the test
-    :return:
-    """
-    if request.user.user_type == UserProfile.PROBATIONER:
-       result = {
-           "status": "danger",
-           "message": "Доступ запрещён"
-           }
-       return render(request, "alert.html", result)
-    test = Test.objects.get(id=id)
-    if request.user != test.author:
-        raise SuspiciousOperation("Некорректный id теста")
-    if "type" in request.POST and int(request.POST["type"]) in (1, 2, 3):
-        if test.test is None or test.test == b'':
-            exam_test = AsctTest()
-        else:
-            exam_test = pickle.loads(test.test)
-        question_type = TestType(int(request.POST["type"]))
-
-        if "question" in request.POST:
-            question = Question(request.POST["question"], question_type)
-        else:
-            question = Question(None, question_type)
-
-        if "image" in request.FILES:
-            image = TestImage.objects.get_or_create(image=request.FILES["image"])
-            image_id = image[0].id
-        else:
-            image_id = None
-        question.set_image(image_id)
-
-        if question_type is TestType.CLOSE_TYPE_SEVERAL_CORRECT_ANSWERS:
-            i = 1
-            while "answer"+str(i) in request.POST:
-                question.add_new_answer(
-                    CloseAnswer(
-                        answer=request.POST["answer"+str(i)],
-                        is_correct=str(i) in request.POST.getlist("trueAnswer")
-                    )
-                )
-                i += 1
-        elif question_type is TestType.CLOSE_TYPE_ONE_CORRECT_ANSWER:
-            i = 1
-            while "answer"+str(i) in request.POST:
-                question.add_new_answer(
-                    CloseAnswer(
-                        answer=request.POST["answer"+str(i)],
-                        is_correct=str(i) == request.POST["trueAnswer"]
-                    )
-                )
-                i += 1
-        elif question_type is TestType.OPEN_TYPE:
-            question.add_new_answer(
-                Answer(
-                    request.POST["openAnswer"]
-                )
-            )
-
-        exam_test.add_question(question)
-        test.test = pickle.dumps(exam_test)
-        test.save()
-        if "complete" in request.POST:
-            return HttpResponseRedirect(reverse("journal_settings", args=[test.journal.id, ]))
-        else:
-            return render(
-                request,
-                "test/create_question.html",
-                {
-                    "number_of_question": len(exam_test.get_questions()) + 1,
-                    "type_list": TYPE_LIST,
-                    "test_id": id
-                }
-            )
-    else:
-        return render(
-            request,
-            "test/create_question.html",
-            {
-                "type_list": TYPE_LIST,
-                "test_id": id
-            }
-        )
-
-
-@login_required(login_url='/')
-def edit_test(request, id):
-    """
-    Edits the test
-    :param request:
-    :param id: id of test
-    :return:
-    """
-    if request.user.user_type == UserProfile.PROBATIONER:
-        result = {
-            "status": "danger",
-            "message": "Доступ запрещён"
-            }
-        return render(request, "alert.html", result)
-    id = int(id)
-    test = Test.objects.get(id=id)
-
-    if "save" in request.POST:
-        test.name = request.POST["name"]
-        test.description = request.POST["description"]
-        test.save()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-    if test.test:
-        exam_test = pickle.loads(test.test)
-        question_list = exam_test.get_questions()
-    else:
-        question_list = None
-
-    return render(
-            request,
-            "test/edit_test.html",
-            {
-                "test": test,
-                "question_list": question_list
-            }
-        )
-
-
-@login_required
-def delete_test(request, id):
-    if request.user.user_type == UserProfile.PROBATIONER:
-       result = {
-           "status": "danger",
-           "message": "Доступ запрещён"
-           }
-       return render(request, "alert.html", result)
-    try:
-        Test.objects.get(id=id).delete()
-    except:
-        pass
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-@login_required
-def add_question(request, id):
-    """
-    Adds the question to test
-    :param request:
-    :param id: id of the test
-    :return:
-    """
-    if request.user.user_type == UserProfile.PROBATIONER:
-       result = {
-           "status": "danger",
-           "message": "Доступ запрещён"
-           }
-       return render(request, "alert.html", result)
-    test = Test.objects.get(id=id)
-    if test.test is None or test.test == b'':
-        asct_test = AsctTest()
-    else:
-        asct_test = pickle.loads(test.test)
-
-    if request.user != test.author:
-        raise SuspiciousOperation("Некорректный id теста")
-    if "type" in request.POST and int(request.POST["type"]) in (1, 2, 3):
-        question_type = TestType(int(request.POST["type"]))
-
-        if "question" in request.POST:
-            question = Question(request.POST["question"], question_type)
-        else:
-            question = Question(None, question_type)
-
-        if "image" in request.FILES:
-            image = TestImage.objects.get_or_create(image=request.FILES["image"])
-            image_id = image[0].id
-        else:
-            image_id = None
-        question.set_image(image_id)
-
-        if question_type is TestType.CLOSE_TYPE_SEVERAL_CORRECT_ANSWERS:
-            i = 1
-            while "answer"+str(i) in request.POST:
-                question.add_new_answer(
-                    CloseAnswer(
-                        answer=request.POST["answer"+str(i)],
-                        is_correct=str(i) in request.POST.getlist("trueAnswer")
-                    )
-                )
-                i += 1
-        elif question_type is TestType.CLOSE_TYPE_ONE_CORRECT_ANSWER:
-            i = 1
-            while "answer"+str(i) in request.POST:
-                question.add_new_answer(
-                    CloseAnswer(
-                        answer=request.POST["answer"+str(i)],
-                        is_correct=str(i) == request.POST["trueAnswer"]
-                    )
-                )
-                i += 1
-        elif question_type is TestType.OPEN_TYPE:
-            question.add_new_answer(
-                Answer(
-                    request.POST["openAnswer"]
-                )
-            )
-
-        asct_test.add_question(question)
-        test.test = pickle.dumps(asct_test)
-        test.save()
-
-        return HttpResponseRedirect(reverse("edit_test", args=[id]))
-    else:
-        return render(
-            request,
-            "test/add_question.html",
-            {
-                "number_of_question": len(asct_test.get_questions()) + 1,
-                "type_list": TYPE_LIST,
-                "test_id": id
-            }
-        )
-
-
-@login_required
-def edit_question(request, id, number):
-    """
-    Edits the question in the test
-    :param request:
-    :param id: id of test
-    :param number: number of question
-    :return:
-    """
-    if request.user.user_type == UserProfile.PROBATIONER:
-       result = {
-           "status": "danger",
-           "message": "Доступ запрещён"
-           }
-       return render(request, "alert.html", result)
-    id = int(id)
-    number = int(number)
-    test = Test.objects.get(id=id)
-    if test.test is None or test.test == b'':
-        raise SuspiciousOperation("Некорректный запрос")
-    asct_test = pickle.loads(test.test)
-    if "type" in request.POST and int(request.POST["type"]) in (1, 2, 3):
-        question_type = TestType(int(request.POST["type"]))
-
-        if "question" in request.POST:
-            question = Question(request.POST["question"], question_type)
-        else:
-            question = Question(None, question_type)
-
-        if "image" in request.FILES:
-            image = TestImage.objects.get_or_create(image=request.FILES["image"])
-            question.set_image(image[0].id)
-        else:
-            question.set_image(asct_test.get_questions()[number-1].get_image())
-
-        if question_type is TestType.CLOSE_TYPE_SEVERAL_CORRECT_ANSWERS:
-            i = 1
-            while "answer"+str(i) in request.POST:
-                question.add_new_answer(
-                    CloseAnswer(
-                        answer=request.POST["answer"+str(i)],
-                        is_correct=str(i) in request.POST.getlist("trueAnswer")
-                    )
-                )
-                i += 1
-        elif question_type is TestType.CLOSE_TYPE_ONE_CORRECT_ANSWER:
-            i = 1
-            while "answer"+str(i) in request.POST:
-                question.add_new_answer(
-                    CloseAnswer(
-                        answer=request.POST["answer"+str(i)],
-                        is_correct=str(i) == request.POST["trueAnswer"]
-                    )
-                )
-                i += 1
-        elif question_type is TestType.OPEN_TYPE:
-            question.add_new_answer(
-                Answer(
-                    request.POST["openAnswer"]
-                )
-            )
-
-        asct_test.get_questions()[number-1] = question
-        test.test = pickle.dumps(asct_test)
-        test.save()
-
-        return HttpResponseRedirect(reverse("edit_test", args=[id]))
-    else:
-        question = asct_test.get_questions()[number-1]
-        if question.get_image():
-            image_test = TestImage.objects.get(id=question.get_image())
-            image = image_test.image.url
-        else:
-            image = None
-
-        return render(
-                request,
-                "test/edit_question.html",
-                {
-                    "number_of_question": number,
-                    "operation": "edit_test_edit_question",
-                    "type_list": TYPE_LIST,
-                    "test_id": id,
-                    "question": question,
-                    "image": image
-                }
-            )
-
-
-
-@login_required
-def delete_question(request, id):
-    if request.user.user_type == UserProfile.PROBATIONER:
-       result = {
-           "status": "danger",
-           "message": "Доступ запрещён"
-           }
-       return render(request, "alert.html", result)
-    try:
-        test = Test.objects.get(id=id)
-    except:
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    if test.test:
-        exam_test = pickle.loads(test.test)
-        if "delete" in request.POST:
-            exam_test.get_questions().pop(int(request.POST["delete"]) - 1)
-            test.test = pickle.dumps(exam_test)
-            test.save()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-@login_required
-def test_settings(request, id):
-    if request.user.user_type == UserProfile.PROBATIONER:
-       result = {
-           "status": "danger",
-           "message": "Доступ запрещён"
-           }
-       return render(request, "alert.html", result)
-    try:
-        test = Test.objects.get(id=id)
-    except:
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    journal_list = TestJournal.objects.filter(test=test)
-    for journal in journal_list:
-        if journal.date_to < timezone.now() and journal.status != TestJournal.COMPLETED and journal.status != TestJournal.OVERDUE:
-            journal.status = TestJournal.OVERDUE
-            journal.save()
-    return render(
-                request,
-                "test/test_settings.html",
-                {
-                    "test": test,
-                    "journal_list": journal_list
-                }
-            )
-
-
-@login_required
-def schedule_test(request, id):
-    if request.user.user_type == UserProfile.PROBATIONER:
-        result = {
-            "status": "danger",
-            "message": "Доступ запрещён"
-            }
-        return render(request, "alert.html", result)
-
-    if "save" in request.POST:
-        try:
-            test = Test.objects.get(id=id)
-            user = UserProfile.objects.get(id=request.POST["user"])
-        except:
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        scheduled_test = TestJournal.objects.create(
-            date_to=datetime.datetime.strptime(request.POST["dateTo"], "%d.%m.%Y"),
-            user=user,
-            test=test
-        )
-        try:
-            send_mail(
-                'Вам назначен тест в ASCT',
-                'Здравствуйте ' + user.first_name + '! \n \n Вам назначен тест: \"' + test.name + '\" \n\n Срок до ' + request.POST["dateTo"]
-                + ' \n\n Для прохождения теста перейдите по ссылке: ' + request.build_absolute_uri(reverse("start_test", args=[scheduled_test.id,])),
-                getattr(settings, "EMAIL_HOST_USER", None),
-                [user.email],
-                fail_silently=False
-            )
-        except:
-            pass
-        return HttpResponseRedirect(reverse("test_settings", args=[test.id,]))
-    else:
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-@login_required
-def cancel_test(request, id):
-    if request.user.user_type == UserProfile.PROBATIONER:
-        result = {
-            "status": "danger",
-            "message": "Доступ запрещён"
-            }
-        return render(request, "alert.html", result)
-    try:
-        TestJournal.objects.get(id=id).delete()
-    except:
-        pass
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-@login_required
-def start_test(request, id):
-    """
-    Starts selected test
-    :param request:
-    :param id:
-    :return:
-    """
-    try:
-        journal = TestJournal.objects.get(id=id)
-    except:
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    if request.user.is_authenticated() and journal.user == request.user:
-        progress = Progress.objects.filter(user=request.user, test=journal.test)
-        if not progress:
-            Progress.objects.get_or_create(
-                user=request.user,
-                start_date=timezone.now(),
-                end_date=None,
-                test=journal.test,
-                result_list=None,
-                current_result=0
-            )
-        else:
-            progress = progress[0]
-            progress.start_date = timezone.now()
-            progress.end_date = None
-            progress.result_list = None
-            progress.current_result = 0
-            progress.save()
-        return HttpResponseRedirect(reverse("next_question", args=[id, 1]))
-    else:
-        result = {
-            "status": "danger",
-            "message": "Доступ запрещён"
-            }
-        return render(request, "alert.html", result)
-
-
-@login_required
-def next_question(request, id, number):
-    """
-    Shows next question
-    :param request:
-    :param id: - id of test
-    :param number: number of question
-    :return:
-    """
-    id = int(id)
-    number = int(number)
-    journal = TestJournal.objects.get(id=id)
-    progress = Progress.objects.filter(user=request.user, test=journal.test)[0]
-    result_list = []
-    exam_test = pickle.loads(journal.test.test)
-
-    if not progress.result_list:
-        if number > 1:
-            return HttpResponseRedirect(reverse("next_question", args=[journal.id, 1]))
-    else:
-        result_list = pickle.loads(progress.result_list)
-        if len(result_list) > number - 1:
-            return HttpResponseRedirect(reverse("next_question", args=[journal.id, len(result_list) + 1]))
-        elif len(result_list) + 1 < number:
-            return HttpResponseRedirect(reverse("next_question", args=[journal.id, len(result_list) + 1]))
-        elif number > len(exam_test.get_questions()):
-            return HttpResponseRedirect(reverse("index"))
-
-
-    question = exam_test.get_questions()[number - 1]
-
-    if "answer" in request.POST:
-        is_correct = True
-        request_answer = None
-        if question.get_test_type() is TestType.OPEN_TYPE:
-            if question.get_answers().get_answer() != request.POST["answer"]:
-                is_correct = False
-                request_answer = request.POST["answer"]
-            else:
-                request_answer = request.POST["answer"]
-        elif question.get_test_type() is TestType.CLOSE_TYPE_SEVERAL_CORRECT_ANSWERS:
-            correct_answer_list = []
-            for item in range(len(question.get_answers())):
-                if question.get_answers()[item].is_correct():
-                    correct_answer_list.append(str(item + 1))
-            is_correct = correct_answer_list == request.POST.getlist("answer")
-            request_answer = request.POST.getlist("answer")
-        elif question.get_test_type() is TestType.CLOSE_TYPE_ONE_CORRECT_ANSWER:
-            correct_answer = 1
-            for item in range(len(question.get_answers())):
-                if question.get_answers()[item].is_correct():
-                    correct_answer = item + 1
-                    break
-            is_correct = str(correct_answer) == request.POST["answer"]
-            request_answer = request.POST["answer"]
-
-        if is_correct:
-            progress.current_result += 1
-        result_list.append(
-            AsctResult(
-                is_correct=is_correct,
-                answer=request_answer
-            )
-        )
-        progress.result_list = pickle.dumps(result_list)
-        progress.save()
-
-        if number == len(exam_test.get_questions()):
-            progress.end_date = timezone.now()
-            progress.save()
-
-            result_of_test = int(100/len(exam_test.get_questions()) * progress.current_result)
-            journal.status=TestJournal.COMPLETED
-            journal.start_date=progress.start_date
-            journal.end_date=progress.end_date
-            journal.number_of_questions=len(exam_test.get_questions())
-            journal.number_of_correct_answers=progress.current_result
-            journal.result=result_of_test
-            journal.report=progress.result_list
-            journal.test_object=journal.test.test
-            journal.save()
-
-            return HttpResponseRedirect(reverse("end_test", args=[journal.id]))
-        else:
-            number += 1
-            return HttpResponseRedirect(reverse("next_question", args=[journal.id, number]))
-
-    progress = 100/len(exam_test.get_questions()) * (number - 1)
-    answers = question.get_answers()
-    if question.get_image():
-        image_test = TestImage.objects.get(id=question.get_image())
-        image = image_test.image.url
-    else:
-        image = None
-    if question.get_test_type() != TestType.OPEN_TYPE:
-        variant_list = []
-        for answer in answers:
-            variant_list.append(answer.get_answer())
-    else:
-        variant_list = None
-
-    return render(
-        request,
-        "test/next_question.html",
-        {
-            "journal": journal,
-            "progress": progress,
-            "number_of_question": number,
-            "question": question.get_question(),
-            "type": question.get_test_type().value,
-            "variant_list": variant_list,
-            "image": image
-        }
-    )
-
-
-@login_required
-def end_test(request, id):
-    """
-    Renders simple result form (without detail report)
-    :param request:
-    :param id: id of Journal field
-    :return: end_test.html
-    """
-    journal = TestJournal.objects.get(id=id)
-    if not journal:
-        raise SuspiciousOperation("Некорректный запрос")
-    elif not request.user.is_authenticated() and journal.user:
-        raise SuspiciousOperation("Некорректный запрос")
-    return render(
-        request,
-        "test/end_test.html",
-        {
-            "journal": journal
-        }
-    )
-
-@login_required
-def report(request, id):
-    """
-    Prepares the report of the test result
-    :param request:
-    :param id: id of Journal field
-    :return:
-    """
-    if request.user.user_type == UserProfile.PROBATIONER:
-        result = {
-            "status": "danger",
-            "message": "Доступ запрещён"
-            }
-        return render(request, "alert.html", result)
-    id = int(id)
-    try:
-        journal = TestJournal.objects.get(id=id)
-    except:
-        raise SuspiciousOperation("Некорректный запрос")
-    if not journal:
-        raise SuspiciousOperation("Некорректный запрос")
-    else:
-        report = pickle.loads(journal.report)
-        asct_test = pickle.loads(journal.test_object)
-        return render(
-            request,
-            "test/report.html",
-            {
-                "journal": journal,
-                "report": report,
-                "exam_test": asct_test
-            }
-        )
-
-
-@login_required
-def schedule_test_to_user(request):
-    if request.user.user_type == UserProfile.PROBATIONER:
-        result = {
-            "status": "danger",
-            "message": "Доступ запрещён"
-            }
-        return render(request, "alert.html", result)
-    if "save" in request.POST:
-        try:
-            test = Test.objects.get(id=request.POST["test"])
-            user = UserProfile.objects.get(id=request.POST["user"])
-        except:
-            return HttpResponseRedirect(reverse("index"))
-        scheduled_test = TestJournal.objects.create(
-            date_to=datetime.datetime.strptime(request.POST["dateTo"], "%d.%m.%Y"),
-            user=user,
-            test=test
-        )
-
-        try:
-            send_mail(
-                'Вам назначен тест в ASCT',
-                'Здравствуйте ' + user.first_name + '! \n \n Вам назначен тест: \"' + test.name + '\" \n\n Срок до ' + request.POST["dateTo"]
-                + ' \n\n Для прохождения теста перейдите по ссылке: ' + request.build_absolute_uri(reverse("start_test", args=[scheduled_test.id, ])),
-                getattr(settings, "EMAIL_HOST_USER", None),
-                [user.email],
-                fail_silently=False
-            )
-        except:
-            pass
-        return HttpResponseRedirect(reverse("user_info", args=[user.id,]))
-    else:
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
