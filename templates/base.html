@@ -28,7 +28,7 @@
     <!-- Custom Fonts -->
     <link href="/static/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-    <link rel="stylesheet" href="/static/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="/static/css/bootstrap-datetimepicker.min.css"/>
 
     {% block style %}
 
@@ -45,92 +45,101 @@
 
 <body>
 
-    <div id="wrapper">
+<div id="wrapper">
 
-        <!-- Navigation -->
-        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="{% url "index" %}"><b>ASCT
-                    {% if user.company %}
-                        ({{ user.company }})
-                    {% endif %}
-                </b></a>
-            </div>
-            <!-- /.navbar-header -->
-            <ul class="nav navbar-top-links navbar-left">
-                {% block backbutton %}
-                    <li>
-                        <a onclick="history.go(-1);"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span> Назад</a>
-                    </li>
-                {% endblock %}
-                <li>
-                    <a href="{% url "index" %}"><i class="fa fa-dashboard fa-fw"></i> Рабочий стол</a>
-                </li>
-                {% if user.user_type != 'PROBATIONER' %}
-                    <li><a href="{% url "reports" %}"><i class="fa fa-file-text-o"></i> Отчёты</a></li>
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url "index" %}"><b>ASCT
+                {% if user.company %}
+                    ({{ user.company }})
                 {% endif %}
-            </ul>
-            <ul class="nav navbar-top-links navbar-right">
-                <li><img class="img-circle"
-                         src="{{ MEDIA_URL }}{{ user.photo }}"
-                         alt="Photo" width="45" height="45"></li>
-                <li>{{ user.get_full_name }}
-                    {% if user.user_type == 'CURATOR' %}(Куратор)
-                    {% elif user.user_type == 'ADMIN' %}(Администратор)
-                    {% elif user.user_type == 'OPERATOR' %}(Оператор)
-                    {% elif user.user_type == 'PROBATIONER' %}(Испытуемый)
-                    {% endif %}
+            </b></a>
+        </div>
+        <!-- /.navbar-header -->
+        <ul class="nav navbar-top-links navbar-left">
+            {% block backbutton %}
+                <li>
+                    <a onclick="history.go(-1);"><span class="glyphicon glyphicon-triangle-left"
+                                                       aria-hidden="true"></span> Назад</a>
                 </li>
-                 <!-- /.dropdown -->
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        {% if user.user_type == "CURATOR" %}
+            {% endblock %}
+            <li>
+                <a href="{% url "index" %}"><i class="fa fa-dashboard fa-fw"></i> Рабочий стол</a>
+            </li>
+            {% if user.user_type != 'PROBATIONER' %}
+                <li><a href="{% url "reports" %}"><i class="fa fa-file-text-o"></i> Отчёты</a></li>
+            {% endif %}
+        </ul>
+        <ul class="nav navbar-top-links navbar-right">
+            <li>
+                {% if user_data.photo %}
+                    <img class="img-circle"
+                         src="{{ MEDIA_URL }}{{ user.photo }}"
+                         alt="Photo" width="45" height="45">
+                {% else %}
+                    <img class="img-circle"
+                         data-src="holder.js/45x45/auto/white"
+                         alt="Photo" width="45" height="45">
+                {% endif %}
+            </li>
+            <li>{{ user.get_full_name }}
+                {% if user.user_type == 'CURATOR' %}(Куратор)
+                {% elif user.user_type == 'ADMIN' %}(Администратор)
+                {% elif user.user_type == 'OPERATOR' %}(Оператор)
+                {% elif user.user_type == 'PROBATIONER' %}(Испытуемый)
+                {% endif %}
+            </li>
+            <!-- /.dropdown -->
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    {% if user.user_type == "CURATOR" %}
                         <li><a href="{% url "user_settings" id=user.id %}"><i class="fa fa-user fa-fw"></i> Профиль</a>
                         <li class="divider"></li>
-                        {% endif %}
-                        <li><a href="{% url "logout" %}"><i class="fa fa-sign-out fa-fw"></i> Выход</a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-user -->
-                </li>
-                <!-- /.dropdown -->
-            </ul>
-        </nav>
-        <div id="page-wrapper">
-            {% block dashboard %}
-            {% endblock %}
-        </div>
+                    {% endif %}
+                    <li><a href="{% url "logout" %}"><i class="fa fa-sign-out fa-fw"></i> Выход</a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-user -->
+            </li>
+            <!-- /.dropdown -->
+        </ul>
+    </nav>
+    <div id="page-wrapper">
+        {% block dashboard %}
+        {% endblock %}
     </div>
-    <!-- /#wrapper -->
+</div>
+<!-- /#wrapper -->
 
-    <!-- jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="/static/js/bootstrap.min.js"></script>
+<!-- Bootstrap Core JavaScript -->
+<script src="/static/js/bootstrap.min.js"></script>
 
-    <!-- Metis Menu Plugin JavaScript -->
-    <script src="/static/js/metisMenu.min.js"></script>
+<!-- Metis Menu Plugin JavaScript -->
+<script src="/static/js/metisMenu.min.js"></script>
 
-   <!-- Custom Theme JavaScript -->
-    <script src="/static/js/sb-admin-2.js"></script>
+<!-- Custom Theme JavaScript -->
+<script src="/static/js/sb-admin-2.js"></script>
 
-    <script src="/static/js/holder.js"></script>
+<script src="/static/js/holder.js"></script>
 
-    <script type="text/javascript" src="/static/js/moment.js"></script>
+<script type="text/javascript" src="/static/js/moment.js"></script>
 
-    <script type="text/javascript" src="/static/js/locale/ru.js"></script>
+<script type="text/javascript" src="/static/js/locale/ru.js"></script>
 
-    <script type="text/javascript" src="/static/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap-datetimepicker.min.js"></script>
 
 
 {% block scripts %}
