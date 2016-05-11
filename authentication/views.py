@@ -9,7 +9,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
 from asct import settings
-from main.models import UserProfile, Company, Department, Position
+from main.models import Company, Department, Position
+from authentication.models import UserProfile
 import imghdr
 
 
@@ -19,10 +20,10 @@ def generate_password(size=8, chars=string.ascii_uppercase + string.ascii_lowerc
 
 @csrf_protect
 def login(request):
-    if "email" in request.POST and "password" in request.POST:
-        email = request.POST.get("email")
+    if "username" in request.POST and "password" in request.POST:
+        username = request.POST.get("username")
         password = request.POST.get("password")
-        user = auth.authenticate(email=email, password=password)
+        user = auth.authenticate(username=username, password=password)
         if user is not None and user.is_active:
             auth.login(request, user)
             return HttpResponseRedirect(reverse("index"))
@@ -69,6 +70,7 @@ def user_settings(request, id):
             photo = None
         if photo and imghdr.what(photo):
             user_data.photo = photo
+        user_data.username = request.POST["username"]
         user_data.email = request.POST["email"]
         user_data.last_name = request.POST["lastName"]
         user_data.first_name = request.POST["firstName"]
@@ -115,16 +117,16 @@ def user_settings(request, id):
 @login_required
 def create_new_user(request):
     if "create" in request.POST:
-        email = request.POST["email"]
+        username = request.POST["username"]
         try:
-            user_profile_in_db = UserProfile.objects.get(email=email)
+            user_profile_in_db = UserProfile.objects.get(username=username)
             if user_profile_in_db:
                 return render(
                     request,
                     "alert.html",
                     {
                         "status": "danger",
-                        "message": "Пользователь с e-mail адресом "+email+" уже существует!"
+                        "message": "Пользователь "+username+" уже существует!"
                     }
                 )
         except:
@@ -154,7 +156,8 @@ def create_new_user(request):
         else:
             position = None
         user = auth.get_user_model().objects.create_user(
-            email=email,
+            username=username,
+            email=request.POST["email"],
             password=password,
             date_of_birth=datetime.datetime.strptime(request.POST["dateOfBirth"], "%d.%m.%Y"),
             last_name=request.POST["lastName"],

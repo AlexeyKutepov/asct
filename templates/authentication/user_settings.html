@@ -70,6 +70,13 @@
             <div class="col-lg-5">
                 <div class="row">
                     <div class="form-group">
+                        <label for="inputUsername">* Логин</label>
+                        <input type="text" class="form-control" id="inputUsername" name="username"
+                               placeholder="Логин" value="{{ user_data.username|default:"" }}" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
                         <label for="inputEmail">* e-mail</label>
                         <input type="email" class="form-control" id="inputEmail" name="email"
                                placeholder="e-mail" value="{{ user_data.email|default:"" }}" required>

@@ -74,7 +74,7 @@ TEMPLATES = [
     },
 ]
 
-AUTH_USER_MODEL = 'main.UserProfile'
+AUTH_USER_MODEL = 'authentication.UserProfile'
 
 WSGI_APPLICATION = 'asct.wsgi.application'
 

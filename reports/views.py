@@ -2,10 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Max
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-
-# Create your views here.
-from main.models import UserProfile, ScheduledTheme, ScheduledSubTheme, ThemeExam, Company, Department, Journal, \
-    TestJournal
+from main.models import ScheduledTheme, ScheduledSubTheme, ThemeExam, Company, Department, Journal, TestJournal
+from authentication.models import UserProfile
 
 
 class Counter:

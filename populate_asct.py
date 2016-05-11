@@ -7,7 +7,8 @@ import django
 django.setup()
 
 from django.contrib.auth.models import User
-from main.models import UserProfile, Company, Department, Theme, Journal, SubTheme, Position
+from main.models import Company, Department, Theme, Journal, SubTheme, Position
+from authentication.models import UserProfile
 
 
 def populate():
@@ -51,6 +52,7 @@ def populate():
 
     super_user = add_super_user(company1, department1, position6)
     add_user(
+        "curator1",
         "curator1@mail.ru",
         "123456",
         "Бондарь",
@@ -64,6 +66,7 @@ def populate():
         position1
     )
     add_user(
+        "curator2",
         "curator2@mail.ru",
         "123456",
         "Секисова",
@@ -77,6 +80,7 @@ def populate():
         position2
     )
     add_user(
+        "curator3",
         "curator3@mail.ru",
         "123456",
         "Сидоров",
@@ -90,6 +94,7 @@ def populate():
         position2
     )
     add_user(
+        "user1",
         "user1@mail.ru",
         "123456",
         "Худык",
@@ -103,6 +108,7 @@ def populate():
         position1
     )
     add_user(
+        "user2",
         "user2@mail.ru",
         "123456",
         "Нечеса",
@@ -116,6 +122,7 @@ def populate():
         position1
     )
     add_user(
+        "user3",
         "user3@mail.ru",
         "123456",
         "Сидоров",
@@ -129,6 +136,7 @@ def populate():
         position1
     )
     add_user(
+        "user4",
         "user4@mail.ru",
         "123456",
         "Метельский",
@@ -142,6 +150,7 @@ def populate():
         position2
     )
     add_user(
+        "user5",
         "user5@mail.ru",
         "123456",
         "Бородина",
@@ -155,6 +164,7 @@ def populate():
         position2
     )
     add_user(
+        "user6",
         "user6@mail.ru",
         "123456",
         "Авдеенко",
@@ -168,6 +178,7 @@ def populate():
         position3
     )
     add_user(
+        "user7",
         "user7@mail.ru",
         "123456",
         "Аркадьев",
@@ -181,6 +192,7 @@ def populate():
         position5
     )
     add_user(
+        "user8",
         "user8@mail.ru",
         "123456",
         "Григорьев",
@@ -194,6 +206,7 @@ def populate():
         position5
     )
     add_user(
+        "user9",
         "user9@mail.ru",
         "123456",
         "Никифоров",
@@ -397,6 +410,7 @@ def add_super_user(company, department, position):
     """
     try:
         user = django.contrib.auth.get_user_model().objects.create_superuser(
+            username="admin",
             email="admin@gmail.com",
             date_of_birth="1990-01-01",
             password="admin",
@@ -414,9 +428,10 @@ def add_super_user(company, department, position):
         print("Impossible to create a superuser.")
 
 
-def add_user(email, password, last_name, first_name, middle_name, birthday, gender, user_type, company, department, position):
+def add_user(username, email, password, last_name, first_name, middle_name, birthday, gender, user_type, company, department, position):
     """
     Creates new user into database
+    :param username
     :param email:
     :param password:
     :param first_name:
@@ -428,6 +443,7 @@ def add_user(email, password, last_name, first_name, middle_name, birthday, gend
     :return:
     """
     user_profile = django.contrib.auth.get_user_model().objects.create_user(
+        username=username,
         email=email,
         password=password,
         first_name=first_name,

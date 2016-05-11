@@ -12,7 +12,8 @@ from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from asct import settings
 from main.asct_test.asct_test import AsctTest, TestType, Question, CloseAnswer, Answer, AsctResult
-from main.models import UserProfile, Company, Department, Journal, Theme, SubTheme, ScheduledTheme, ScheduledSubTheme, \
+from authentication.models import UserProfile
+from main.models import Company, Department, Journal, Theme, SubTheme, ScheduledTheme, ScheduledSubTheme, \
     File, Position, ThemeExam, Test, TestImage, TestJournal, Progress
 
 def test_page(request):
