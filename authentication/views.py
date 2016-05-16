@@ -173,7 +173,7 @@ def create_new_user(request):
         try:
             send_mail(
                 'Регистрация в ASCT',
-                'Здравствуйте ' + user.first_name + '! \n \n Вы успешно зарегистрированы в сервисе ASCT \n \n Ваш логин: ' + user.email + ' \n Ваш пароль: ' + password,
+                'Здравствуйте ' + user.first_name + '! \n \n Вы успешно зарегистрированы в сервисе ASCT \n \n Ваш логин: ' + user.username + ' \n Ваш пароль: ' + password,
                 getattr(settings, "EMAIL_HOST_USER", None),
                 [user.email],
                 fail_silently=False
@@ -236,7 +236,7 @@ def give_new_password(request, id):
         try:
             send_mail(
                 'Новый пароль доступа в ASCT',
-                'Здравствуйте ' + user_data.first_name + '! \n \n Вам выдан новый пароль доступа в ASCT \n \n Ваш логин: ' + user_data.email + ' \n Ваш пароль: ' + password,
+                'Здравствуйте ' + user_data.first_name + '! \n \n Вам выдан новый пароль доступа в ASCT \n \n Ваш логин: ' + user_data.username + ' \n Ваш пароль: ' + password,
                 getattr(settings, "EMAIL_HOST_USER", None),
                 [user_data.email],
                 fail_silently=False
