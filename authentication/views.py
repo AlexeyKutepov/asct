@@ -47,7 +47,7 @@ def user_settings(request, id):
         result = {
             "status": "danger",
             "message": "Пользователь не найден"
-            }
+        }
         return render(request, "alert.html", result)
     company_list = Company.objects.all()
     if user_data.company:
@@ -97,7 +97,8 @@ def user_settings(request, id):
             "alert.html",
             {
                 "status": "success",
-                "message": "Изменения профиля пользователя успешно сохранены! Профиль пользователя: <a href=\"" + request.META.get('HTTP_REFERER') + "\">" + user_data.get_full_name() + "</a>"
+                "message": "Изменения профиля пользователя успешно сохранены! Профиль пользователя: <a href=\"" + request.META.get(
+                    'HTTP_REFERER') + "\">" + user_data.get_full_name() + "</a>"
             }
         )
     else:
@@ -126,7 +127,7 @@ def create_new_user(request):
                     "alert.html",
                     {
                         "status": "danger",
-                        "message": "Пользователь "+username+" уже существует!"
+                        "message": "Пользователь " + username + " уже существует!"
                     }
                 )
         except:
@@ -173,7 +174,8 @@ def create_new_user(request):
         try:
             send_mail(
                 'Регистрация в ASCT',
-                'Здравствуйте ' + user.first_name + '! \n \n Вы успешно зарегистрированы в сервисе ASCT \n \n Ваш логин: ' + user.username + ' \n Ваш пароль: ' + password,
+                'Здравствуйте ' + user.first_name + '! \n \nВы успешно зарегистрированы в сервисе ASCT \n \nВаш логин: ' + user.username + ' \nВаш пароль: ' + password +
+                ' \n\nДля авторизации в системе перейдите по ссылке: ' + "http://" + request.get_host(),
                 getattr(settings, "EMAIL_HOST_USER", None),
                 [user.email],
                 fail_silently=False
@@ -219,7 +221,7 @@ def give_new_password(request, id):
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
-            }
+        }
         return render(request, "alert.html", result)
     else:
         try:
@@ -228,7 +230,7 @@ def give_new_password(request, id):
             result = {
                 "status": "danger",
                 "message": "Пользователь не найден"
-                }
+            }
             return render(request, "alert.html", result)
         password = generate_password()
         user_data.set_password(password)
@@ -236,7 +238,8 @@ def give_new_password(request, id):
         try:
             send_mail(
                 'Новый пароль доступа в ASCT',
-                'Здравствуйте ' + user_data.first_name + '! \n \n Вам выдан новый пароль доступа в ASCT \n \n Ваш логин: ' + user_data.username + ' \n Ваш пароль: ' + password,
+                'Здравствуйте ' + user_data.first_name + '! \n \nВам выдан новый пароль доступа в ASCT \n \nВаш логин: ' + user_data.username + ' \nВаш пароль: ' + password +
+                ' \n\nДля авторизации в системе перейдите по ссылке: ' + "http://" + request.get_host(),
                 getattr(settings, "EMAIL_HOST_USER", None),
                 [user_data.email],
                 fail_silently=False
@@ -245,7 +248,7 @@ def give_new_password(request, id):
             pass
         result = {
             "status": "success",
-            "message": "<p>Пользователь " + user_data.get_full_name() + " получил новый пароль для доступа в ASCT: " + password + "</p> <p>Пароль отправлен на электронную почту пользователя: " + user_data.email + "</p>"
+            "message": "<p>Пользователь " + user_data.get_full_name() + " получил новый пароль для доступа в ASCT.</p> <p>Пароль отправлен на электронную почту пользователя: " + user_data.email + "</p>"
         }
         return render(request, "alert.html", result)
 
@@ -256,7 +259,7 @@ def delete_user(request, id):
         result = {
             "status": "danger",
             "message": "Доступ запрещён"
-            }
+        }
         return render(request, "alert.html", result)
     else:
         try:
@@ -265,7 +268,7 @@ def delete_user(request, id):
             result = {
                 "status": "danger",
                 "message": "Пользователь не найден"
-                }
+            }
             return render(request, "alert.html", result)
         full_name = user_data.get_full_name()
         user_data.delete()
