@@ -2,6 +2,45 @@
 {% block dashboard %}
     <div class="row">
         <div class="col-lg-12">
+            <h4 class="page-header">{{ user.get_full_name | default:"" }}</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="row">
+                <div class="col-lg-6">
+                    <p><b>Компания: </b>{{ user.company | default:"" }}</p>
+                    <p><b>Подразделение: </b>{{ user.department | default:"" }}</p>
+                    <p><b>Должность: </b>{{ user.position | default:"" }}</p>
+                    {% if user.user_type == "CURATOR" %}
+                    <p><b>Тип пользователя: </b>Куратор</p>
+                    {% elif user.user_type == "ADMIN" %}
+                    <p><b>Тип пользователя: </b>Администратор</p>
+                    {% elif user.user_type == "OPERATOR" %}
+                    <p><b>Тип пользователя: </b>Оператор</p>
+                    {% else %}
+                    <p><b>Тип пользователя: </b>Испытуемый</p>
+                    {% endif %}
+                </div>
+                <div class="col-lg-6">
+                    {% if assessment %}
+                    <p><b>Средний балл (зачёты): </b>{{ assessment }}</p>
+                    {% endif %}
+                {% if progress %}
+                    <p><b>Прогресс: </b> {{ progress }} %</p>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress }}"
+                             aria-valuemin="0" aria-valuemax="100" style="width: {{ progress }}%;">
+                            {{ progress }}%
+                        </div>
+                    </div>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
             <h4 class="page-header">Обучение</h4>
         </div>
     </div>
