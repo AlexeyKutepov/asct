@@ -1021,19 +1021,25 @@ def user_info(request, id):
     else:
         assessment = round(assessment / assessment_count, 2)
 
-    sub_theme_list = ScheduledSubTheme.objects.filter(user=user_data)
-    completed_sub_theme_list = ScheduledSubTheme.objects.filter(user=user_data,
-                                                                status=ScheduledSubTheme.COMPLETED)
-    if len(sub_theme_list) != 0:
-        progress = round(len(completed_sub_theme_list) / len(sub_theme_list) * 100 if len(sub_theme_list) else 0, 2)
-    else:
-        theme_list = ScheduledTheme.objects.filter(user=user_data)
-        completed_theme_list = ScheduledTheme.objects.filter(user=user_data,
+    theme_list = ScheduledTheme.objects.filter(user=user_data)
+    completed_theme_list = ScheduledTheme.objects.filter(user=user_data,
                                                                 status=ScheduledTheme.COMPLETED)
-        if len(theme_list) != 0:
-            progress = round(len(completed_theme_list) / len(theme_list) * 100 if len(theme_list) else 0, 2)
-        else:
-            progress = None
+
+    if len(theme_list) != 0 and len(theme_list) == len(completed_theme_list):
+        progress = 100
+    elif len(theme_list) != 0:
+        theme_progress = len(completed_theme_list)
+        sub_theme_progress = 0.0
+        for theme in theme_list:
+            if theme.status != ScheduledTheme.COMPLETED:
+                sub_theme_list = ScheduledSubTheme.objects.filter(scheduled_theme=theme)
+                if len(sub_theme_list) != 0:
+                    completed_sub_theme_list = ScheduledSubTheme.objects.filter(scheduled_theme=theme, status=ScheduledSubTheme.COMPLETED)
+                    sub_theme_progress += round(len(completed_sub_theme_list) / len(sub_theme_list) if len(sub_theme_list) else 0, 2)
+        progress = round((theme_progress + sub_theme_progress)/len(theme_list)*100 if len(theme_list) else 0, 2)
+    else:
+        progress = None
+
     return render(
         request,
         "main/user_info.html",
