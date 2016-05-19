@@ -20,9 +20,9 @@ def test_page(request):
 
 
 def prepare_curator_page(request):
-    user_list = UserProfile.objects.all()
-    company_list = Company.objects.all()
-    position_list = Position.objects.all()
+    user_list = UserProfile.objects.all().order_by('last_name')
+    company_list = Company.objects.all().order_by('name')
+    position_list = Position.objects.all().order_by('name')
     return render(
         request,
         "main/curator_profile.html",
@@ -38,8 +38,8 @@ def prepare_admin_page(request):
     user_list = UserProfile.objects.filter(
         Q(user_type=UserProfile.OPERATOR, company=request.user.company) | Q(user_type=UserProfile.PROBATIONER,
                                                                             company=request.user.company)
-    )
-    position_list = Position.objects.all()
+    ).order_by('last_name')
+    position_list = Position.objects.all().order_by('name')
     return render(
         request,
         "main/admin_profile.html",
@@ -51,7 +51,7 @@ def prepare_admin_page(request):
 
 
 def prepare_operator_page(request):
-    probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company)
+    probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company).order_by('last_name')
     return render(
         request,
         "main/operator_profile.html",
@@ -312,7 +312,7 @@ def add_department(request):
 @login_required
 def department_settings(request, id):
     department = Department.objects.get(id=id)
-    position_list = Position.objects.all()
+    position_list = Position.objects.all().order_by('name')
     if "save" in request.POST:
         department.name = request.POST["department"]
         in_department_list = request.POST.getlist("inDepartment")

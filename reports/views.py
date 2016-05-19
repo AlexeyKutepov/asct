@@ -378,8 +378,8 @@ def reports(request):
         }
         return render(request, "alert.html", result)
     elif request.user.user_type == UserProfile.CURATOR:
-        probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER)
-        company_list = Company.objects.all()
+        probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER).order_by("last_name")
+        company_list = Company.objects.all().order_by("name")
     else:
         probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company)
         company_list = [request.user.company, ]
