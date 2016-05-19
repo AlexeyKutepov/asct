@@ -1027,7 +1027,13 @@ def user_info(request, id):
     if len(sub_theme_list) != 0:
         progress = round(len(completed_sub_theme_list) / len(sub_theme_list) * 100 if len(sub_theme_list) else 0, 2)
     else:
-        progress = None
+        theme_list = ScheduledTheme.objects.filter(user=user_data)
+        completed_theme_list = ScheduledTheme.objects.filter(user=user_data,
+                                                                status=ScheduledTheme.COMPLETED)
+        if len(theme_list) != 0:
+            progress = round(len(completed_theme_list) / len(theme_list) * 100 if len(theme_list) else 0, 2)
+        else:
+            progress = None
     return render(
         request,
         "main/user_info.html",
