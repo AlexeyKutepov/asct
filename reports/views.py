@@ -322,14 +322,8 @@ def prepare_department_report(request, probationer_list, company_list):
     result_list = []
     in_total_assessment = 0
     in_total_assessment_count = 0
-    in_sub_theme_list_count = 0
-    in_total_completed_sub_theme_list_count = 0
+    department_theme_progress = 0.0
     for user in user_list:
-        theme_sub_list = ScheduledSubTheme.objects.filter(user=user)
-        in_sub_theme_list_count += len(theme_sub_list)
-        completed_sub_theme_list = ScheduledSubTheme.objects.filter(user=user,
-                                                             status=ScheduledSubTheme.COMPLETED)
-        in_total_completed_sub_theme_list_count += len(completed_sub_theme_list)
         exam_list = ThemeExam.objects.filter(user=user)
         assessment = 0
         assessment_count = 0
@@ -340,10 +334,28 @@ def prepare_department_report(request, probationer_list, company_list):
                 assessment_count += 1
                 in_total_assessment_count += 1
         assessment = assessment/assessment_count if assessment_count != 0 else "Нет оценок по зачётам"
-        if len(theme_sub_list) != 0:
-            progress = round(len(completed_sub_theme_list) / len(theme_sub_list) * 100, 1) if len(theme_sub_list) else 0
+
+        theme_list = ScheduledTheme.objects.filter(user=user)
+        completed_theme_list = ScheduledTheme.objects.filter(user=user,
+                                                                    status=ScheduledTheme.COMPLETED)
+
+        if len(theme_list) != 0 and len(theme_list) == len(completed_theme_list):
+            progress = 100
+            department_theme_progress += 1
+        elif len(theme_list) != 0:
+            theme_progress = len(completed_theme_list)
+            sub_theme_progress = 0.0
+            for theme in theme_list:
+                if theme.status != ScheduledTheme.COMPLETED:
+                    sub_theme_list = ScheduledSubTheme.objects.filter(scheduled_theme=theme)
+                    if len(sub_theme_list) != 0:
+                        completed_sub_theme_list = ScheduledSubTheme.objects.filter(scheduled_theme=theme, status=ScheduledSubTheme.COMPLETED)
+                        sub_theme_progress += round(len(completed_sub_theme_list) / len(sub_theme_list) if len(sub_theme_list) else 0, 2)
+            progress = round((theme_progress + sub_theme_progress)/len(theme_list)*100 if len(theme_list) else 0, 2)
+            department_theme_progress += progress/100
         else:
             progress = "Темы не назначены"
+
         result_list.append(
             {
                 "user": user,
@@ -362,7 +374,7 @@ def prepare_department_report(request, probationer_list, company_list):
             "company_list": company_list,
             "department": department,
             "result_list": result_list,
-            "in_total_progress": round(in_total_completed_sub_theme_list_count / in_sub_theme_list_count * 100, 1) if in_sub_theme_list_count else 0,
+            "in_total_progress": round((department_theme_progress)/len(user_list) * 100 if len(user_list) else 0, 2),
             "in_total_assessment": in_total_assessment,
             "show_department_report": True
         }
