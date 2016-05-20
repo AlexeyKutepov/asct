@@ -248,7 +248,8 @@ def give_new_password(request, id):
             pass
         result = {
             "status": "success",
-            "message": "<p>Пользователь " + user_data.get_full_name() + " получил новый пароль для доступа в ASCT.</p> <p>Пароль отправлен на электронную почту пользователя: " + user_data.email + "</p>"
+            "message": "<p>Пользователь <a href=\"" + request.META.get('HTTP_REFERER') + "\">"
+                       + user_data.get_full_name() + "</a> получил новый пароль для доступа в ASCT.</p> <p>Пароль отправлен на электронную почту пользователя: " + user_data.email + "</p>"
         }
         return render(request, "alert.html", result)
 

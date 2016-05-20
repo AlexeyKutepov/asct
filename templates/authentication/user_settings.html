@@ -19,22 +19,22 @@
               enctype="multipart/form-data">
     {% endif %}
 {% csrf_token %}
+
 <div class="row">
-    <div class="form-group col-lg-4">
-        {% if user_data.photo %}
-            <img id="impPreview"
-                 src="{{ MEDIA_URL }}{{ user_data.photo }}"
-                 alt="Photo" width="200" height="auto" style="height:auto !important;">
-            <p></p>
-            <input id="inputPhoto" name="photo" type="file" accept="image/*" onchange="onPreview(this)">
-        {% else %}
-            <img id="impPreview"
-                 data-src="holder.js/200x200/auto/white"
-                 alt="Photo" width="200" height="200">
-            <p></p>
-            <input id="inputPhoto" name="photo" type="file" accept="image/*" onchange="onPreview(this)">
-        {% endif %}
-    </div>
+<div class="form-group col-lg-3">
+    {% if user_data.photo %}
+        <img id="impPreview"
+             src="{{ MEDIA_URL }}{{ user_data.photo }}"
+             alt="Photo" width="200" height="auto" style="height:auto !important;">
+        <p></p>
+        <input id="inputPhoto" name="photo" type="file" accept="image/*" onchange="onPreview(this)">
+    {% else %}
+        <img id="impPreview"
+             data-src="holder.js/200x200/auto/white"
+             alt="Photo" width="200" height="200">
+        <p></p>
+        <input id="inputPhoto" name="photo" type="file" accept="image/*" onchange="onPreview(this)">
+    {% endif %}
     {% if user.user_type != "PROBATIONER" and not isCreate and user != user_data %}
         <div class="modal fade" id="modalDeleteUser" tabindex="-1" role="dialog"
              aria-labelledby="modalDeleteUserLabel" aria-hidden="true">
@@ -57,29 +57,33 @@
                 </div>
             </div>
         </div>
-
-        <div class="col-lg-4 col-lg-offset-1">
-            <div class="row">
-                <div class="form-group">
-                    <p></p>
-                    <input type="button" data-toggle="modal"
-                           data-target="#modalDeleteUser"
-                           class="btn btn-danger pull-right" value="Удалить пользователя"/>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group">
-                    <p></p>
-                    <a href="{% url "give_new_password" id=user_data.id %}"><input type="button"
-                                                                                   class="btn btn-default pull-right"
-                                                                                   value="Выдать новый пароль"/></a>
-                </div>
+        <br>
+        <div class="row">
+            <div class="col-lg-12">
+                <a href="{% url "give_new_password" id=user_data.id %}">
+                    <button type="button" class="btn btn-primary" style="width: 200px">Выдать новый пароль</button>
+                </a>
             </div>
         </div>
+        <br>
+        <div class="row">
+            <div class="col-lg-12">
+                <button type="button" class="btn btn-warning" style="width: 200px">Уволить пользователя</button>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-lg-12">
+                <button type="button" data-toggle="modal" data-target="#modalDeleteUser" class="btn btn-danger"
+                        style="width: 200px">
+                    Удалить пользователя
+                </button>
+            </div>
+        </div>
+
     {% endif %}
 </div>
-<div class="row">
-<div class="col-lg-5">
+<div class="col-lg-3">
     <div class="row">
         <div class="form-group">
             <label for="inputUsername">* Логин</label>
@@ -128,28 +132,110 @@
             </div>
         </div>
     </div>
-    <label class="control-label" for="divGender">Пол:</label>
+</div>
+<div class="col-lg-3 col-lg-offset-1">
     {% if user_data.gender == "MALE" %}
-        <div id="divGender" class="row">
-            <div class="col-lg-6">
-                <input id="radioMale" type="radio" name="gender" value="MALE" checked>Мужской
-            </div>
-            <div class="col-lg-6">
-                <input id="radioFemale" type="radio" name="gender" value="FEMALE">Женский
+        <div class="row">
+            <div class="form-group">
+                <label for="selectGender"><b>Пол:</b></label>
+
+                <p><select id="selectGender" name="gender" class="selectpicker">
+                    <option value="MALE" selected>Мужской</option>
+                    <option value="FEMALE">Женский</option>
+                </select></p>
             </div>
         </div>
     {% else %}
-        <div id="divGender" class="row">
-            <div class="col-lg-6">
-                <input id="radioMale" type="radio" name="gender" value="MALE">Мужской
-            </div>
-            <div class="col-lg-6">
-                <input id="radioFemale" type="radio" name="gender" value="FEMALE" checked>Женский
+        <div class="row">
+            <div class="form-group">
+                <label for="selectCompany"><b>Пол:</b></label>
+
+                <p><select id="selectGender" name="gender" class="selectpicker">
+                    <option value="MALE">Мужской</option>
+                    <option value="FEMALE" selected>Женский</option>
+                </select></p>
             </div>
         </div>
     {% endif %}
-</div>
-<div class="col-lg-5 col-lg-offset-1">
+    {% if user.user_type == "CURATOR" %}
+        {% if user_data.user_type == "CURATOR" %}
+            <div class="row">
+                <div class="form-group">
+                    <label for="selectUserType"><b>Тип пользователя:</b></label>
+
+                    <p><select id="selectUserType" name="userType" class="selectpicker">
+                        <option value="CURATOR" selected>Куратор</option>
+                        <option value="ADMIN">Администратор</option>
+                        <option value="OPERATOR">Оператор</option>
+                        <option value="PROBATIONER">Испытуемый</option>
+                    </select></p>
+                </div>
+            </div>
+        {% elif user_data.user_type == "ADMIN" %}
+            <div class="row">
+                <div class="form-group">
+                    <label for="selectUserType"><b>Тип пользователя:</b></label>
+
+                    <p><select id="selectUserType" name="userType" class="selectpicker">
+                        <option value="CURATOR">Куратор</option>
+                        <option value="ADMIN" selected>Администратор</option>
+                        <option value="OPERATOR">Оператор</option>
+                        <option value="PROBATIONER">Испытуемый</option>
+                    </select></p>
+                </div>
+            </div>
+        {% elif user_data.user_type == "OPERATOR" %}
+            <div class="row">
+                <div class="form-group">
+                    <label for="selectUserType"><b>Тип пользователя:</b></label>
+
+                    <p><select id="selectUserType" name="userType" class="selectpicker">
+                        <option value="CURATOR">Куратор</option>
+                        <option value="ADMIN">Администратор</option>
+                        <option value="OPERATOR" selected>Оператор</option>
+                        <option value="PROBATIONER">Испытуемый</option>
+                    </select></p>
+                </div>
+            </div>
+        {% else %}
+            <div class="row">
+                <div class="form-group">
+                    <label for="selectUserType"><b>Тип пользователя:</b></label>
+
+                    <p><select id="selectUserType" name="userType" class="selectpicker">
+                        <option value="CURATOR">Куратор</option>
+                        <option value="ADMIN">Администратор</option>
+                        <option value="OPERATOR">Оператор</option>
+                        <option value="PROBATIONER" selected>Испытуемый</option>
+                    </select></p>
+                </div>
+            </div>
+        {% endif %}
+    {% elif user.user_type == "ADMIN" and user != user_data %}
+        {% if user_data.user_type == "OPERATOR" %}
+            <div class="row">
+                <div class="form-group">
+                    <label for="selectUserType"><b>Тип пользователя:</b></label>
+
+                    <p><select id="selectUserType" name="userType" class="selectpicker">
+                        <option value="OPERATOR" selected>Оператор</option>
+                        <option value="PROBATIONER">Испытуемый</option>
+                    </select></p>
+                </div>
+            </div>
+        {% else %}
+            <div class="row">
+                <div class="form-group">
+                    <label for="selectUserType"><b>Тип пользователя:</b></label>
+
+                    <p><select id="selectUserType" name="userType" class="selectpicker">
+                        <option value="OPERATOR">Оператор</option>
+                        <option value="PROBATIONER" selected>Испытуемый</option>
+                    </select></p>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
     <div class="row">
         <div class="form-group">
             <label for="selectCompany"><b>Компания</b></label>
@@ -196,95 +282,9 @@
             </select></p>
         </div>
     </div>
-    <p></p>
-    {% if user.user_type == "CURATOR" %}
-        <label class="control-label" for="divGender">Тип пользователя:</label>
-        {% if user_data.user_type == "CURATOR" %}
-            <div id="divUserType" class="row">
-                <div class="col-lg-3">
-                    <input id="radioCurator" type="radio" name="userType" value="CURATOR" checked>Куратор
-                </div>
-                <div class="col-lg-3">
-                    <input id="radioAdmin" type="radio" name="userType" value="ADMIN">Администратор
-                </div>
-                <div class="col-lg-3">
-                    <input id="radioOperator" type="radio" name="userType" value="OPERATOR">Оператор
-                </div>
-                <div class="col-lg-3">
-                    <input id="radioProbationer" type="radio" name="userType" value="PROBATIONER">Испытуемый
-                </div>
-            </div>
-        {% elif user_data.user_type == "ADMIN" %}
-            <div id="divUserType" class="row">
-                <div class="col-lg-3">
-                    <input id="radioCurator" type="radio" name="userType" value="CURATOR">Куратор
-                </div>
-                <div class="col-lg-3">
-                    <input id="radioAdmin" type="radio" name="userType" value="ADMIN" checked>Администратор
-                </div>
-                <div class="col-lg-3">
-                    <input id="radioOperator" type="radio" name="userType" value="OPERATOR">Оператор
-                </div>
-                <div class="col-lg-3">
-                    <input id="radioProbationer" type="radio" name="userType" value="PROBATIONER">Испытуемый
-                </div>
-            </div>
-        {% elif user_data.user_type == "OPERATOR" %}
-            <div id="divUserType" class="row">
-                <div class="col-lg-3">
-                    <input id="radioCurator" type="radio" name="userType" value="CURATOR">Куратор
-                </div>
-                <div class="col-lg-3">
-                    <input id="radioAdmin" type="radio" name="userType" value="ADMIN">Администратор
-                </div>
-                <div class="col-lg-3">
-                    <input id="radioOperator" type="radio" name="userType" value="OPERATOR" checked>Оператор
-                </div>
-                <div class="col-lg-3">
-                    <input id="radioProbationer" type="radio" name="userType" value="PROBATIONER">Испытуемый
-                </div>
-            </div>
-        {% else %}
-            <div id="divUserType" class="row">
-                <div class="col-lg-3">
-                    <input id="radioCurator" type="radio" name="userType" value="CURATOR">Куратор
-                </div>
-                <div class="col-lg-3">
-                    <input id="radioAdmin" type="radio" name="userType" value="ADMIN">Администратор
-                </div>
-                <div class="col-lg-3">
-                    <input id="radioOperator" type="radio" name="userType" value="OPERATOR">Оператор
-                </div>
-                <div class="col-lg-3">
-                    <input id="radioProbationer" type="radio" name="userType" value="PROBATIONER" checked>Испытуемый
-                </div>
-            </div>
-        {% endif %}
-    {% elif user.user_type == "ADMIN" and user != user_data %}
-        <label class="control-label" for="divGender">Тип пользователя:</label>
-        {% if user_data.user_type == "OPERATOR" %}
-            <div id="divUserType" class="row">
-                <div class="col-lg-6">
-                    <input id="radioOperator" type="radio" name="userType" value="OPERATOR" checked>Оператор
-                </div>
-                <div class="col-lg-6">
-                    <input id="radioProbationer" type="radio" name="userType" value="PROBATIONER">Испытуемый
-                </div>
-            </div>
-        {% else %}
-            <div id="divUserType" class="row">
-                <div class="col-lg-6">
-                    <input id="radioOperator" type="radio" name="userType" value="OPERATOR">Оператор
-                </div>
-                <div class="col-lg-6">
-                    <input id="radioProbationer" type="radio" name="userType" value="PROBATIONER" checked>Испытуемый
-                </div>
-            </div>
-        {% endif %}
-    {% endif %}
-
 </div>
 </div>
+<br>
 <div class="row">
     <div class="col-lg-offset-4 col-lg-12">
         {% if isCreate %}
