@@ -278,3 +278,29 @@ def delete_user(request, id):
             "message": "<p>Пользователь " + full_name + " удалён</p>"
         }
         return render(request, "alert.html", result)
+
+
+def fire_user(request, id):
+    if request.user.user_type == UserProfile.PROBATIONER:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+        }
+        return render(request, "alert.html", result)
+    else:
+        try:
+            user_data = UserProfile.objects.get(id=id)
+        except:
+            result = {
+                "status": "danger",
+                "message": "Пользователь не найден"
+            }
+            return render(request, "alert.html", result)
+        full_name = user_data.get_full_name()
+        user_data.is_active = False
+        user_data.save()
+        result = {
+            "status": "success",
+            "message": "<p>Пользователь " + full_name + " уволен</p>"
+        }
+        return render(request, "alert.html", result)

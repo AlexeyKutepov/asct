@@ -57,6 +57,27 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="modalFireUser" tabindex="-1" role="dialog"
+             aria-labelledby="modalFireUserLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="modalFireUserLabel">Увольнение пользователя</h4>
+                    </div>
+                    <div class="modal-body">
+                        Вы действительно хотите уволить пользователя "{{ user_data.get_full_name }}"?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Нет</button>
+                        <a href="{% url "fire_user" id=user_data.id %}">
+                            <button type="button" name="delete" class="btn btn-default">Да</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <br>
         <div class="row">
             <div class="col-lg-12">
@@ -68,7 +89,7 @@
         <br>
         <div class="row">
             <div class="col-lg-12">
-                <button type="button" class="btn btn-warning" style="width: 200px">Уволить пользователя</button>
+                <button type="button" data-toggle="modal" data-target="#modalFireUser" class="btn btn-warning" style="width: 200px">Уволить пользователя</button>
             </div>
         </div>
         <br>
