@@ -18,6 +18,28 @@ class Counter:
         self.counter = 0
 
 
+def calculate_progress(user):
+    theme_list = ScheduledTheme.objects.filter(user=user)
+    completed_theme_list = ScheduledTheme.objects.filter(user=user,
+                                                                status=ScheduledTheme.COMPLETED)
+
+    if len(theme_list) != 0 and len(theme_list) == len(completed_theme_list):
+        progress = 100
+    elif len(theme_list) != 0:
+        theme_progress = len(completed_theme_list)
+        sub_theme_progress = 0.0
+        for theme in theme_list:
+            if theme.status != ScheduledTheme.COMPLETED:
+                sub_theme_list = ScheduledSubTheme.objects.filter(scheduled_theme=theme)
+                if len(sub_theme_list) != 0:
+                    completed_sub_theme_list = ScheduledSubTheme.objects.filter(scheduled_theme=theme, status=ScheduledSubTheme.COMPLETED)
+                    sub_theme_progress += round(len(completed_sub_theme_list) / len(sub_theme_list) if len(sub_theme_list) else 0, 2)
+        progress = round((theme_progress + sub_theme_progress)/len(theme_list)*100 if len(theme_list) else 0, 2)
+    else:
+        progress = None
+    return progress
+
+
 def prepare_probationer_report(request, probationer_list, company_list):
     """
     Формирование отчёта "Ведомость сотрудника"
@@ -56,7 +78,8 @@ def prepare_probationer_report(request, probationer_list, company_list):
             "exam_list": exam_list,
             "journal_list": journal_list,
             "show_probationer_report": True,
-            "counter": counter
+            "counter": counter,
+            "progress": calculate_progress(user_data)
         }
     )
 

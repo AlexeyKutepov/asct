@@ -10,7 +10,8 @@
         </div>
     </div>
     <ul class="nav nav-tabs">
-        <li id="liProbationerReport" role="presentation" class="active"><a id="aProbationerReport" href="#">Ведомость сотрудника</a>
+        <li id="liProbationerReport" role="presentation" class="active"><a id="aProbationerReport" href="#">Ведомость
+            сотрудника</a>
         </li>
         <li id="liDepartmentReport" role="presentation"><a id="aDepartmentReport" href="#">Ведомость подразделения</a>
         </li>
@@ -18,7 +19,8 @@
         </li>
         <li id="liCompanyReport" role="presentation"><a id="aCompanyReport" href="#">Мгновенный срез по компании</a>
         </li>
-        <li id="liAllCompanyReport" role="presentation"><a id="aAllCompanyReport" href="#">Мгновенный срез по группе компаний</a>
+        <li id="liAllCompanyReport" role="presentation"><a id="aAllCompanyReport" href="#">Мгновенный срез по группе
+            компаний</a>
         </li>
         <li id="liTestReport" role="presentation"><a id="aTestReport" href="#">План-график назначенных тестов</a>
         </li>
@@ -35,10 +37,12 @@
                 {% csrf_token %}
                 <div class="col-lg-4">
                     <div class="form-group">
-                        <select name="probationer" class="selectpicker" data-width="100%" data-live-search="true" required>
+                        <select name="probationer" class="selectpicker" data-width="100%" data-live-search="true"
+                                required>
                             {% for probationer in probationer_list %}
                                 {% if user_data == probationer %}
-                                    <option value="{{ probationer.id }}" selected>{{ probationer.get_full_name }}</option>
+                                    <option value="{{ probationer.id }}"
+                                            selected>{{ probationer.get_full_name }}</option>
                                 {% else %}
                                     <option value="{{ probationer.id }}">{{ probationer.get_full_name }}</option>
                                 {% endif %}
@@ -51,98 +55,150 @@
                 </div>
             </form>
         </div>
-    <p></p>
-    {% if show_probationer_report %}
-        <div class="row">
-            <div class="col-lg-12">
-                <table class="table table-bordered table-hover">
-                    <thead>
+        <p></p>
+        {% if show_probationer_report %}
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <table class="table table-bordered table-hover">
+                        <thead>
                         <tr>
-                            <th colspan="5" style="text-align: center;">
-                                <p><a href="{% url "user_info" id=user_data.id %}">{{ user_data.get_full_name }}</a>
-                                <p>{{ user_data.company }}, {{ user_data.department }}
-                                <p>{{ user_data.position }}
-                            </th>
-                        </tr>
-                    </thead>
-                </table>
-            {% for journal in journal_list %}
-                <table class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th colspan="2">
-                                Учебная программа
-                            </th>
-                            <th colspan="3">
-                                {{ journal.name }}
-                            </th>
-                        </tr>
-                        <tr>
-                            <th width="5%">№</th>
-                            <th width="50%">Название</th>
-                            <th width="10%">Прогресс</th>
-                            <th width="10%">Оценка</th>
-                            <th width="25%">Экзаменатор</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for theme in scheduled_theme_list %}
-                        {% if theme.theme.journal == journal %}
-                            <tr>
-                                <td><b>{{ counter.increment }}</b></td>
-                                <td><b>{{ theme.theme.name }}</b></td>
-                                <td>
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ theme.progress }}"
-                                             aria-valuemin="0" aria-valuemax="100" style="width: {{ theme.progress }}%;">
-                                            {{ theme.progress }}%
+                            <th>
+                                <div class="row">
+                                    <div class="form-group col-lg-2">
+                                        {% if user_data.photo %}
+                                            <img id="impPreview"
+                                                 src="{{ MEDIA_URL }}{{ user_data.photo }}"
+                                                 alt="Photo" width="200" height="auto">
+                                        {% else %}
+                                            <img id="impPreview"
+                                                 data-src="holder.js/200x200/auto/white"
+                                                 alt="Photo" width="200" height="200">
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <h4><b>ФИО: </b><a href="{% url "user_info" id=user_data.id %}">{{ user_data.get_full_name | default:"" }}</a></h4>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <p><b>Компания: </b>{{ user_data.company | default:"" }}</p>
+
+                                                <p><b>Подразделение: </b>{{ user_data.department | default:"" }}</p>
+
+                                                <p><b>Должность: </b>{{ user_data.position | default:"" }}</p>
+                                                {% if user_data.user_type == "CURATOR" %}
+                                                    <p><b>Тип пользователя: </b>Куратор</p>
+                                                {% elif user_data.user_type == "ADMIN" %}
+                                                    <p><b>Тип пользователя: </b>Администратор</p>
+                                                {% elif user_data.user_type == "OPERATOR" %}
+                                                    <p><b>Тип пользователя: </b>Оператор</p>
+                                                {% else %}
+                                                    <p><b>Тип пользователя: </b>Испытуемый</p>
+                                                {% endif %}
+                                                {% if assessment %}
+                                                    <p><b>Средний балл (зачёты): </b>{{ assessment }}</p>
+                                                {% endif %}
+                                                {% if progress %}
+                                                    <p><b>Прогресс: </b> {{ progress }} %</p>
+                                                    <div class="progress">
+                                                        <div class="progress-bar" role="progressbar"
+                                                             aria-valuenow="{{ progress }}"
+                                                             aria-valuemin="0" aria-valuemax="100"
+                                                             style="width: {{ progress }}%;">
+                                                            {{ progress }}%
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
                                         </div>
                                     </div>
-                                </td>
-                                <td><b>
-                                    {% for exam in exam_list %}
-                                        {% if exam.theme == theme.theme %}
-                                            {{ exam.result|default:"" }}
-                                        {% endif %}
-                                    {% endfor %}
-                                </b></td>
-                                <td><b>
-                                    {% for exam in exam_list %}
-                                        {% if exam.theme == theme.theme %}
-                                            {{ exam.examiner.get_full_name|default:"" }}
-                                        {% endif %}
-                                    {% endfor %}
-                                </b></td>
+                                </div>
+                            </th>
+                        </tr>
+                        </thead>
+                    </table>
+                    {% for journal in journal_list %}
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th colspan="2">
+                                    Учебная программа
+                                </th>
+                                <th colspan="3">
+                                    {{ journal.name }}
+                                </th>
                             </tr>
-                            {% for sub_theme in scheduled_sub_theme_list %}
-                                {% if sub_theme.scheduled_theme == theme %}
-                                <tr>
-                                    <td></td>
-                                    <td>{{ sub_theme.sub_theme.name }}</td>
-                                    <td></td>
-                                    <td>
-                                        {% if sub_theme.status == "COMPLETED" %}
-                                        <i class="fa fa-check"></i>
+                            <tr>
+                                <th width="5%">№</th>
+                                <th width="50%">Название</th>
+                                <th width="10%">Прогресс</th>
+                                <th width="10%">Оценка</th>
+                                <th width="25%">Экзаменатор</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for theme in scheduled_theme_list %}
+                                {% if theme.theme.journal == journal %}
+                                    <tr>
+                                        <td><b>{{ counter.increment }}</b></td>
+                                        <td><b>{{ theme.theme.name }}</b></td>
+                                        <td>
+                                            <div class="progress">
+                                                <div class="progress-bar" role="progressbar"
+                                                     aria-valuenow="{{ theme.progress }}"
+                                                     aria-valuemin="0" aria-valuemax="100"
+                                                     style="width: {{ theme.progress }}%;">
+                                                    {{ theme.progress }}%
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><b>
+                                            {% for exam in exam_list %}
+                                                {% if exam.theme == theme.theme %}
+                                                    {{ exam.result|default:"" }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </b></td>
+                                        <td><b>
+                                            {% for exam in exam_list %}
+                                                {% if exam.theme == theme.theme %}
+                                                    {{ exam.examiner.get_full_name|default:"" }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </b></td>
+                                    </tr>
+                                    {% for sub_theme in scheduled_sub_theme_list %}
+                                        {% if sub_theme.scheduled_theme == theme %}
+                                            <tr>
+                                                <td></td>
+                                                <td>{{ sub_theme.sub_theme.name }}</td>
+                                                <td></td>
+                                                <td>
+                                                    {% if sub_theme.status == "COMPLETED" %}
+                                                        <i class="fa fa-check"></i>
+                                                    {% endif %}
+                                                </td>
+                                                <td></td>
+                                            </tr>
                                         {% endif %}
-                                    </td>
-                                    <td></td>
-                                </tr>
+                                    {% endfor %}
                                 {% endif %}
                             {% endfor %}
-                        {% endif %}
+                            </tbody>
+                        </table>
+                        <div hidden>{{ counter.set_to_zero }}</div>
                     {% endfor %}
-                    </tbody>
-                </table>
-                <div hidden>{{ counter.set_to_zero }}</div>
-            {% endfor %}
+                </div>
             </div>
-        </div>
-    {% endif %}
+        {% endif %}
     </div>
     <div id="divDepartmentReport" hidden>
         <div class="row">
             <form id="formDepartmentReport" action="{% url "reports" %}" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
+                {% csrf_token %}
                 <div class="form-group col-lg-2">
                     <select id="selectCompany" name="company" class="selectpicker">
                         {% for company in company_list %}
@@ -164,12 +220,13 @@
             </form>
         </div>
         <input id="departmentId" value="{{ department.id|default:"" }}" hidden>
+
         <p></p>
         {% if show_department_report %}
-        <div class="row">
-            <div class="col-lg-12">
-                <table class="table table-bordered table-hover">
-                    <tbody>
+            <div class="row">
+                <div class="col-lg-12">
+                    <table class="table table-bordered table-hover">
+                        <tbody>
                         <tr>
                             <td width="15%"><b>Компания</b></td>
                             <td>{{ department.company }}</td>
@@ -178,41 +235,45 @@
                             <td width="15%"><b>Подразделение</b></td>
                             <td>{{ department.name }}</td>
                         </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <table class="table table-bordered table-hover">
-                    <thead>
+            <div class="row">
+                <div class="col-lg-12">
+                    <table class="table table-bordered table-hover">
+                        <thead>
                         <th>№</th>
                         <th width="45%">ФИО</th>
                         <th width="30%">Прогресс</th>
                         <th width="20%">Оценка</th>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         {% for result in result_list %}
                             <tr>
                                 <td>{{ forloop.counter }}</td>
-                                <td><a href="{% url "user_info" id=result.user.id %}">{{ result.user.get_full_name }}</a></td>
+                                <td>
+                                    <a href="{% url "user_info" id=result.user.id %}">{{ result.user.get_full_name }}</a>
+                                </td>
                                 <td>
                                     {% if result.progress == "Темы не назначены" %}
-                                    Темы не назначены
+                                        Темы не назначены
                                     {% else %}
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ result.progress }}"
-                                             aria-valuemin="0" aria-valuemax="100" style="width: {{ result.progress }}%;">
-                                            {{ result.progress }}%
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar"
+                                                 aria-valuenow="{{ result.progress }}"
+                                                 aria-valuemin="0" aria-valuemax="100"
+                                                 style="width: {{ result.progress }}%;">
+                                                {{ result.progress }}%
+                                            </div>
                                         </div>
-                                    </div>
                                     {% endif %}
                                 </td>
                                 <td>{{ result.assessment }}</td>
                             </tr>
                         {% endfor %}
-                    </tbody>
-                    <tfoot>
+                        </tbody>
+                        <tfoot>
                         <th colspan="2">Итого</th>
                         <th>
                             <div class="progress">
@@ -223,103 +284,106 @@
                             </div>
                         </th>
                         <th>{{ in_total_assessment }}</th>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-        {% endif %}
-    </div>
-    <div id="divExamListReport" hidden>
-    <div>
-        <div class="row">
-            <div class="col-lg-6">
-                <h5>Выберите испытуемого</h5>
-            </div>
-        </div>
-        <div class="row">
-            <form id="formExamListReport" action="{% url "reports" %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="col-lg-4">
-                    <div class="form-group">
-                        <select name="probationer" class="selectpicker" data-width="100%" data-live-search="true" required>
-                            {% for probationer in probationer_list %}
-                                {% if user_data == probationer %}
-                                    <option value="{{ probationer.id }}" selected>{{ probationer.get_full_name }}</option>
-                                {% else %}
-                                    <option value="{{ probationer.id }}">{{ probationer.get_full_name }}</option>
-                                {% endif %}
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <button type="submit" name="exam_list_report" class="btn btn-success">Сформировать</button>
-                </div>
-            </form>
-        </div>
-    <p></p>
-    {% if show_exam_list_report %}
-        <div class="row">
-            <div class="col-lg-12">
-                <table class="table table-bordered table-hover">
-                    <tbody>
-                        <tr>
-                            <td width="20%"><b>ФИО сотрудника</b></td>
-                            <td><a href="{% url "user_info" id=user_data.id %}">{{ user_data.get_full_name }}</a></td>
-                        </tr>
-                        <tr>
-                            <td width="20%"><b>Компания</b></td>
-                            <td>{{ user_data.company }}</td>
-                        </tr>
-                        <tr>
-                            <td width="20%"><b>Отдел</b></td>
-                            <td>{{ user_data.department }}</td>
-                        </tr>
-                        <tr>
-                            <td width="20%"><b>Должность</b></td>
-                            <td>{{ user_data.position }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        {% if journal_list %}
-            {% for journal in journal_list %}
-            <div class="row">
-                <div class="col-lg-12">
-                    <h4>{{ journal.name }}</h4>
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                            <th width="5%">№</th>
-                            <th width="50%">Зачёт по теме</th>
-                            <th width="15%">Оценка</th>
-                            <th width="30%">Экзаменатор</th>
-                        </thead>
-                        <tbody>
-                            {% for exam in exam_list %}
-                                {% if exam.theme.journal == journal %}
-                                    <tr>
-                                        <td>{{ forloop.counter }}</td>
-                                        <td>{{ exam.theme.name }}</td>
-                                        <td>{{ exam.result|default:"" }}</td>
-                                        <td>{{ exam.examiner.get_full_name }}</td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                        </tbody>
+                        </tfoot>
                     </table>
                 </div>
             </div>
-            {% endfor %}
-        {% else %}
-        <div class="row">
-            <div class="col-lg-12">
-                <h4>Зачёты не назначены</h4>
-            </div>
-        </div>
         {% endif %}
-    {% endif %}
     </div>
+    <div id="divExamListReport" hidden>
+        <div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <h5>Выберите испытуемого</h5>
+                </div>
+            </div>
+            <div class="row">
+                <form id="formExamListReport" action="{% url "reports" %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <select name="probationer" class="selectpicker" data-width="100%" data-live-search="true"
+                                    required>
+                                {% for probationer in probationer_list %}
+                                    {% if user_data == probationer %}
+                                        <option value="{{ probationer.id }}"
+                                                selected>{{ probationer.get_full_name }}</option>
+                                    {% else %}
+                                        <option value="{{ probationer.id }}">{{ probationer.get_full_name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <button type="submit" name="exam_list_report" class="btn btn-success">Сформировать</button>
+                    </div>
+                </form>
+            </div>
+            <p></p>
+            {% if show_exam_list_report %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <table class="table table-bordered table-hover">
+                            <tbody>
+                            <tr>
+                                <td width="20%"><b>ФИО сотрудника</b></td>
+                                <td><a href="{% url "user_info" id=user_data.id %}">{{ user_data.get_full_name }}</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="20%"><b>Компания</b></td>
+                                <td>{{ user_data.company }}</td>
+                            </tr>
+                            <tr>
+                                <td width="20%"><b>Отдел</b></td>
+                                <td>{{ user_data.department }}</td>
+                            </tr>
+                            <tr>
+                                <td width="20%"><b>Должность</b></td>
+                                <td>{{ user_data.position }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% if journal_list %}
+                    {% for journal in journal_list %}
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <h4>{{ journal.name }}</h4>
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                    <th width="5%">№</th>
+                                    <th width="50%">Зачёт по теме</th>
+                                    <th width="15%">Оценка</th>
+                                    <th width="30%">Экзаменатор</th>
+                                    </thead>
+                                    <tbody>
+                                    {% for exam in exam_list %}
+                                        {% if exam.theme.journal == journal %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ exam.theme.name }}</td>
+                                                <td>{{ exam.result|default:"" }}</td>
+                                                <td>{{ exam.examiner.get_full_name }}</td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h4>Зачёты не назначены</h4>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
     </div>
     <div id="divCompanyReport" hidden>
         <div class="row">
@@ -335,9 +399,9 @@
                         <select name="company" class="selectpicker" data-width="100%" data-live-search="true" required>
                             {% for item in company_list %}
                                 {% if company and company == item %}
-                                <option value="{{ item.id }}" selected>{{ item.name }}</option>
+                                    <option value="{{ item.id }}" selected>{{ item.name }}</option>
                                 {% else %}
-                                <option value="{{ item.id }}">{{ item.name }}</option>
+                                    <option value="{{ item.id }}">{{ item.name }}</option>
                                 {% endif %}
                             {% endfor %}
                         </select>
@@ -349,11 +413,11 @@
             </form>
         </div>
         <p></p>
-    {% if show_company_report %}
-        <div class="row">
-            <div class="col-lg-12">
-                <table class="table table-bordered table-hover">
-                    <thead>
+        {% if show_company_report %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <table class="table table-bordered table-hover">
+                        <thead>
                         <tr>
                             <th>Название компании</th>
                             <th colspan="6">Критерии</th>
@@ -367,8 +431,8 @@
                             <th width="12%">Зачеты</th>
                             <th width="12%">Средняя оценка</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         {% for data in company_report_data %}
                             <tr>
                                 <td>{{ data.department_name }}</td>
@@ -377,16 +441,20 @@
                                 <td>{{ data.not_completed_probationer_count }}</td>
                                 <td>
                                     <div class="progress">
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ data.theme_progress }}"
-                                             aria-valuemin="0" aria-valuemax="100" style="width: {{ data.theme_progress }}%;">
+                                        <div class="progress-bar" role="progressbar"
+                                             aria-valuenow="{{ data.theme_progress }}"
+                                             aria-valuemin="0" aria-valuemax="100"
+                                             style="width: {{ data.theme_progress }}%;">
                                             {{ data.theme_progress }}%
                                         </div>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="progress">
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ data.exam_progress }}"
-                                             aria-valuemin="0" aria-valuemax="100" style="width: {{ data.exam_progress }}%;">
+                                        <div class="progress-bar" role="progressbar"
+                                             aria-valuenow="{{ data.exam_progress }}"
+                                             aria-valuemin="0" aria-valuemax="100"
+                                             style="width: {{ data.exam_progress }}%;">
                                             {{ data.exam_progress }}%
                                         </div>
                                     </div>
@@ -394,34 +462,38 @@
                                 <td>{{ data.assessment }}</td>
                             </tr>
                         {% endfor %}
-                    </tbody>
-                    <tfoot>
+                        </tbody>
+                        <tfoot>
                         <th>Итого</th>
                         <th>{{ in_total.probationer_count }}</th>
                         <th>{{ in_total.completed_probationer_count }}</th>
                         <th>{{ in_total.not_completed_probationer_count }}</th>
                         <th>
                             <div class="progress">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="{{ in_total.theme_progress }}"
-                                     aria-valuemin="0" aria-valuemax="100" style="width: {{ in_total.theme_progress }}%;">
+                                <div class="progress-bar" role="progressbar"
+                                     aria-valuenow="{{ in_total.theme_progress }}"
+                                     aria-valuemin="0" aria-valuemax="100"
+                                     style="width: {{ in_total.theme_progress }}%;">
                                     {{ in_total.theme_progress }}%
                                 </div>
                             </div>
                         </th>
                         <th>
                             <div class="progress">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="{{ in_total.exam_progress }}"
-                                     aria-valuemin="0" aria-valuemax="100" style="width: {{ in_total.exam_progress }}%;">
+                                <div class="progress-bar" role="progressbar"
+                                     aria-valuenow="{{ in_total.exam_progress }}"
+                                     aria-valuemin="0" aria-valuemax="100"
+                                     style="width: {{ in_total.exam_progress }}%;">
                                     {{ in_total.exam_progress }}%
                                 </div>
                             </div>
                         </th>
                         <th>{{ in_total.assessment }}</th>
-                    </tfoot>
-                </table>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
-        </div>
-    {% endif %}
+        {% endif %}
     </div>
     <div id="divAllCompanyReport" hidden>
         <div class="row">
@@ -433,81 +505,89 @@
             </form>
         </div>
         <p></p>
-    {% if show_all_company_report %}
-        {% for company_report_data in all_company_report_data %}
-        <div class="row">
-            <div class="col-lg-12">
-                <table class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>Название компании</th>
-                            <th colspan="6">Критерии</th>
-                        </tr>
-                        <tr>
-                            <th>{{ company_report_data.company.name }}</th>
-                            <th width="12%">Всего испытуемых</th>
-                            <th width="12%">Всего испытуемых, завершивших обучение</th>
-                            <th width="12%">Всего обучаемых испытуемых</th>
-                            <th width="12%">Прогресс</th>
-                            <th width="12%">Зачеты</th>
-                            <th width="12%">Средняя оценка</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for data in company_report_data.report %}
+        {% if show_all_company_report %}
+            {% for company_report_data in all_company_report_data %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <table class="table table-bordered table-hover">
+                            <thead>
                             <tr>
-                                <td>{{ data.department_name }}</td>
-                                <td>{{ data.probationer_count }}</td>
-                                <td>{{ data.completed_probationer_count }}</td>
-                                <td>{{ data.not_completed_probationer_count }}</td>
-                                <td>
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ data.theme_progress }}"
-                                             aria-valuemin="0" aria-valuemax="100" style="width: {{ data.theme_progress }}%;">
-                                            {{ data.theme_progress }}%
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ data.exam_progress }}"
-                                             aria-valuemin="0" aria-valuemax="100" style="width: {{ data.exam_progress }}%;">
-                                            {{ data.exam_progress }}%
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>{{ data.assessment }}</td>
+                                <th>Название компании</th>
+                                <th colspan="6">Критерии</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                    <tfoot>
-                        <th>Итого</th>
-                        <th>{{ company_report_data.in_total.probationer_count }}</th>
-                        <th>{{ company_report_data.in_total.completed_probationer_count }}</th>
-                        <th>{{ company_report_data.in_total.not_completed_probationer_count }}</th>
-                        <th>
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="{{ company_report_data.in_total.theme_progress }}"
-                                     aria-valuemin="0" aria-valuemax="100" style="width: {{ company_report_data.in_total.theme_progress }}%;">
-                                    {{ company_report_data.in_total.theme_progress }}%
+                            <tr>
+                                <th>{{ company_report_data.company.name }}</th>
+                                <th width="12%">Всего испытуемых</th>
+                                <th width="12%">Всего испытуемых, завершивших обучение</th>
+                                <th width="12%">Всего обучаемых испытуемых</th>
+                                <th width="12%">Прогресс</th>
+                                <th width="12%">Зачеты</th>
+                                <th width="12%">Средняя оценка</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for data in company_report_data.report %}
+                                <tr>
+                                    <td>{{ data.department_name }}</td>
+                                    <td>{{ data.probationer_count }}</td>
+                                    <td>{{ data.completed_probationer_count }}</td>
+                                    <td>{{ data.not_completed_probationer_count }}</td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar"
+                                                 aria-valuenow="{{ data.theme_progress }}"
+                                                 aria-valuemin="0" aria-valuemax="100"
+                                                 style="width: {{ data.theme_progress }}%;">
+                                                {{ data.theme_progress }}%
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar"
+                                                 aria-valuenow="{{ data.exam_progress }}"
+                                                 aria-valuemin="0" aria-valuemax="100"
+                                                 style="width: {{ data.exam_progress }}%;">
+                                                {{ data.exam_progress }}%
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ data.assessment }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                            <tfoot>
+                            <th>Итого</th>
+                            <th>{{ company_report_data.in_total.probationer_count }}</th>
+                            <th>{{ company_report_data.in_total.completed_probationer_count }}</th>
+                            <th>{{ company_report_data.in_total.not_completed_probationer_count }}</th>
+                            <th>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar"
+                                         aria-valuenow="{{ company_report_data.in_total.theme_progress }}"
+                                         aria-valuemin="0" aria-valuemax="100"
+                                         style="width: {{ company_report_data.in_total.theme_progress }}%;">
+                                        {{ company_report_data.in_total.theme_progress }}%
+                                    </div>
                                 </div>
-                            </div>
-                        </th>
-                        <th>
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="{{ company_report_data.in_total.exam_progress }}"
-                                     aria-valuemin="0" aria-valuemax="100" style="width: {{ company_report_data.in_total.exam_progress }}%;">
-                                    {{ company_report_data.in_total.exam_progress }}%
+                            </th>
+                            <th>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar"
+                                         aria-valuenow="{{ company_report_data.in_total.exam_progress }}"
+                                         aria-valuemin="0" aria-valuemax="100"
+                                         style="width: {{ company_report_data.in_total.exam_progress }}%;">
+                                        {{ company_report_data.in_total.exam_progress }}%
+                                    </div>
                                 </div>
-                            </div>
-                        </th>
-                        <th>{{ company_report_data.in_total.assessment }}</th>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-        {% endfor %}
-    {% endif %}
+                            </th>
+                            <th>{{ company_report_data.in_total.assessment }}</th>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
     </div>
     <div id="divTestReport" hidden>
         <div class="row">
@@ -522,38 +602,38 @@
         {% if show_test_report %}
             <table class="table table-bordered table-hover">
                 <thead>
-                    <th>№</th>
-                    <th>Испытуемый</th>
-                    <th>Компания</th>
-                    <th>Отдел</th>
-                    <th>Должность</th>
-                    <th>Учебная программа</th>
-                    <th>Тест</th>
-                    <th>Дата</th>
-                    <th>Статус</th>
-                    <th>Оценка, %</th>
+                <th>№</th>
+                <th>Испытуемый</th>
+                <th>Компания</th>
+                <th>Отдел</th>
+                <th>Должность</th>
+                <th>Учебная программа</th>
+                <th>Тест</th>
+                <th>Дата</th>
+                <th>Статус</th>
+                <th>Оценка, %</th>
                 </thead>
                 <tbody>
-                    {% for test in test_list %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td><a href="{% url "user_info" id=test.user.id %}">{{ test.user.get_full_name }}</a></td>
-                            <td>{{ test.user.company }}</td>
-                            <td>{{ test.user.department }}</td>
-                            <td>{{ test.user.position }}</td>
-                            <td>{{ test.test.journal.name }}</td>
-                            <td>{{ test.test.name }}</td>
-                            <td>{{ test.date_to|date:"d.m.Y" }}</td>
-                            {% if test.status == "ASSIGNED" %}
-                                <td>Назначен</td>
-                            {% elif test.status == "COMPLETED" %}
-                                <td>Пройден</td>
-                            {% else %}
-                                <td>Просрочен</td>
-                            {% endif %}
-                            <td>{{ test.result }}</td>
-                        </tr>
-                    {% endfor %}
+                {% for test in test_list %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td><a href="{% url "user_info" id=test.user.id %}">{{ test.user.get_full_name }}</a></td>
+                        <td>{{ test.user.company }}</td>
+                        <td>{{ test.user.department }}</td>
+                        <td>{{ test.user.position }}</td>
+                        <td>{{ test.test.journal.name }}</td>
+                        <td>{{ test.test.name }}</td>
+                        <td>{{ test.date_to|date:"d.m.Y" }}</td>
+                        {% if test.status == "ASSIGNED" %}
+                            <td>Назначен</td>
+                        {% elif test.status == "COMPLETED" %}
+                            <td>Пройден</td>
+                        {% else %}
+                            <td>Просрочен</td>
+                        {% endif %}
+                        <td>{{ test.result }}</td>
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
         {% endif %}
