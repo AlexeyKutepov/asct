@@ -91,6 +91,56 @@
             </div>
         </div>
     </div>
+    {% if fire_user_list %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h4 class="page-header">Уволенные пользователи</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Уволенные пользователи
+                </div>
+                <div class="panel-body user-panel">
+                    <table id="tableFireUserList" class="table table-hover">
+                        <thead>
+                            <th id="thFireUserName" class="cursor-pointer"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span> ФИО</th>
+                            <th id="thFireUserPosition" class="cursor-pointer"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span> Должность</th>
+                            <th id="thFireUserCompany" class="cursor-pointer"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span> Компания</th>
+                            <th id="thFireUserType" class="cursor-pointer"><span class="glyphicon glyphicon-sort" aria-hidden="true"></span> Права</th>
+                        </thead>
+                        {% for item in fire_user_list %}
+                        <tr>
+                            <td><a href="{% url "user_info" id=item.id %}">{{ item.get_full_name }}</a></td>
+                            <td>{{ item.position }}</td>
+                            <td>{{ item.company }}</td>
+                            {% if item.user_type == "CURATOR" %}
+                            <td><input name="tdcurator" hidden>Куратор</td>
+                            {% elif item.user_type == "ADMIN" %}
+                            <td><input name="tdadmin" hidden>Администратор</td>
+                            {% elif item.user_type == "OPERATOR" %}
+                            <td><input name="tdoperator" hidden>Оператор</td>
+                            {% else %}
+                            <td><input name="tdprobationer" hidden>Испытуемый</td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="panel-footer input-group custom-search-form">
+                    <input id="inputFireUserSearch" type="text" class="form-control" placeholder="Поиск...">
+                    <span class="input-group-btn">
+                        <button id="buttonFireUserSearch" class="btn btn-default" type="button">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 {% endblock %}
 {% block scripts %}
     <script src="/static/js/sort-elements.js"></script>

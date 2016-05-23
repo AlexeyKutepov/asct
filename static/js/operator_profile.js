@@ -13,6 +13,19 @@ $(document).ready(function () {
     $("#buttonProbationerSearch").click(probationerSearch);
     $("#inputProbationerSearch").change(probationerSearch).keyup(probationerSearch);
 
+    var fireUserSearch = function() {
+        $('#tableFireUserList > tbody > tr').each(function() {
+            if(($(this).find('a').html().toUpperCase()).indexOf($("#inputFireUserSearch").val().toUpperCase()) > -1) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    };
+
+    $("#buttonFireUserSearch").click(fireUserSearch);
+    $("#inputFireUserSearch").change(fireUserSearch).keyup(fireUserSearch);
+
     var journalSearch = function() {
         $('#tableJournalList > tbody > tr').each(function() {
             if(($(this).find('a').html().toUpperCase()).indexOf($("#inputJournalSearch").val().toUpperCase()) > -1) {
@@ -87,6 +100,31 @@ $(document).ready(function () {
             inverse = false;
         th.click(function(){
             tableUserList.find('td').filter(function(){
+                return $(this).index() === thIndex;
+            }).sortElements(function(a, b){
+                if( $.text([a]) == $.text([b]) )
+                    return 0;
+                return $.text([a]) > $.text([b]) ?
+                    inverse ? -1 : 1
+                    : inverse ? 1 : -1;
+            }, function(){
+                // parentNode is the element we want to move
+                return this.parentNode;
+            });
+            inverse = !inverse;
+        });
+    });
+
+    var tableFireUserList = $("#tableFireUserList");
+
+    $('#thFireUserName, #thFireUserPosition, #thFireUserCompany, #thFireUserType')
+        .wrapInner('<span title="sort this column"/>')
+        .each(function(){
+        var th = $(this),
+            thIndex = th.index(),
+            inverse = false;
+        th.click(function(){
+            tableFireUserList.find('td').filter(function(){
                 return $(this).index() === thIndex;
             }).sortElements(function(a, b){
                 if( $.text([a]) == $.text([b]) )

@@ -43,6 +43,7 @@ def calculate_progress(user):
 
 def prepare_curator_page(request):
     user_list = UserProfile.objects.filter(is_active=True).order_by('last_name')
+    fire_user_list = UserProfile.objects.filter(is_active=False).order_by('last_name')
     company_list = Company.objects.all().order_by('name')
     position_list = Position.objects.all().order_by('name')
     return render(
@@ -51,7 +52,8 @@ def prepare_curator_page(request):
         {
             "user_list": user_list,
             "company_list": company_list,
-            "position_list": position_list
+            "position_list": position_list,
+            "fire_user_list": fire_user_list
         }
     )
 
@@ -61,24 +63,31 @@ def prepare_admin_page(request):
         Q(user_type=UserProfile.OPERATOR, company=request.user.company, is_active=True) | Q(user_type=UserProfile.PROBATIONER,
                                                                             company=request.user.company, is_active=True)
     ).order_by('last_name')
+    fire_user_list = UserProfile.objects.filter(
+        Q(user_type=UserProfile.OPERATOR, company=request.user.company, is_active=True) | Q(user_type=UserProfile.PROBATIONER,
+                                                                            company=request.user.company, is_active=False)
+    ).order_by('last_name')
     position_list = Position.objects.all().order_by('name')
     return render(
         request,
         "main/admin_profile.html",
         {
             "user_list": user_list,
-            "position_list": position_list
+            "position_list": position_list,
+            "fire_user_list": fire_user_list
         }
     )
 
 
 def prepare_operator_page(request):
     probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company, is_active=True).order_by('last_name')
+    fire_user_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company, is_active=False).order_by('last_name')
     return render(
         request,
         "main/operator_profile.html",
         {
             "probationer_list": probationer_list,
+            "fire_user_list": fire_user_list
         }
     )
 
