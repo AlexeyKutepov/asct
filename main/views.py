@@ -42,7 +42,7 @@ def calculate_progress(user):
 
 
 def prepare_curator_page(request):
-    user_list = UserProfile.objects.all().order_by('last_name')
+    user_list = UserProfile.objects.filter(is_active=True).order_by('last_name')
     company_list = Company.objects.all().order_by('name')
     position_list = Position.objects.all().order_by('name')
     return render(
@@ -58,8 +58,8 @@ def prepare_curator_page(request):
 
 def prepare_admin_page(request):
     user_list = UserProfile.objects.filter(
-        Q(user_type=UserProfile.OPERATOR, company=request.user.company) | Q(user_type=UserProfile.PROBATIONER,
-                                                                            company=request.user.company)
+        Q(user_type=UserProfile.OPERATOR, company=request.user.company, is_active=True) | Q(user_type=UserProfile.PROBATIONER,
+                                                                            company=request.user.company, is_active=True)
     ).order_by('last_name')
     position_list = Position.objects.all().order_by('name')
     return render(
@@ -73,7 +73,7 @@ def prepare_admin_page(request):
 
 
 def prepare_operator_page(request):
-    probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company).order_by('last_name')
+    probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company, is_active=True).order_by('last_name')
     return render(
         request,
         "main/operator_profile.html",
@@ -161,7 +161,7 @@ def get_position_list(request):
 def get_user_list_by_department(request):
     if "id" in request.POST:
         department = Department.objects.get(id=request.POST["id"])
-        user_list = UserProfile.objects.filter(department=department)
+        user_list = UserProfile.objects.filter(department=department, is_active=True)
         result = {}
         list = []
         for user in user_list:
@@ -629,14 +629,14 @@ def theme_settings(request, id):
     except:
         return HttpResponseRedirect(reverse("index"))
     if theme:
-        examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER), company=theme.journal.company)
+        examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER), company=theme.journal.company, is_active=True)
     else:
-        examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER))
+        examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER), is_active=True)
     sub_theme_list = SubTheme.objects.filter(parent_theme=theme)
     if request.user.user_type == UserProfile.CURATOR:
         scheduled_theme_list = ScheduledTheme.objects.filter(theme=theme)
     else:
-        user_list = UserProfile.objects.filter(company=request.user.company)
+        user_list = UserProfile.objects.filter(company=request.user.company, is_active=True)
         scheduled_theme_list = ScheduledTheme.objects.filter(theme=theme, user__in=user_list)
     for scheduled_theme in scheduled_theme_list:
         if scheduled_theme.date_to < timezone.now() - timezone.timedelta(days=1) and scheduled_theme.status != ScheduledTheme.COMPLETED and scheduled_theme.status != ScheduledTheme.OVERDUE:
@@ -930,14 +930,16 @@ def get_probationer_list(request):
                     Q(user_type=UserProfile.PROBATIONER)
                     & Q(company=theme.journal.company)
                     & Q(department=theme.journal.department)
+                    & Q(is_active=True)
                 )
             else:
                 probationer_list = UserProfile.objects.filter(
                     user_type=UserProfile.PROBATIONER,
-                    company=theme.journal.company
+                    company=theme.journal.company,
+                    is_active=True
                 )
         else:
-            probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER)
+            probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, is_active=True)
         result = {}
         list = []
         for item in probationer_list:
@@ -958,14 +960,16 @@ def get_probationer_list(request):
                     Q(user_type=UserProfile.PROBATIONER)
                     & Q(company=test.journal.company)
                     & Q(department=test.journal.department)
+                    & Q(is_active=True)
                 )
             else:
                 probationer_list = UserProfile.objects.filter(
                     user_type=UserProfile.PROBATIONER,
-                    company=test.journal.company
+                    company=test.journal.company,
+                    is_active=True
                 )
         else:
-            probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER)
+            probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, is_active=True)
         result = {}
         list = []
         for item in probationer_list:
@@ -988,9 +992,9 @@ def get_examiner_list(request):
             theme = None
         if theme:
             examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER),
-                                                       company=theme.journal.company)
+                                                       company=theme.journal.company, is_active=True)
         else:
-            examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER))
+            examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER), is_active=True)
         result = {}
         list = []
         for item in examiner_list:
@@ -1020,7 +1024,7 @@ def user_info(request, id):
             "message": "Пользователь не найден"
         }
         return render(request, "alert.html", result)
-    examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER), company=user_data.company)
+    examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER), company=user_data.company, is_active=True)
     scheduled_theme_list = ScheduledTheme.objects.filter(user=user_data)
     for scheduled_theme in scheduled_theme_list:
         if scheduled_theme.date_to < timezone.now() - timezone.timedelta(days=1) and scheduled_theme.status != ScheduledTheme.COMPLETED and scheduled_theme.status != ScheduledTheme.OVERDUE:

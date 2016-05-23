@@ -106,7 +106,7 @@ def prepare_company_report(request, probationer_list, company_list):
     in_total_completed_exam_count = 0
     in_total_assessment = 0
     for department in department_list:
-        probationer_data_list = UserProfile.objects.filter(department=department, user_type=UserProfile.PROBATIONER)
+        probationer_data_list = UserProfile.objects.filter(department=department, user_type=UserProfile.PROBATIONER, is_active=True)
         if len(probationer_data_list) == 0:
             continue
         else:
@@ -195,7 +195,7 @@ def prepare_all_company_report(request, probationer_list, company_list):
         in_total_completed_exam_count = 0
         in_total_assessment = 0
         for department in department_list:
-            probationer_data_list = UserProfile.objects.filter(department=department, user_type=UserProfile.PROBATIONER)
+            probationer_data_list = UserProfile.objects.filter(department=department, user_type=UserProfile.PROBATIONER, is_active=True)
             if len(probationer_data_list) == 0:
                 continue
             else:
@@ -339,7 +339,7 @@ def prepare_department_report(request, probationer_list, company_list):
     """
     try:
         department = Department.objects.get(id=request.POST["department"])
-        user_list = UserProfile.objects.filter(department=department, user_type=UserProfile.PROBATIONER)
+        user_list = UserProfile.objects.filter(department=department, user_type=UserProfile.PROBATIONER, is_active=True)
     except:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     result_list = []
@@ -413,10 +413,10 @@ def reports(request):
         }
         return render(request, "alert.html", result)
     elif request.user.user_type == UserProfile.CURATOR:
-        probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER).order_by("last_name")
+        probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, is_active=True).order_by("last_name")
         company_list = Company.objects.all().order_by("name")
     else:
-        probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company)
+        probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company, is_active=True)
         company_list = [request.user.company, ]
     if "probationer_report" in request.POST:
         return prepare_probationer_report(request, probationer_list, company_list)

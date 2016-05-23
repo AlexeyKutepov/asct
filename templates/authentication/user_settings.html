@@ -12,6 +12,15 @@
             {% endif %}
         </div>
     </div>
+    {% if not user_data.is_active %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-warning" role="alert">
+                Уволен
+            </div>
+        </div>
+    </div>
+    {% endif %}
     {% if isCreate %}
         <form id="formCreateNewUser" action="{% url "create_new_user" %}" method="post" enctype="multipart/form-data">
     {% else %}
@@ -19,7 +28,6 @@
               enctype="multipart/form-data">
     {% endif %}
 {% csrf_token %}
-
 <div class="row">
 <div class="form-group col-lg-3">
     {% if user_data.photo %}
@@ -57,6 +65,7 @@
                 </div>
             </div>
         </div>
+        {% if user_data.is_active %}
         <div class="modal fade" id="modalFireUser" tabindex="-1" role="dialog"
              aria-labelledby="modalFireUserLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -78,6 +87,29 @@
                 </div>
             </div>
         </div>
+        {% else %}
+        <div class="modal fade" id="modalHireUser" tabindex="-1" role="dialog"
+             aria-labelledby="modalHireUserLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="modalHireUserLabel">Принять на работу</h4>
+                    </div>
+                    <div class="modal-body">
+                        Вы действительно хотите принять на работу пользователя "{{ user_data.get_full_name }}"?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Нет</button>
+                        <a href="{% url "hire_user" id=user_data.id %}">
+                            <button type="button" name="delete" class="btn btn-default">Да</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
         <br>
         <div class="row">
             <div class="col-lg-12">
@@ -87,11 +119,19 @@
             </div>
         </div>
         <br>
+        {% if user_data.is_active %}
         <div class="row">
             <div class="col-lg-12">
                 <button type="button" data-toggle="modal" data-target="#modalFireUser" class="btn btn-warning" style="width: 200px">Уволить пользователя</button>
             </div>
         </div>
+        {% else %}
+        <div class="row">
+            <div class="col-lg-12">
+                <button type="button" data-toggle="modal" data-target="#modalHireUser" class="btn btn-warning" style="width: 200px">Принять на работу</button>
+            </div>
+        </div>
+        {% endif %}
         <br>
         <div class="row">
             <div class="col-lg-12">

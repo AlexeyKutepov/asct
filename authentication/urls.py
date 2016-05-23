@@ -11,4 +11,5 @@ urlpatterns = patterns('',
         url(r'^give/new/password/(?P<id>\d+)$', views.give_new_password, name='give_new_password'),
         url(r'^delete/user/(?P<id>\d+)$', views.delete_user, name='delete_user'),
         url(r'^fire/user/(?P<id>\d+)$', views.fire_user, name='fire_user'),
+        url(r'^hire/user/(?P<id>\d+)$', views.hire_user, name='hire_user'),
 )
