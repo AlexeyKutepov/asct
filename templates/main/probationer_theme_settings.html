@@ -95,31 +95,43 @@
                                         <a href="{% url "sub_theme_in_work" id=item.id %}">
                                         <button id="btnStartSubTheme{{ forloop.counter }}" type="button" class="btn btn-success"
                                                 title="Начать изучение подтемы">
-                                            <span class="glyphicon gglyphicon glyphicon-play" aria-hidden="true"></span>
+                                            <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
                                         </button>
                                         </a>
                                     {% elif item.status == 'IN_WORK' %}
+                                        <a href="{% url "stop_learning_sub_theme" id=item.id %}">
+                                        <button id="btnStopSubTheme{{ forloop.counter }}" type="button" class="btn btn-danger"
+                                                title="Отменить изучение подтемы">
+                                            <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
+                                        </button>
+                                        </a>
                                         <a href="{% url "sub_theme_completed" id=item.id %}">
                                         <button id="btnStartSubTheme{{ forloop.counter }}" type="button" class="btn btn-success"
                                                 title="Завершить изучение">
-                                            <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                                         </button>
                                         </a>
                                     {% else %}
+                                        <a href="{% url "stop_learning_sub_theme" id=item.id %}">
+                                        <button id="btnStopSubTheme{{ forloop.counter }}" type="button" class="btn btn-danger"
+                                                title="Отменить изучение подтемы">
+                                            <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
+                                        </button>
+                                        </a>
                                         <button id="btnStartSubTheme{{ forloop.counter }}" type="button" class="btn btn-success"
                                                 title="Изучение завершено" disabled>
-                                            <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                                         </button>
                                     {% endif %}
                                 {% elif scheduled_theme.status == 'COMPLETED' %}
                                     <button id="btnStartSubTheme{{ forloop.counter }}" type="button" class="btn btn-success"
                                             title="Изучение завершено" disabled>
-                                        <span class="glyphicon glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                                     </button>
                                 {% else %}
                                     <button id="btnStartSubTheme{{ forloop.counter }}" type="button" class="btn btn-success"
                                             title="Начать изучение подтемы" disabled>
-                                        <span class="glyphicon gglyphicon glyphicon-play" aria-hidden="true"></span>
+                                        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
                                     </button>
                                 {% endif %}
                             </td>

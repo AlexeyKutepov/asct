@@ -1256,6 +1256,27 @@ def sub_theme_completed(request, id):
 
 
 @login_required
+def stop_learning_sub_theme(request, id):
+    try:
+        scheduled_sub_theme = ScheduledSubTheme.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    scheduled_sub_theme.status = ScheduledSubTheme.ASSIGNED
+    scheduled_sub_theme.save()
+
+    scheduled_sub_theme_list = ScheduledSubTheme.objects.filter(scheduled_theme=scheduled_sub_theme.scheduled_theme)
+    scheduled_sub_theme_list_completed = ScheduledSubTheme.objects.filter(
+        scheduled_theme=scheduled_sub_theme.scheduled_theme, status=ScheduledSubTheme.COMPLETED)
+    scheduled_sub_theme.scheduled_theme.progress = int(
+        (100 / len(scheduled_sub_theme_list)) * len(scheduled_sub_theme_list_completed))
+    if scheduled_sub_theme.scheduled_theme.progress == 100:
+        scheduled_sub_theme.scheduled_theme.status = ScheduledTheme.COMPLETED
+    scheduled_sub_theme.scheduled_theme.save()
+
+    return HttpResponseRedirect(reverse("probationer_theme_settings", args=[scheduled_sub_theme.scheduled_theme.id, ]))
+
+
+@login_required
 def upload_file_to_sub_theme(request):
     if "subThemeId" in request.POST:
         try:
