@@ -1208,6 +1208,22 @@ def theme_completed(request, id):
 
 
 @login_required
+def stop_learning_theme(request, id):
+    try:
+        scheduled_theme = ScheduledTheme.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    scheduled_sub_theme_list = ScheduledSubTheme.objects.filter(scheduled_theme=scheduled_theme)
+    for item in scheduled_sub_theme_list:
+        item.status = ScheduledSubTheme.ASSIGNED
+        item.save()
+    scheduled_theme.status = ScheduledTheme.ASSIGNED
+    scheduled_theme.progress = 0
+    scheduled_theme.save()
+    return HttpResponseRedirect(reverse("probationer_theme_settings", args=[id, ]))
+
+
+@login_required
 def sub_theme_in_work(request, id):
     try:
         scheduled_sub_theme = ScheduledSubTheme.objects.get(id=id)
