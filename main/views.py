@@ -1204,7 +1204,8 @@ def theme_completed(request, id):
     scheduled_theme.status = ScheduledTheme.COMPLETED
     scheduled_theme.progress = 100
     scheduled_theme.save()
-    return HttpResponseRedirect(reverse("probationer_theme_settings", args=[id, ]))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    # return HttpResponseRedirect(reverse("probationer_theme_settings", args=[id, ]))
 
 
 @login_required
