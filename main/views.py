@@ -256,7 +256,7 @@ def edit_company(request, id):
         company = Company.objects.get(id=id)
     except:
         return HttpResponseRedirect(reverse("index"))
-    department_list = Department.objects.filter(company=company)
+    department_list = Department.objects.filter(company=company).order_by('name')
     return render(
         request,
         "main/company_settings.html",
