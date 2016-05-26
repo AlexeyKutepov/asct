@@ -153,7 +153,7 @@
     <form id="formCloneJournal" action="{% url "clone_journal" id=journal.id %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
         <div id="modalCloneJournal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalCloneJournal">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -171,6 +171,9 @@
                                             <option value="{{ company.id }}">{{ company.name }}</option>
                                         {% endfor %}
                                     </select>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" name="copyFiles">Дублировать учебные материалы</label>
                                 </div>
                             </div>
                         </div>

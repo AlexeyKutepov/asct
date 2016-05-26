@@ -535,6 +535,14 @@ def clone_journal(request, id):
                 owner=request.user,
                 parent_theme=cloned_theme
             )
+            if "copyFiles" in request.POST and request.POST["copyFiles"] == "on":
+                file_list = File.objects.filter(sub_theme=sub_theme)
+                for file in file_list:
+                    File.objects.create(
+                        file=file.file,
+                        theme=file.theme,
+                        sub_theme=cloned_sub_theme
+                    )
     test_list = Test.objects.filter(journal=journal)
     for test in test_list:
         cloned_test = Test.objects.create(
@@ -545,6 +553,8 @@ def clone_journal(request, id):
             author=test.author,
             date_and_time=timezone.now()
         )
+
+
     result = {
         "status": "success",
         "message": "Программа \"" + journal.name + "\" дублирована для компании \"" + company.name + "\""
