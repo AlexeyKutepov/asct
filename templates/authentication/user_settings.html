@@ -38,7 +38,7 @@
         <input id="inputPhoto" name="photo" type="file" accept="image/*" onchange="onPreview(this)">
     {% else %}
         <img id="impPreview"
-             data-src="holder.js/200x200/auto/white"
+             src="{{ STATIC_URL }}img/default_user_icon.jpg"
              alt="Photo" width="200" height="200">
         <p></p>
         <input id="inputPhoto" name="photo" type="file" accept="image/*" onchange="onPreview(this)">

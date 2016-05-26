@@ -64,7 +64,7 @@ def prepare_admin_page(request):
                                                                             company=request.user.company, is_active=True)
     ).order_by('last_name')
     fire_user_list = UserProfile.objects.filter(
-        Q(user_type=UserProfile.OPERATOR, company=request.user.company, is_active=True) | Q(user_type=UserProfile.PROBATIONER,
+        Q(user_type=UserProfile.OPERATOR, company=request.user.company, is_active=False) | Q(user_type=UserProfile.PROBATIONER,
                                                                             company=request.user.company, is_active=False)
     ).order_by('last_name')
     position_list = Position.objects.all().order_by('name')
