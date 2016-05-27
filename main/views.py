@@ -284,37 +284,13 @@ def edit_company_save(request):
             return HttpResponseRedirect(reverse("index"))
         company.name = request.POST["company"]
         company.save()
-        if "department" in request.POST:
-            department_list_in_base = Department.objects.filter(company=company)
-            department_names = [d.name for d in department_list_in_base]
-            for department in request.POST.getlist("department"):
-                if department not in department_names:
-                    Department.objects.create(name=department, company=company)
-            for department in department_list_in_base:
-                if department.name not in request.POST.getlist("department"):
-                    # ВАЖНЫЙ МОМЕНТ: перед удалением департамента нужно почистить юзеров от него, иначе они будут удалены
-                    user_list = UserProfile.objects.filter(department=department)
-                    for item in user_list:
-                        item.department = None
-                        item.save()
-                    department.delete()
-        else:
-            department_list_in_base = Department.objects.filter(company=company)
-            for department in department_list_in_base:
-                # ВАЖНЫЙ МОМЕНТ: перед удалением департамента нужно почистить юзеров от него, иначе они будут удалены
-                user_list = UserProfile.objects.filter(department=department)
-                for item in user_list:
-                    item.department = None
-                    item.save()
-                department.delete()
         result = {
             "status": "success",
             "message": "Изменения успешно сохранены!"
         }
         return render(request, "alert.html", result)
-
     else:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
