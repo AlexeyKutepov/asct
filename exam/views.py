@@ -396,7 +396,7 @@ def test_settings(request, id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     journal_list = TestJournal.objects.filter(test=test)
     for journal in journal_list:
-        if journal.date_to < timezone.now() and journal.status != TestJournal.COMPLETED and journal.status != TestJournal.OVERDUE:
+        if journal.date_to < timezone.now() - timezone.timedelta(days=1) and journal.status != TestJournal.COMPLETED and journal.status != TestJournal.OVERDUE:
             journal.status = TestJournal.OVERDUE
             journal.save()
     return render(
