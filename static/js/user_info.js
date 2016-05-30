@@ -193,7 +193,7 @@ $(document).ready(function () {
                     })).selectpicker('refresh');
                 }
                 if (testList.length > 0) {
-                    $("#formScheduleTest").attr('action', '/schedule/test/to/user/');
+                    $("#formScheduleTest").attr('action', '/exam/schedule/test/to/user/');
                 }
             },
             error: function (xhr, textStatus, errorThrown) {
