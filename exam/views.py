@@ -646,17 +646,17 @@ def report(request, id):
     :param id: id of Journal field
     :return:
     """
-    if request.user.user_type == UserProfile.PROBATIONER:
-        result = {
-            "status": "danger",
-            "message": "Доступ запрещён"
-        }
-        return render(request, "alert.html", result)
     id = int(id)
     try:
         journal = TestJournal.objects.get(id=id)
     except:
         raise SuspiciousOperation("Некорректный запрос")
+    if request.user.user_type == UserProfile.PROBATIONER and request.user != journal.user:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+        }
+        return render(request, "alert.html", result)
     if not journal:
         raise SuspiciousOperation("Некорректный запрос")
     else:

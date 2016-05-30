@@ -25,6 +25,7 @@
                 <th>Количество вопросов</th>
                 <th>Количество правильных ответов</th>
                 <th>Оценка</th>
+                <th>Отчёт</th>
             </tr>
             </thead>
             <tbody>
@@ -39,6 +40,14 @@
                     <td>{{ journal.number_of_questions }}</td>
                     <td>{{ journal.number_of_correct_answers }}</td>
                     <td>{{ journal.result }}%</td>
+                    <td>
+                        <a href="{% url "report" id=journal.id %}">
+                            <button id="btnEndTest{{ forloop.counter }}" type="button" class="btn btn-primary"
+                                    title="Результаты теста">
+                                <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                            </button>
+                        </a>
+                    </td>
                 </tr>
             </tbody>
         </table>
