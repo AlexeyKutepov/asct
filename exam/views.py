@@ -448,6 +448,20 @@ def schedule_test(request, id):
 
 
 @login_required
+def edit_scheduled_test(request, id):
+    try:
+        scheduled_test = TestJournal.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    if "dateTo" in request.POST:
+        scheduled_test.date_to = datetime.datetime.strptime(request.POST["dateTo"], "%d.%m.%Y")
+        if scheduled_test.status == TestJournal.OVERDUE:
+            scheduled_test.status = TestJournal.ASSIGNED
+        scheduled_test.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
 def cancel_test(request, id):
     if request.user.user_type == UserProfile.PROBATIONER:
         result = {

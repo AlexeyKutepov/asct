@@ -64,7 +64,7 @@
                     <th>Назначен</th>
                     <th>Срок</th>
                     <th>Результат</th>
-                    <th width="100px">Действия</th>
+                    <th width="145px">Действия</th>
                 </thead>
                 <tbody>
                 {% for item in journal_list %}
@@ -121,12 +121,59 @@
                         </form>
 
                         {% if item.status == 'COMPLETED' %}
-                        <a href="{% url "report" id=item.id %}">
-                            <button id="btnEndTest{{ forloop.counter }}" type="button" class="btn btn-primary"
-                                    title="Результаты теста">
+                            <button id="btnEditTest{{ forloop.counter }}" type="button" class="btn btn-primary"
+                                    title="Редактировать" disabled>
+                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            </button>
+                            <a href="{% url "report" id=item.id %}">
+                                <button id="btnEndTest{{ forloop.counter }}" type="button" class="btn btn-success"
+                                        title="Результаты теста">
+                                    <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                                </button>
+                            </a>
+                        {% else %}
+                            <form id="formEditTest{{ forloop.counter }}" action="{% url "edit_scheduled_test" id=item.id %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                                <div id="modalEditTest{{ forloop.counter }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalEditTestLabel{{ forloop.counter }}">
+                                    <div class="modal-dialog modal-sm">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                        aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="modalEditTestLabel{{ forloop.counter }}">Изменение срока прохождения теста</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group">
+                                                            <label for="datepickerChangeTestDateTo{{ forloop.counter }}"><b>Срок до</b></label>
+                                                            <div class='input-group date' id='datepickerChangeTestDateTo{{ forloop.counter }}'>
+                                                                <input type='text' name="dateTo" class="form-control" value="{{ item.date_to|date:"d.m.Y" }}" required/>
+                                                                <span class="input-group-addon">
+                                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                                                <button type="submit" name="save" class="btn btn-primary">Сохранить</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <button id="btnEditTest{{ forloop.counter }}" type="button" class="btn btn-primary"
+                                    data-toggle="modal" data-target="#modalEditTest{{ forloop.counter }}" title="Редактировать">
+                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            </button>
+                            <button id="btnEndTest{{ forloop.counter }}" type="button" class="btn btn-success"
+                                    title="Результаты теста" disabled>
                                 <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
                             </button>
-                        </a>
                         {% endif %}
 
                         <button id="btnDel{{ forloop.counter }}" type="button" data-toggle="modal"
