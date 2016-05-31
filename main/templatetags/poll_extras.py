@@ -40,3 +40,7 @@ def get_answer_by_index(List, i):
 @register.filter
 def is_correct_by_index(List, i):
     return List[int(i)].is_correct()
+
+@register.filter
+def check_manually_by_index(List, i):
+    return List[int(i)].get_check_manually()

@@ -86,14 +86,31 @@
     <div class="col-lg-12">
         {% for question in exam_test.get_questions %}
         <table class="table">
-            <tbody>
+            <thead>
                 <tr>
-                    {% if report|is_correct_by_index:forloop.counter0 %}
+                    {% if report|is_correct_by_index:forloop.counter0 and not report|check_manually_by_index:forloop.counter0 %}
                     <th class="success">Вопрос №{{ forloop.counter }}</th>
+                    {% elif report|check_manually_by_index:forloop.counter0 %}
+                    <th class="info">
+                    <form action="{% url "check_manually_answer" id=journal.id number=forloop.counter0 %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        Вопрос №{{ forloop.counter }} (требует проверки)
+                        <button id="btnFalse{{ forloop.counter }}" name="False" type="submit" class="btn btn-danger pull-right"
+                                title="Ответ не правильный" value="False">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button>
+                        <button id="btnTrue{{ forloop.counter }}" name="True" style="margin-right: 5px" type="submit" class="btn btn-success pull-right"
+                                title="Ответ правильный" value="True">
+                            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        </button>
+                    </form>
+                    </th>
                     {% else %}
                     <th class="danger">Вопрос №{{ forloop.counter }}</th>
                     {% endif %}
                 </tr>
+            </thead>
+            <tbody>
                 <tr>
                     <td>{{ question.get_question }}</td>
                 </tr>

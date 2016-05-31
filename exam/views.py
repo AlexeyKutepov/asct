@@ -581,7 +581,7 @@ def next_question(request, id, number):
             is_correct = str(correct_answer) == request.POST["answer"]
             request_answer = request.POST["answer"]
 
-        if is_correct:
+        if is_correct and not check_manually:
             progress.current_result += 1
         result_list.append(
             AsctResult(
@@ -704,6 +704,58 @@ def report(request, id):
                 "exam_test": asct_test
             }
         )
+
+
+@login_required
+def check_manually_answer(request, id, number):
+    """
+    Shows next question
+    :param request:
+    :param id: - id of test
+    :param number: number of question
+    :return:
+    """
+    id = int(id)
+    number = int(number)
+    journal = TestJournal.objects.get(id=id)
+    progress = Progress.objects.filter(user=journal.user, test=journal.test)[0]
+    exam_test = pickle.loads(journal.test.test)
+    result_list = pickle.loads(progress.result_list)
+
+    if "True" in request.POST:
+        is_correct = True
+    else:
+        is_correct = False
+
+    if is_correct:
+        progress.current_result += 1
+    result_list[number] = AsctResult(
+        is_correct=is_correct,
+        answer=result_list[number].get_answer(),
+        check_manually=False
+    )
+
+    progress.result_list = pickle.dumps(result_list)
+    progress.save()
+
+    result_of_test = int(100 / len(exam_test.get_questions()) * progress.current_result)
+    set_check_manually = False
+    for result in result_list:
+        if result.get_check_manually():
+            set_check_manually = True
+    if set_check_manually:
+        journal.status = TestJournal.CHECK_MANUALLY
+    else:
+        journal.status = TestJournal.COMPLETED
+    journal.number_of_questions = len(exam_test.get_questions())
+    journal.number_of_correct_answers = progress.current_result
+    journal.result = result_of_test
+    journal.report = progress.result_list
+    journal.test_object = journal.test.test
+    journal.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 
 @login_required
