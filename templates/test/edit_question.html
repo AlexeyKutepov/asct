@@ -91,6 +91,9 @@
                         <label class="control-label" for="inputOpenAnswer">Введите правильный ответ:</label>
                         <input id="inputOpenAnswer" name="openAnswer" type="text" class="form-control" value="{{ question.get_answers.get_answer }}">
                     </div>
+                    <div class="checkbox">
+                      <label><input type="checkbox" name="checkManually" value="checkManually" {% if question.check_manually %} checked {% endif %}>Проверять вручную</label>
+                    </div>
                 </div>
                 <p></p>
 

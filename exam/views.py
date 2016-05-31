@@ -1,16 +1,19 @@
 import datetime
-from django.utils import timezone
 import pickle
+
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import SuspiciousOperation
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+
 from asct import settings
-from main.asct_test.asct_test import AsctTest, TestType, Question, CloseAnswer, Answer, AsctResult
+from exam.asct_test.asct_test import AsctTest, TestType, Question, CloseAnswer, Answer, AsctResult
 from authentication.models import UserProfile
 from exam.models import Journal, Test, TestImage, TestJournal, Progress
+
 
 TYPE_LIST = [
     "Содержит один или несколько правильных вариантов ответа",
@@ -107,7 +110,8 @@ def create_new_question(request, id):
         elif question_type is TestType.OPEN_TYPE:
             question.add_new_answer(
                 Answer(
-                    request.POST["openAnswer"]
+                    request.POST["openAnswer"],
+                    "checkManually" in request.POST
                 )
             )
 
@@ -251,7 +255,8 @@ def add_question(request, id):
         elif question_type is TestType.OPEN_TYPE:
             question.add_new_answer(
                 Answer(
-                    request.POST["openAnswer"]
+                    request.POST["openAnswer"],
+                    "checkManually" in request.POST
                 )
             )
 
@@ -330,7 +335,8 @@ def edit_question(request, id, number):
         elif question_type is TestType.OPEN_TYPE:
             question.add_new_answer(
                 Answer(
-                    request.POST["openAnswer"]
+                    request.POST["openAnswer"],
+                    "checkManually" in request.POST
                 )
             )
 

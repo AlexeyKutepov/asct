@@ -8,8 +8,9 @@ class Answer():
     The Open answer
     """
 
-    def __init__(self, correct_answer):
+    def __init__(self, correct_answer, check_manually=False):
         self._correct_answer = correct_answer
+        self._check_manually = check_manually
 
     def set_answer(self, correct_answer):
         self._correct_answer = correct_answer
