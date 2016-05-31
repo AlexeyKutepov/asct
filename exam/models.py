@@ -33,10 +33,12 @@ class TestJournal(models.Model):
     """
     ASSIGNED = 'ASSIGNED'
     COMPLETED = 'COMPLETED'
+    CHECK_MANUALLY = 'CHECK_MANUALLY'
     OVERDUE = 'OVERDUE'
     STATUS = (
         (ASSIGNED, 'ASSIGNED'),
         (COMPLETED, 'COMPLETED'),
+        (CHECK_MANUALLY, 'CHECK_MANUALLY'),
         (OVERDUE, 'OVERDUE'),
     )
     # The user, who was complete the test

@@ -18,6 +18,12 @@ class Answer():
     def get_answer(self):
         return self._correct_answer
 
+    def set_check_manually(self, check_manually):
+        self._check_manually = check_manually
+
+    def get_check_manually(self):
+        return self._check_manually
+
 
 class CloseAnswer(Answer):
     """
@@ -131,9 +137,10 @@ class AsctResult:
     The result of the question answer
     """
 
-    def __init__(self, is_correct, answer):
+    def __init__(self, is_correct, answer, check_manually=False):
         self._is_correct = is_correct
         self._answer = answer
+        self._check_manually = check_manually
 
     def is_correct(self):
         return self._is_correct
@@ -146,3 +153,9 @@ class AsctResult:
 
     def set_answer(self, answer):
         self._is_correct = answer
+
+    def set_check_manually(self, check_manually):
+        self._check_manually = check_manually
+
+    def get_check_manually(self):
+        return self._check_manually

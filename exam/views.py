@@ -553,13 +553,18 @@ def next_question(request, id, number):
 
     if "answer" in request.POST:
         is_correct = True
+        check_manually = False
         request_answer = None
         if question.get_test_type() is TestType.OPEN_TYPE:
-            if question.get_answers().get_answer() != request.POST["answer"]:
-                is_correct = False
+            if question.get_answers().get_check_manually():
+                check_manually = True
                 request_answer = request.POST["answer"]
             else:
-                request_answer = request.POST["answer"]
+                if question.get_answers().get_answer() != request.POST["answer"]:
+                    is_correct = False
+                    request_answer = request.POST["answer"]
+                else:
+                    request_answer = request.POST["answer"]
         elif question.get_test_type() is TestType.CLOSE_TYPE_SEVERAL_CORRECT_ANSWERS:
             correct_answer_list = []
             for item in range(len(question.get_answers())):
@@ -581,7 +586,8 @@ def next_question(request, id, number):
         result_list.append(
             AsctResult(
                 is_correct=is_correct,
-                answer=request_answer
+                answer=request_answer,
+                check_manually=check_manually
             )
         )
         progress.result_list = pickle.dumps(result_list)
@@ -590,9 +596,15 @@ def next_question(request, id, number):
         if number == len(exam_test.get_questions()):
             progress.end_date = timezone.now()
             progress.save()
-
             result_of_test = int(100 / len(exam_test.get_questions()) * progress.current_result)
-            journal.status = TestJournal.COMPLETED
+            set_check_manually = False
+            for result in result_list:
+                if result.get_check_manually():
+                    set_check_manually = True
+            if set_check_manually:
+                journal.status = TestJournal.CHECK_MANUALLY
+            else:
+                journal.status = TestJournal.COMPLETED
             journal.start_date = progress.start_date
             journal.end_date = progress.end_date
             journal.number_of_questions = len(exam_test.get_questions())
@@ -653,7 +665,8 @@ def end_test(request, id):
         request,
         "test/end_test.html",
         {
-            "journal": journal
+            "journal": journal,
+            "check_manually": journal.status == TestJournal.CHECK_MANUALLY
         }
     )
 

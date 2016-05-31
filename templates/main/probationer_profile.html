@@ -10,31 +10,33 @@
             <div class="row">
                 <div class="col-lg-6">
                     <p><b>Компания: </b>{{ user.company | default:"" }}</p>
+
                     <p><b>Подразделение: </b>{{ user.department | default:"" }}</p>
+
                     <p><b>Должность: </b>{{ user.position | default:"" }}</p>
                     {% if user.user_type == "CURATOR" %}
-                    <p><b>Тип пользователя: </b>Куратор</p>
+                        <p><b>Тип пользователя: </b>Куратор</p>
                     {% elif user.user_type == "ADMIN" %}
-                    <p><b>Тип пользователя: </b>Администратор</p>
+                        <p><b>Тип пользователя: </b>Администратор</p>
                     {% elif user.user_type == "OPERATOR" %}
-                    <p><b>Тип пользователя: </b>Оператор</p>
+                        <p><b>Тип пользователя: </b>Оператор</p>
                     {% else %}
-                    <p><b>Тип пользователя: </b>Испытуемый</p>
+                        <p><b>Тип пользователя: </b>Испытуемый</p>
                     {% endif %}
                 </div>
                 <div class="col-lg-6">
                     {% if assessment %}
-                    <p><b>Средний балл (зачёты): </b>{{ assessment }}</p>
+                        <p><b>Средний балл (зачёты): </b>{{ assessment }}</p>
                     {% endif %}
-                {% if progress %}
-                    <p><b>Прогресс: </b> {{ progress }} %</p>
-                    <div class="progress">
-                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress }}"
-                             aria-valuemin="0" aria-valuemax="100" style="width: {{ progress }}%;">
-                            {{ progress }}%
+                    {% if progress %}
+                        <p><b>Прогресс: </b> {{ progress }} %</p>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="{{ progress }}"
+                                 aria-valuemin="0" aria-valuemax="100" style="width: {{ progress }}%;">
+                                {{ progress }}%
+                            </div>
                         </div>
-                    </div>
-                {% endif %}
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -65,47 +67,49 @@
                     <th>Прогресс</th>
                     </thead>
                     <tbody>
-                        {% for item in scheduled_theme_list %}
-                            {% if item.status == 'ASSIGNED' %}
-                                <tr>
-                            {% elif item.status == 'IN_WORK' %}
-                                <tr class="info">
-                            {% elif item.status == 'OVERDUE' %}
-                                <tr class="danger">
-                            {% elif item.status == 'COMPLETED' %}
-                                <tr class="success">
-                            {% endif %}
-                                <td><a href="{% url "probationer_theme_settings" id=item.id %}">{{ item.theme.name }}</a></td>
-                                {% if item.status == 'ASSIGNED' %}
-                                <td>Назначена</td>
+                    {% for item in scheduled_theme_list %}
+                        {% if item.status == 'ASSIGNED' %}
+                            <tr>
                                 {% elif item.status == 'IN_WORK' %}
-                                <td>Изучение</td>
-                                {% elif item.status == 'COMPLETED' %}
-                                <td>Изучена</td>
+                            <tr class="info">
                                 {% elif item.status == 'OVERDUE' %}
-                                <td>Просрочена</td>
-                                {% endif %}
-                                <td>{{ item.date_from|date:"d.m.Y" }}</td>
-                                <td>{{ item.date_to|date:"d.m.Y" }}</td>
-                                <td>
-                                    {% if item.status != 'COMPLETED' %}
-                                        <div class="progress">
-                                            <div class="progress-bar" role="progressbar" aria-valuenow="{{ item.progress }}" aria-valuemin="0"
-                                                 aria-valuemax="100" style="width: {{ item.progress }}%;">
-                                                {{ item.progress }}%
-                                            </div>
-                                        </div>
-                                    {% else %}
-                                        <div class="progress">
-                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0"
-                                                 aria-valuemax="100" style="width: 100%;">
-                                                100%
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
+                            <tr class="danger">
+                                {% elif item.status == 'COMPLETED' %}
+                            <tr class="success">
+                        {% endif %}
+                    <td><a href="{% url "probationer_theme_settings" id=item.id %}">{{ item.theme.name }}</a></td>
+                    {% if item.status == 'ASSIGNED' %}
+                        <td>Назначена</td>
+                    {% elif item.status == 'IN_WORK' %}
+                        <td>Изучение</td>
+                    {% elif item.status == 'COMPLETED' %}
+                        <td>Изучена</td>
+                    {% elif item.status == 'OVERDUE' %}
+                        <td>Просрочена</td>
+                    {% endif %}
+                    <td>{{ item.date_from|date:"d.m.Y" }}</td>
+                    <td>{{ item.date_to|date:"d.m.Y" }}</td>
+                    <td>
+                        {% if item.status != 'COMPLETED' %}
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="{{ item.progress }}"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100" style="width: {{ item.progress }}%;">
+                                    {{ item.progress }}%
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100" style="width: 100%;">
+                                    100%
+                                </div>
+                            </div>
+                        {% endif %}
+                    </td>
+                    </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -116,14 +120,14 @@
             <div class="col-lg-12">
                 <table id="tableUserStatisticList" class="table table-bordered table-hover">
                     <thead>
-                        <th>Тема</th>
-                        <th>Дата и время</th>
-                        <th>Место</th>
-                        <th>Экзаменатор</th>
-                        <th>Результат</th>
+                    <th>Тема</th>
+                    <th>Дата и время</th>
+                    <th>Место</th>
+                    <th>Экзаменатор</th>
+                    <th>Результат</th>
                     </thead>
                     <tbody>
-                        {% for exam in exam_list %}
+                    {% for exam in exam_list %}
                         <tr>
                             <td>{{ exam.theme.name }}</td>
                             <td>{{ exam.datetime|date:"d.m.Y H:i" }}</td>
@@ -131,7 +135,7 @@
                             <td>{{ exam.examiner.get_full_name }}</td>
                             <td>{{ exam.result|default:"" }}</td>
                         </tr>
-                        {% endfor %}
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -142,73 +146,83 @@
             <div class="col-lg-12">
                 <table id="tableTest" class="table table-bordered table-hover">
                     <thead>
-                        <th>Название</th>
-                        <th>Описание</th>
-                        <th>Статус</th>
-                        <th>Назначен</th>
-                        <th>Срок</th>
-                        <th>Результат</th>
-                        <th>Действия</th>
+                    <th>Название</th>
+                    <th>Описание</th>
+                    <th>Статус</th>
+                    <th>Назначен</th>
+                    <th>Срок</th>
+                    <th>Результат</th>
+                    <th>Действия</th>
                     </thead>
                     <tbody>
-                        {% for test in test_list %}
+                    {% for test in test_list %}
                         {% if test.status == 'ASSIGNED' %}
                             <tr>
-                        {% elif test.status == 'COMPLETED' %}
-                           {% if test.result >= 70 %}
-                           <tr class="success">
-                           {% elif test.result >= 40 %}
-                           <tr class="warning">
-                           {% else %}
-                           <tr class="danger">
-                           {% endif %}
-                        {% elif test.status == 'OVERDUE' %}
-                           <tr class="danger">
-                        {% endif %}
-                            <td>{{ test.test.name }}</td>
-                            <td>{{ test.test.description }}</td>
-
-                             {% if test.status == 'ASSIGNED' %}
-                             <td>Назначен</td>
-                             {% elif test.status == 'IN_WORK' %}
-                             <td>Прохождение</td>
-                             {% elif test.status == 'COMPLETED' %}
-                             <td>Пройден</td>
-                             {% elif test.status == 'OVERDUE' %}
-                             <td>Просрочен</td>
-                             {% endif %}
-
-                            <td>{{ test.date_from|date:"d.m.Y" }}</td>
-                            <td>{{ test.date_to|date:"d.m.Y" }}</td>
-                            <td>
-                                {% if test.status == 'COMPLETED' %}
-                                    {{ test.result }}
+                                {% elif  test.status == 'CHECK_MANUALLY' %}
+                            <tr class="info">
+                                {% elif test.status == 'COMPLETED' %}
+                                {% if test.result >= 70 %}
+                                    <tr class="success">
+                                        {% elif test.result >= 40 %}
+                                    <tr class="warning">
+                                        {% else %}
+                                    <tr class="danger">
                                 {% endif %}
-                            </td>
-                            <td>
-                                {% if test.status != 'COMPLETED' and test.status != 'OVERDUE' %}
-                                <a href="{% url "start_test" id=test.id %}">
-                                    <button id="btnStartTest{{ forloop.counter }}" type="button" class="btn btn-success"
-                                            title="Начать прохождение теста">
-                                        <span class="glyphicon gglyphicon glyphicon-play" aria-hidden="true"></span>
-                                    </button>
-                                </a>
                                 {% elif test.status == 'OVERDUE' %}
-                                    <button id="btnStartTest{{ forloop.counter }}" type="button" class="btn btn-success disabled"
-                                            title="Начать прохождение теста">
-                                        <span class="glyphicon gglyphicon glyphicon-play" aria-hidden="true"></span>
-                                    </button>
-                                {% else %}
-                                <a href="{% url "end_test" id=test.id %}">
-                                    <button id="btnEndTest{{ forloop.counter }}" type="button" class="btn btn-primary"
-                                            title="Результаты теста">
-                                        <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
-                                    </button>
-                                </a>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
+                            <tr class="danger">
+                        {% endif %}
+                    <td>{{ test.test.name }}</td>
+                    <td>{{ test.test.description }}</td>
+
+                    {% if test.status == 'ASSIGNED' %}
+                        <td>Назначен</td>
+                    {% elif test.status == 'IN_WORK' %}
+                        <td>Прохождение</td>
+                    {% elif test.status == 'CHECK_MANUALLY' %}
+                        <td>Ожидает проверки</td>
+                    {% elif test.status == 'COMPLETED' %}
+                        <td>Пройден</td>
+                    {% elif test.status == 'OVERDUE' %}
+                        <td>Просрочен</td>
+                    {% endif %}
+
+                    <td>{{ test.date_from|date:"d.m.Y" }}</td>
+                    <td>{{ test.date_to|date:"d.m.Y" }}</td>
+                    <td>
+                        {% if test.status == 'COMPLETED' %}
+                            {{ test.result }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if test.status != 'COMPLETED' and test.status != 'OVERDUE' and test.status != 'CHECK_MANUALLY' %}
+                            <a href="{% url "start_test" id=test.id %}">
+                                <button id="btnStartTest{{ forloop.counter }}" type="button" class="btn btn-success"
+                                        title="Начать прохождение теста">
+                                    <span class="glyphicon gglyphicon glyphicon-play" aria-hidden="true"></span>
+                                </button>
+                            </a>
+                        {% elif test.status == 'OVERDUE' %}
+                            <button id="btnStartTest{{ forloop.counter }}" type="button"
+                                    class="btn btn-success disabled"
+                                    title="Начать прохождение теста">
+                                <span class="glyphicon gglyphicon glyphicon-play" aria-hidden="true"></span>
+                            </button>
+                        {% elif test.status == 'CHECK_MANUALLY' %}
+                            <button id="btnEndTest{{ forloop.counter }}" type="button" class="btn btn-primary"
+                                    title="Результаты теста" disabled>
+                                <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                            </button>
+                        {% else %}
+                            <a href="{% url "end_test" id=test.id %}">
+                                <button id="btnEndTest{{ forloop.counter }}" type="button" class="btn btn-primary"
+                                        title="Результаты теста">
+                                    <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                                </button>
+                            </a>
+                        {% endif %}
+                    </td>
+                    </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -216,5 +230,5 @@
     </div>
 {% endblock %}
 {% block scripts %}
-   <script src="/static/js/probationer_profile.js"></script>
+    <script src="/static/js/probationer_profile.js"></script>
 {% endblock %}
