@@ -20,4 +20,6 @@ urlpatterns = patterns('',
         url(r'^next/question/(?P<id>\d+)/(?P<number>\d+)/$', views.next_question, name='next_question'),
         url(r'^end/test/(?P<id>\d+)/$', views.end_test, name='end_test'),
         url(r'^report/(?P<id>\d+)/$', views.report, name='report'),
+        url(r'^to/test/ist/(?P<id>\d+)/$', views.to_test_list, name='to_test_list'),
+
 )

@@ -729,3 +729,11 @@ def schedule_test_to_user(request):
         return HttpResponseRedirect(reverse("user_info", args=[user.id, ]))
     else:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def to_test_list(request, id):
+    try:
+        test = Test.objects.get(id=id)
+    except:
+        return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("journal_settings", args=[test.journal.id, ]))
