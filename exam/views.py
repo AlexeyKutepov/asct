@@ -495,13 +495,14 @@ def start_test(request, id):
     except:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     if request.user.is_authenticated() and journal.user == request.user:
-        progress = Progress.objects.filter(user=request.user, test=journal.test)
+        progress = Progress.objects.filter(test_journal=journal)
         if not progress:
             Progress.objects.get_or_create(
                 user=request.user,
                 start_date=timezone.now(),
                 end_date=None,
                 test=journal.test,
+                test_journal=journal,
                 result_list=None,
                 current_result=0
             )
@@ -533,7 +534,7 @@ def next_question(request, id, number):
     id = int(id)
     number = int(number)
     journal = TestJournal.objects.get(id=id)
-    progress = Progress.objects.filter(user=request.user, test=journal.test)[0]
+    progress = Progress.objects.filter(test_journal=journal)[0]
     result_list = []
     exam_test = pickle.loads(journal.test.test)
 
@@ -718,7 +719,7 @@ def check_manually_answer(request, id, number):
     id = int(id)
     number = int(number)
     journal = TestJournal.objects.get(id=id)
-    progress = Progress.objects.filter(user=journal.user, test=journal.test)[0]
+    progress = Progress.objects.filter(test_journal=journal)[0]
     exam_test = pickle.loads(journal.test.test)
     result_list = pickle.loads(progress.result_list)
 

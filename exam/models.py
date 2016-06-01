@@ -84,6 +84,8 @@ class Progress(models.Model):
     end_date = models.DateTimeField(blank=True, null=True)
     # The performed test by user
     test = models.ForeignKey(Test)
+    # journal
+    test_journal = models.ForeignKey(TestJournal, blank=True, null=True)
     # The current result
     result_list = models.BinaryField(blank=True, null=True)
     # Number of correct answers
