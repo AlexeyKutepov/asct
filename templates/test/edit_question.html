@@ -3,6 +3,8 @@
     <link href="/static/css/bootstrap-select.min.css" rel="stylesheet">
 {% endblock %}
 {% block dashboard %}
+    <br>
+    <br>
     <form id="formCreateNewQuestion" action="{% url "edit_question" id=test_id number=number_of_question  %}" method="post"
           enctype="multipart/form-data">
         {% csrf_token %}
@@ -61,7 +63,7 @@
                         <span class="input-group-addon">
                             <input id="isTrueAnswer1" name="trueAnswer" value="1" type="checkbox">
                         </span>
-                            <input id="inputAnswer1" name="answer1" type="text" class="form-control" required>
+                            <input id="inputAnswer1" name="answer1" type="text" class="form-control">
                         </div>
                     </div>
                     <p id="pAnswer1"></p>
@@ -70,7 +72,7 @@
                         <span class="input-group-addon">
                             <input id="isTrueAnswer2" name="trueAnswer" value="2" type="checkbox">
                         </span>
-                            <input id="inputAnswer2" name="answer2" type="text" class="form-control" required>
+                            <input id="inputAnswer2" name="answer2" type="text" class="form-control">
                         </div>
                     </div>
                     <p id="pAnswer2"></p>
@@ -89,10 +91,10 @@
                 <div id="divOpenAnswer">
                     <div class="form-group">
                         <label class="control-label" for="inputOpenAnswer">Введите правильный ответ:</label>
-                        <input id="inputOpenAnswer" name="openAnswer" type="text" class="form-control" value="{{ question.get_answers.get_answer }}">
+                        <input id="inputOpenAnswer" name="openAnswer" type="text" class="form-control" value="{{ question.get_answers.get_answer }}" required>
                     </div>
                     <div class="checkbox">
-                      <label><input type="checkbox" name="checkManually" value="checkManually" {% if question.check_manually %} checked {% endif %}>Проверять вручную</label>
+                      <label><input type="checkbox" name="checkManually" value="checkManually" {% if question.get_answers.get_check_manually %} checked {% endif %}>Проверять вручную</label>
                     </div>
                 </div>
                 <p></p>
@@ -148,6 +150,9 @@
                     <div class="form-group">
                         <label class="control-label" for="inputOpenAnswer">Введите правильный ответ:</label>
                         <input id="inputOpenAnswer" name="openAnswer" type="text" class="form-control">
+                    </div>
+                    <div class="checkbox">
+                      <label><input type="checkbox" name="checkManually" value="checkManually" {% if question.get_answers.get_check_manually %} checked {% endif %}>Проверять вручную</label>
                     </div>
                 </div>
                 <p></p>

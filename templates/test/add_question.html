@@ -3,6 +3,8 @@
     <link href="/static/css/bootstrap-select.min.css" rel="stylesheet">
 {% endblock %}
 {% block dashboard %}
+    <br>
+    <br>
     <form id="formCreateNewQuestion" action="{% url "add_question" id=test_id  %}" method="post"
           enctype="multipart/form-data">
         {% csrf_token %}
