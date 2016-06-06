@@ -235,7 +235,7 @@ def prepare_all_company_report(request, probationer_list, company_list):
                     "not_completed_probationer_count": len(probationer_data_list) - completed_probationer_count,
                     "theme_progress": round(completed_theme_count / theme_count * 100, 1) if theme_count else 0,
                     "exam_progress": round(completed_exam_count / exam_count * 100, 1) if completed_exam_count else 0,
-                    "assessment": assessment / completed_exam_count if completed_exam_count else 0,
+                    "assessment": round(assessment / completed_exam_count, 2) if completed_exam_count else 0,
                 }
                 company_report_data.append(result)
         in_total = {
@@ -244,7 +244,7 @@ def prepare_all_company_report(request, probationer_list, company_list):
             "not_completed_probationer_count": in_total_probationer_count - in_total_completed_probationer_count,
             "theme_progress": round(in_total_completed_theme_count / in_total_theme_count * 100, 1) if in_total_theme_count else 0,
             "exam_progress": round(in_total_completed_exam_count / in_total_exam_count * 100, 1) if in_total_completed_exam_count else 0,
-            "assessment": in_total_assessment / in_total_completed_exam_count if in_total_completed_exam_count else 0,
+            "assessment": round(in_total_assessment / in_total_completed_exam_count, 2) if in_total_completed_exam_count else 0,
         }
         all_company_report_data.append(
             {
@@ -386,7 +386,7 @@ def prepare_department_report(request, probationer_list, company_list):
                 "assessment": assessment if len(exam_list) != 0 else "Зачёты не назначены"
             }
         )
-    in_total_assessment = in_total_assessment/in_total_assessment_count if in_total_assessment_count != 0 else 0
+    in_total_assessment = round(in_total_assessment/in_total_assessment_count, 2) if in_total_assessment_count != 0 else 0
 
 
     return render(
