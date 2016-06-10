@@ -1153,6 +1153,12 @@ def probationer_theme_settings(request, id):
     if scheduled_theme.date_to < timezone.now() - timezone.timedelta(days=1) and scheduled_theme.status != ScheduledTheme.COMPLETED and scheduled_theme.status != ScheduledTheme.OVERDUE:
         scheduled_theme.status = ScheduledTheme.OVERDUE
         scheduled_theme.save()
+    if scheduled_theme.user != request.user:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+        }
+        return render(request, "alert.html", result)
     sub_theme_list = SubTheme.objects.filter(parent_theme=scheduled_theme.theme)
     scheduled_sub_theme_list = ScheduledSubTheme.objects.filter(sub_theme__in=sub_theme_list, user=request.user,
                                                                 scheduled_theme=scheduled_theme)
