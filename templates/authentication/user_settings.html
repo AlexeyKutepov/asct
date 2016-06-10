@@ -8,7 +8,9 @@
             {% if isCreate %}
                 <h3 class="page-header">Создание нового пользователя</h3>
             {% else %}
-                <h3 class="page-header">{{ user_data.get_full_name }} (редактирование профиля)</h3>
+                <h4 class="page-header"><a href="{% url "index" %}">Рабочий стол</a> >
+                <a href="{% url "user_info" id=user_data.id %}">Информация о пользователе</a> >
+                    {{ user_data.get_full_name }} (редактирование профиля)</h4>
             {% endif %}
         </div>
     </div>
