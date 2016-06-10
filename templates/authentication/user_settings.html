@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-lg-12">
             {% if isCreate %}
-                <h3 class="page-header">Создание нового пользователя</h3>
+                <h4 class="page-header"><a href="{% url "index" %}">Рабочий стол</a> > Создание нового пользователя</h4>
             {% else %}
                 <h4 class="page-header"><a href="{% url "index" %}">Рабочий стол</a> >
                 <a href="{% url "user_info" id=user_data.id %}">Информация о пользователе</a> >

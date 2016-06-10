@@ -3,7 +3,10 @@
 {% load poll_extras %}
 <div class="row">
     <div class="col-lg-12">
-        <h3 class="page-header">Результаты выполнения теста "<a href="{% url "test_settings" id=journal.test.id %}">{{ journal.test.name }}</a>"</h3>
+        <h4 class="page-header"><a href="{% url "index" %}">Рабочий стол</a> >
+            <a href="{% url "journal_settings" id=journal.test.journal.id %}">{{ journal.test.journal.name }}</a> >
+            <a href="{% url "test_settings" id=journal.test.id %}">Статистика по тесту</a> >
+            Отчёт по тесту "{{ journal.test.name }}"</h4>
     </div>
 </div>
 <div class="row">
