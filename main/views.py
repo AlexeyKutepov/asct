@@ -752,7 +752,7 @@ def schedule_theme(request, id):
             )
         try:
             send_mail(
-                'Вам назначена тема в ASCT',
+                'Вам назначена тема в Premier E-ducation Hub',
                 'Здравствуйте ' + user.first_name + '! \n \n Вам назначена тема для изучения: \"' + theme.name
                 + '\" \n\n Срок до ' + request.POST["dateTo"]
                 + ' \n\n Для изучения перейдите по ссылке: ' + request.build_absolute_uri(
@@ -797,7 +797,7 @@ def schedule_theme_to_user(request):
             )
         try:
             send_mail(
-                'Вам назначена тема в ASCT',
+                'Вам назначена тема в Premier E-ducation Hub',
                 'Здравствуйте ' + user.first_name + '! \n \n Вам назначена тема для изучения: \"' + theme.name
                 + '\" \n\n Срок до ' + request.POST["dateTo"]
                 + ' \n\n Для изучения перейдите по ссылке: ' + request.build_absolute_uri(
@@ -861,7 +861,7 @@ def schedule_exam(request, id):
         )
         try:
             send_mail(
-                'Вам назначен зачёт в ASCT',
+                'Вам назначен зачёт в Premier E-ducation Hub',
                 'Здравствуйте ' + user.first_name + '! \n \n Вам назначен зачёт по теме: \"' + theme.name
                 + '\" \n\n Дата и время проведения зачёта: ' + str(theme_exam.datetime).replace('T', ' ')
                 + ' \n\n Место проведения зачёта: ' + request.POST["place"]
@@ -897,7 +897,7 @@ def edit_exam(request, id):
         theme_exam.save()
         try:
             send_mail(
-                'Изменение информации по зачёту в ASCT',
+                'Изменение информации по зачёту в Premier E-ducation Hub',
                 'Здравствуйте ' + user.first_name + '! \n \n Информация по зачёту была изменена. Актуальная информация:  \n \n Зачёт по теме: \"' + theme_exam.theme.name
                 + '\" \n\n Дата и время проведения зачёта: ' + str(theme_exam.datetime).replace('T', ' ')
                 + ' \n\n Место проведения зачёта: ' + request.POST["place"]

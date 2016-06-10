@@ -173,8 +173,8 @@ def create_new_user(request):
         )
         try:
             send_mail(
-                'Регистрация в ASCT',
-                'Здравствуйте ' + user.first_name + '! \n \nВы успешно зарегистрированы в сервисе ASCT \n \nВаш логин: ' + user.username + ' \nВаш пароль: ' + password +
+                'Регистрация в Premier E-ducation Hub',
+                'Здравствуйте ' + user.first_name + '! \n \nВы успешно зарегистрированы в сервисе Premier E-ducation Hub \n \nВаш логин: ' + user.username + ' \nВаш пароль: ' + password +
                 ' \n\nДля авторизации в системе перейдите по ссылке: ' + "http://" + request.get_host(),
                 getattr(settings, "EMAIL_HOST_USER", None),
                 [user.email],
@@ -184,7 +184,7 @@ def create_new_user(request):
             pass
         result = {
             "status": "success",
-            "message": "<p>Пользователь " + user.get_full_name() + " успешно добавлен в систему</p> <p>Логин и пароль для доступа в ASCT отправлены на электронную почту пользователя: " + user.email + "</p>"
+            "message": "<p>Пользователь " + user.get_full_name() + " успешно добавлен в систему</p> <p>Логин и пароль для доступа в Premier E-ducation Hub отправлены на электронную почту пользователя: " + user.email + "</p>"
         }
         return render(request, "alert.html", result)
     else:
@@ -237,8 +237,8 @@ def give_new_password(request, id):
         user_data.save()
         try:
             send_mail(
-                'Новый пароль доступа в ASCT',
-                'Здравствуйте ' + user_data.first_name + '! \n \nВам выдан новый пароль доступа в ASCT \n \nВаш логин: ' + user_data.username + ' \nВаш пароль: ' + password +
+                'Новый пароль доступа в Premier E-ducation Hub',
+                'Здравствуйте ' + user_data.first_name + '! \n \nВам выдан новый пароль доступа в Premier E-ducation Hub \n \nВаш логин: ' + user_data.username + ' \nВаш пароль: ' + password +
                 ' \n\nДля авторизации в системе перейдите по ссылке: ' + "http://" + request.get_host(),
                 getattr(settings, "EMAIL_HOST_USER", None),
                 [user_data.email],
@@ -249,7 +249,7 @@ def give_new_password(request, id):
         result = {
             "status": "success",
             "message": "<p>Пользователь <a href=\"" + request.META.get('HTTP_REFERER') + "\">"
-                       + user_data.get_full_name() + "</a> получил новый пароль для доступа в ASCT.</p> <p>Пароль отправлен на электронную почту пользователя: " + user_data.email + "</p>"
+                       + user_data.get_full_name() + "</a> получил новый пароль для доступа в Premier E-ducation Hub.</p> <p>Пароль отправлен на электронную почту пользователя: " + user_data.email + "</p>"
         }
         return render(request, "alert.html", result)
 

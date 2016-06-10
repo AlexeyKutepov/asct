@@ -437,7 +437,7 @@ def schedule_test(request, id):
         )
         try:
             send_mail(
-                'Вам назначен тест в ASCT',
+                'Вам назначен тест в Premier E-ducation Hub',
                 'Здравствуйте ' + user.first_name + '! \n \n Вам назначен тест: \"' + test.name + '\" \n\n Срок до ' +
                 request.POST["dateTo"]
                 + ' \n\n Для прохождения теста перейдите по ссылке: ' + request.build_absolute_uri(
@@ -781,7 +781,7 @@ def schedule_test_to_user(request):
 
         try:
             send_mail(
-                'Вам назначен тест в ASCT',
+                'Вам назначен тест в Premier E-ducation Hub',
                 'Здравствуйте ' + user.first_name + '! \n \n Вам назначен тест: \"' + test.name + '\" \n\n Срок до ' +
                 request.POST["dateTo"]
                 + ' \n\n Для прохождения теста перейдите по ссылке: ' + request.build_absolute_uri(
