@@ -359,8 +359,7 @@ def prepare_department_report(request, probationer_list, company_list):
         assessment = assessment/assessment_count if assessment_count != 0 else "Нет оценок по зачётам"
 
         theme_list = ScheduledTheme.objects.filter(user=user)
-        completed_theme_list = ScheduledTheme.objects.filter(user=user,
-                                                                    status=ScheduledTheme.COMPLETED)
+        completed_theme_list = ScheduledTheme.objects.filter(user=user, status=ScheduledTheme.COMPLETED)
 
         if len(theme_list) != 0 and len(theme_list) == len(completed_theme_list):
             progress = 100
@@ -378,6 +377,7 @@ def prepare_department_report(request, probationer_list, company_list):
             department_theme_progress += progress/100
         else:
             progress = "Темы не назначены"
+            department_theme_progress += 1
 
         result_list.append(
             {
