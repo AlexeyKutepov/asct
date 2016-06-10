@@ -5,7 +5,10 @@
     <div class="row">
         <div class="col-lg-12">
             {% if user.user_type != "PROBATIONER" %}
-            <h4 class="page-header"><a href="{% url "theme_settings" id=sub_theme.parent_theme.id %}">{{ sub_theme.parent_theme.name }}</a> > Список учебных материалов подтемы "{{ sub_theme.name }}"</h4>
+            <h4 class="page-header"><a href="{% url "index" %}">Рабочий стол</a> >
+                <a href="{% url "journal_settings" id=sub_theme.parent_theme.journal.id %}">{{ sub_theme.parent_theme.journal.name }}</a> >
+                <a href="{% url "theme_settings" id=sub_theme.parent_theme.id %}">{{ sub_theme.parent_theme.name }}</a>  >
+                Учебные материалы подтемы "{{ sub_theme.name }}"</h4>
             {% else %}
             <h4 class="page-header">Список учебных материалов подтемы "{{ sub_theme.name }}"</h4>
             {% endif %}
