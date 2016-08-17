@@ -21,8 +21,8 @@ def generate_password(size=8, chars=string.ascii_uppercase + string.ascii_lowerc
 @csrf_protect
 def login(request):
     if "username" in request.POST and "password" in request.POST:
-        username = request.POST.get("username")
-        password = request.POST.get("password")
+        username = str(request.POST.get("username")).strip()
+        password = str(request.POST.get("password")).strip()
         user = auth.authenticate(username=username, password=password)
         if user is not None and user.is_active:
             auth.login(request, user)
