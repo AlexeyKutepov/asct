@@ -722,7 +722,11 @@
                         <td>
                             <a href="{% url "journal_settings" id=test.test.journal.id %}">{{ test.test.journal.name }}</a>
                         </td>
-                        <td><a href="{% url "test_settings" id=test.test.id %}">{{ test.test.name }}</a></td>
+                        {% if test.status == 'COMPLETED' or test.status == 'CHECK_MANUALLY' %}
+                            <td><a href="{% url "report" id=test.id %}">{{ test.test.name }}</a></td>
+                        {% else %}
+                            <td>{{ test.test.name }}</td>
+                        {% endif %}
                         <td>{{ test.date_from|date:"d.m.Y" }}</td>
                         <td>{{ test.date_to|date:"d.m.Y" }}</td>
                         {% if test.status == 'ASSIGNED' %}
