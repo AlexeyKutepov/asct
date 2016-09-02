@@ -22,7 +22,7 @@ def test_page(request):
 def calculate_progress(user):
     theme_list = ScheduledTheme.objects.filter(user=user)
     completed_theme_list = ScheduledTheme.objects.filter(user=user,
-                                                                status=ScheduledTheme.COMPLETED)
+                                                         status=ScheduledTheme.COMPLETED)
 
     if len(theme_list) != 0 and len(theme_list) == len(completed_theme_list):
         progress = 100
@@ -33,9 +33,11 @@ def calculate_progress(user):
             if theme.status != ScheduledTheme.COMPLETED:
                 sub_theme_list = ScheduledSubTheme.objects.filter(scheduled_theme=theme)
                 if len(sub_theme_list) != 0:
-                    completed_sub_theme_list = ScheduledSubTheme.objects.filter(scheduled_theme=theme, status=ScheduledSubTheme.COMPLETED)
-                    sub_theme_progress += round(len(completed_sub_theme_list) / len(sub_theme_list) if len(sub_theme_list) else 0, 2)
-        progress = round((theme_progress + sub_theme_progress)/len(theme_list)*100 if len(theme_list) else 0, 2)
+                    completed_sub_theme_list = ScheduledSubTheme.objects.filter(scheduled_theme=theme,
+                                                                                status=ScheduledSubTheme.COMPLETED)
+                    sub_theme_progress += round(
+                        len(completed_sub_theme_list) / len(sub_theme_list) if len(sub_theme_list) else 0, 2)
+        progress = round((theme_progress + sub_theme_progress) / len(theme_list) * 100 if len(theme_list) else 0, 2)
     else:
         progress = None
     return progress
@@ -60,12 +62,14 @@ def prepare_curator_page(request):
 
 def prepare_admin_page(request):
     user_list = UserProfile.objects.filter(
-        Q(user_type=UserProfile.OPERATOR, company=request.user.company, is_active=True) | Q(user_type=UserProfile.PROBATIONER,
-                                                                            company=request.user.company, is_active=True)
+        Q(user_type=UserProfile.OPERATOR, company=request.user.company, is_active=True) | Q(
+            user_type=UserProfile.PROBATIONER,
+            company=request.user.company, is_active=True)
     ).order_by('last_name')
     fire_user_list = UserProfile.objects.filter(
-        Q(user_type=UserProfile.OPERATOR, company=request.user.company, is_active=False) | Q(user_type=UserProfile.PROBATIONER,
-                                                                            company=request.user.company, is_active=False)
+        Q(user_type=UserProfile.OPERATOR, company=request.user.company, is_active=False) | Q(
+            user_type=UserProfile.PROBATIONER,
+            company=request.user.company, is_active=False)
     ).order_by('last_name')
     position_list = Position.objects.all().order_by('name')
     return render(
@@ -80,8 +84,10 @@ def prepare_admin_page(request):
 
 
 def prepare_operator_page(request):
-    probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company, is_active=True).order_by('last_name')
-    fire_user_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company, is_active=False).order_by('last_name')
+    probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company,
+                                                  is_active=True).order_by('last_name')
+    fire_user_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company,
+                                                is_active=False).order_by('last_name')
     return render(
         request,
         "main/operator_profile.html",
@@ -95,13 +101,15 @@ def prepare_operator_page(request):
 def prepare_probationer_page(request):
     scheduled_theme_list = ScheduledTheme.objects.filter(user=request.user)
     for scheduled_theme in scheduled_theme_list:
-        if scheduled_theme.date_to < timezone.now() - timezone.timedelta(days=1) and scheduled_theme.status != ScheduledTheme.COMPLETED and scheduled_theme.status != ScheduledTheme.OVERDUE:
+        if scheduled_theme.date_to < timezone.now() - timezone.timedelta(
+                days=1) and scheduled_theme.status != ScheduledTheme.COMPLETED and scheduled_theme.status != ScheduledTheme.OVERDUE:
             scheduled_theme.status = ScheduledTheme.OVERDUE
             scheduled_theme.save()
     exam_list = ThemeExam.objects.filter(user=request.user)
     test_list = TestJournal.objects.filter(user=request.user)
     for test in test_list:
-        if test.date_to < timezone.now() - timezone.timedelta(days=1) and test.status != TestJournal.COMPLETED and test.status != TestJournal.OVERDUE:
+        if test.date_to < timezone.now() - timezone.timedelta(
+                days=1) and test.status != TestJournal.COMPLETED and test.status != TestJournal.OVERDUE:
             test.status = TestJournal.OVERDUE
             test.save()
 
@@ -129,6 +137,29 @@ def index(request):
         return prepare_probationer_page(request)
     else:
         return render(request, "base.html")
+
+
+@login_required
+def users(request):
+    if request.user.user_type == UserProfile.CURATOR:
+        user_list = UserProfile.objects.filter(is_active=True).order_by('last_name')
+        fire_user_list = UserProfile.objects.filter(is_active=False).order_by('last_name')
+        return render(
+            request,
+            "main/users.html",
+            {
+                "user_list": user_list,
+                "fire_user_list": fire_user_list
+            }
+        )
+    elif request.user.user_type == UserProfile.ADMIN:
+        return render(request, "main/users.html")
+    elif request.user.user_type == UserProfile.OPERATOR:
+        return render(request, "main/users.html")
+    elif request.user.user_type == UserProfile.PROBATIONER:
+        return render(request, "main/users.html")
+    else:
+        return render(request, "main/start_page.html")
 
 
 @login_required
@@ -530,7 +561,6 @@ def clone_journal(request, id):
             date_and_time=timezone.now()
         )
 
-
     result = {
         "status": "success",
         "message": "Программа \"" + journal.name + "\" дублирована для компании \"" + company.name + "\""
@@ -624,7 +654,8 @@ def theme_settings(request, id):
     except:
         return HttpResponseRedirect(reverse("index"))
     if theme:
-        examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER), company=theme.journal.company, is_active=True)
+        examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER), company=theme.journal.company,
+                                                   is_active=True)
     else:
         examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER), is_active=True)
     sub_theme_list = SubTheme.objects.filter(parent_theme=theme)
@@ -634,7 +665,8 @@ def theme_settings(request, id):
         user_list = UserProfile.objects.filter(company=request.user.company, is_active=True)
         scheduled_theme_list = ScheduledTheme.objects.filter(theme=theme, user__in=user_list)
     for scheduled_theme in scheduled_theme_list:
-        if scheduled_theme.date_to < timezone.now() - timezone.timedelta(days=1) and scheduled_theme.status != ScheduledTheme.COMPLETED and scheduled_theme.status != ScheduledTheme.OVERDUE:
+        if scheduled_theme.date_to < timezone.now() - timezone.timedelta(
+                days=1) and scheduled_theme.status != ScheduledTheme.COMPLETED and scheduled_theme.status != ScheduledTheme.OVERDUE:
             scheduled_theme.status = ScheduledTheme.OVERDUE
             scheduled_theme.save()
     exam_list = ThemeExam.objects.filter(theme=theme)
@@ -1019,16 +1051,19 @@ def user_info(request, id):
             "message": "Пользователь не найден"
         }
         return render(request, "alert.html", result)
-    examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER), company=user_data.company, is_active=True)
+    examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER), company=user_data.company,
+                                               is_active=True)
     scheduled_theme_list = ScheduledTheme.objects.filter(user=user_data)
     for scheduled_theme in scheduled_theme_list:
-        if scheduled_theme.date_to < timezone.now() - timezone.timedelta(days=1) and scheduled_theme.status != ScheduledTheme.COMPLETED and scheduled_theme.status != ScheduledTheme.OVERDUE:
+        if scheduled_theme.date_to < timezone.now() - timezone.timedelta(
+                days=1) and scheduled_theme.status != ScheduledTheme.COMPLETED and scheduled_theme.status != ScheduledTheme.OVERDUE:
             scheduled_theme.status = ScheduledTheme.OVERDUE
             scheduled_theme.save()
     exam_list = ThemeExam.objects.filter(user=user_data)
     test_list = TestJournal.objects.filter(user=user_data)
     for test in test_list:
-        if test.date_to < timezone.now() - timezone.timedelta(days=1) and test.status != TestJournal.COMPLETED and test.status != TestJournal.OVERDUE:
+        if test.date_to < timezone.now() - timezone.timedelta(
+                days=1) and test.status != TestJournal.COMPLETED and test.status != TestJournal.OVERDUE:
             test.status = TestJournal.OVERDUE
             test.save()
     assessment = None
@@ -1150,7 +1185,8 @@ def probationer_theme_settings(request, id):
         scheduled_theme = ScheduledTheme.objects.get(id=id)
     except:
         return HttpResponseRedirect(reverse("index"))
-    if scheduled_theme.date_to < timezone.now() - timezone.timedelta(days=1) and scheduled_theme.status != ScheduledTheme.COMPLETED and scheduled_theme.status != ScheduledTheme.OVERDUE:
+    if scheduled_theme.date_to < timezone.now() - timezone.timedelta(
+            days=1) and scheduled_theme.status != ScheduledTheme.COMPLETED and scheduled_theme.status != ScheduledTheme.OVERDUE:
         scheduled_theme.status = ScheduledTheme.OVERDUE
         scheduled_theme.save()
     if scheduled_theme.user != request.user:
@@ -1407,3 +1443,6 @@ def cancel_exam(request, id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     exam.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+

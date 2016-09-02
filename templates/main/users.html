@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block dashboard %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h4 class="page-header">Пользователи</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+
+            <table id="tableUserList" class="table table-hover">
+                <thead>
+                <th id="thUserName" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
+                                                                 aria-hidden="true"></span> ФИО
+                </th>
+                <th id="thUserPosition" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
+                                                                     aria-hidden="true"></span> Должность
+                </th>
+                <th id="thUserCompany" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
+                                                                    aria-hidden="true"></span> Компания
+                </th>
+                <th id="thUserType" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
+                                                                 aria-hidden="true"></span> Права
+                </th>
+                </thead>
+                {% for item in user_list %}
+                    <tr>
+                        <td><a href="{% url "user_info" id=item.id %}">{{ item.get_full_name }}</a></td>
+                        <td>{{ item.position }}</td>
+                        <td>{{ item.company }}</td>
+                        {% if item.user_type == "CURATOR" %}
+                            <td><input name="tdcurator" hidden>Куратор</td>
+                        {% elif item.user_type == "ADMIN" %}
+                            <td><input name="tdadmin" hidden>Администратор</td>
+                        {% elif item.user_type == "OPERATOR" %}
+                            <td><input name="tdoperator" hidden>Оператор</td>
+                        {% else %}
+                            <td><input name="tdprobationer" hidden>Испытуемый</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}
