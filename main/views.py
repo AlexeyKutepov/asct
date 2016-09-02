@@ -16,7 +16,7 @@ from exam.models import Test, TestJournal
 
 
 def test_page(request):
-    return render(request, "test_page.html")
+    return render(request, "main/start_page.html")
 
 
 def calculate_progress(user):

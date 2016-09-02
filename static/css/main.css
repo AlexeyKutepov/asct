@@ -23,3 +23,9 @@
 .cursor-pointer {
     cursor: pointer;
 }
+
+.start-contaner {
+    margin-top: 25%;
+    margin-left: 5%;
+    margin-right: 5%;
+}
