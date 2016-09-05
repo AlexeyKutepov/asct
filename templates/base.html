@@ -76,7 +76,8 @@
                 <a href="{% url "index" %}"><i class="fa fa-dashboard fa-fw"></i> Рабочий стол</a>
             </li>
             {% if user.user_type != 'PROBATIONER' %}
-                <li><a href="{% url "reports" %}"><i class="fa fa-file-text-o"></i> Отчёты</a></li>
+                <li><a href="{% url "users" %}"><i class="fa fa-users"></i> Пользователи</a></li>
+                <li><a href="{% url "reports" %}"><i class="fa fa-area-chart"></i> Отчёты</a></li>
             {% endif %}
         </ul>
         <ul class="nav navbar-top-links navbar-right">

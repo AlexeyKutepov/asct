@@ -127,16 +127,20 @@ def prepare_probationer_page(request):
 
 @login_required
 def index(request):
-    if request.user.user_type == UserProfile.CURATOR:
-        return prepare_curator_page(request)
-    elif request.user.user_type == UserProfile.ADMIN:
-        return prepare_admin_page(request)
-    elif request.user.user_type == UserProfile.OPERATOR:
-        return prepare_operator_page(request)
-    elif request.user.user_type == UserProfile.PROBATIONER:
+    # if request.user.user_type == UserProfile.CURATOR:
+    #     return prepare_curator_page(request)
+    # elif request.user.user_type == UserProfile.ADMIN:
+    #     return prepare_admin_page(request)
+    # elif request.user.user_type == UserProfile.OPERATOR:
+    #     return prepare_operator_page(request)
+    # elif request.user.user_type == UserProfile.PROBATIONER:
+    #     return prepare_probationer_page(request)
+    # else:
+    #     return render(request, "base.html")
+    if request.user.user_type == UserProfile.PROBATIONER:
         return prepare_probationer_page(request)
     else:
-        return render(request, "base.html")
+        return render(request, "main/start_page.html")
 
 
 @login_required
