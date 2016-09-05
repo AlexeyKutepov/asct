@@ -6,59 +6,110 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-6">
-            <div class="input-group custom-search-form">
-                <input id="inputUserSearch" type="text" class="form-control" placeholder="Поиск...">
+        <div class="col-lg-12">
+            <ul class="nav nav-tabs">
+                <li id="liUsers" role="presentation" class="active"><a id="aUsers" href="#">Пользователи</a>
+                </li>
+                <li id="liDismissedUsers" role="presentation"><a id="aDismissedUsers" href="#">Уволенные
+                    пользователи</a>
+                </li>
+            </ul>
+            <br>
+        </div>
+    </div>
+    <div id="divUsers">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="input-group custom-search-form">
+                    <input id="inputUserSearch" type="text" class="form-control" placeholder="Поиск...">
                     <span class="input-group-btn">
                         <button id="buttonUserSearch" class="btn btn-default" type="button">
                             <i class="fa fa-search"></i>
                         </button>
                     </span>
+                </div>
+                <br>
             </div>
-            <br>
+            <div class="col-lg-6">
+                <a href="{% url "create_new_user" %}">
+                    <input type="button" class="btn btn-success pull-right" value="Добавить пользователя"/>
+                </a>
+                <br>
+            </div>
         </div>
-        <div class="col-lg-6">
-            <a href="{% url "create_new_user" %}">
-                <input type="button" class="btn btn-success pull-right" value="Добавить пользователя"/>
-            </a>
-            <br>
+        <div class="row">
+            <div class="col-lg-12">
+                <table id="tableUserList" class="table table-hover">
+                    <thead>
+                    <th id="thUserName" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
+                                                                     aria-hidden="true"></span> ФИО
+                    </th>
+                    <th id="thUserPosition" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
+                                                                         aria-hidden="true"></span> Должность
+                    </th>
+                    <th id="thUserCompany" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
+                                                                        aria-hidden="true"></span> Компания
+                    </th>
+                    <th id="thUserType" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
+                                                                     aria-hidden="true"></span> Права
+                    </th>
+                    </thead>
+                    {% for item in user_list %}
+                        <tr>
+                            <td><a href="{% url "user_info" id=item.id %}">{{ item.get_full_name }}</a></td>
+                            <td>{{ item.position }}</td>
+                            <td>{{ item.company }}</td>
+                            {% if item.user_type == "CURATOR" %}
+                                <td><input name="tdcurator" hidden>Куратор</td>
+                            {% elif item.user_type == "ADMIN" %}
+                                <td><input name="tdadmin" hidden>Администратор</td>
+                            {% elif item.user_type == "OPERATOR" %}
+                                <td><input name="tdoperator" hidden>Оператор</td>
+                            {% else %}
+                                <td><input name="tdprobationer" hidden>Испытуемый</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-12">
-
-            <table id="tableUserList" class="table table-hover">
-                <thead>
-                <th id="thUserName" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
-                                                                 aria-hidden="true"></span> ФИО
-                </th>
-                <th id="thUserPosition" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
-                                                                     aria-hidden="true"></span> Должность
-                </th>
-                <th id="thUserCompany" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
-                                                                    aria-hidden="true"></span> Компания
-                </th>
-                <th id="thUserType" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
-                                                                 aria-hidden="true"></span> Права
-                </th>
-                </thead>
-                {% for item in user_list %}
-                    <tr>
-                        <td><a href="{% url "user_info" id=item.id %}">{{ item.get_full_name }}</a></td>
-                        <td>{{ item.position }}</td>
-                        <td>{{ item.company }}</td>
-                        {% if item.user_type == "CURATOR" %}
-                            <td><input name="tdcurator" hidden>Куратор</td>
-                        {% elif item.user_type == "ADMIN" %}
-                            <td><input name="tdadmin" hidden>Администратор</td>
-                        {% elif item.user_type == "OPERATOR" %}
-                            <td><input name="tdoperator" hidden>Оператор</td>
-                        {% else %}
-                            <td><input name="tdprobationer" hidden>Испытуемый</td>
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-            </table>
+    <div id="divDismissedUsers" hidden>
+        <div class="row">
+            <div class="col-lg-12">
+                <table id="tableFireUserList" class="table table-hover">
+                    <thead>
+                    <th id="thFireUserName" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
+                                                                         aria-hidden="true"></span> ФИО
+                    </th>
+                    <th id="thFireUserPosition" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
+                                                                             aria-hidden="true"></span> Должность
+                    </th>
+                    <th id="thFireUserCompany" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
+                                                                            aria-hidden="true"></span> Компания
+                    </th>
+                    <th id="thFireUserType" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
+                                                                         aria-hidden="true"></span> Права
+                    </th>
+                    </thead>
+                    {% for item in fire_user_list %}
+                        <tr>
+                            <td><a href="{% url "user_info" id=item.id %}">{{ item.get_full_name }}</a></td>
+                            <td>{{ item.position }}</td>
+                            <td>{{ item.company }}</td>
+                            {% if item.user_type == "CURATOR" %}
+                                <td><input name="tdcurator" hidden>Куратор</td>
+                            {% elif item.user_type == "ADMIN" %}
+                                <td><input name="tdadmin" hidden>Администратор</td>
+                            {% elif item.user_type == "OPERATOR" %}
+                                <td><input name="tdoperator" hidden>Оператор</td>
+                            {% else %}
+                                <td><input name="tdprobationer" hidden>Испытуемый</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
         </div>
     </div>
 {% endblock %}
@@ -66,4 +117,23 @@
     <script src="/static/js/sort-elements.js"></script>
     <script src="/static/js/search.js"></script>
     <script src="/static/js/sort.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#aUsers").click(function (e) {
+                e.preventDefault();
+                $("#liUsers").addClass("active");
+                $("#liDismissedUsers").removeClass("active");
+                $("#divUsers").show();
+                $("#divDismissedUsers").hide();
+            });
+
+            $("#aDismissedUsers").click(function (e) {
+                e.preventDefault();
+                $("#liUsers").removeClass("active");
+                $("#liDismissedUsers").addClass("active");
+                $("#divUsers").hide();
+                $("#divDismissedUsers").show();
+            });
+        });
+    </script>
 {% endblock %}
