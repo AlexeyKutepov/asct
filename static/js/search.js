@@ -35,5 +35,21 @@ $(document).ready(function () {
     $("#buttonFireUserSearch").click(fireUserSearch);
     $("#inputFireUserSearch").change(fireUserSearch).keyup(fireUserSearch);
 
+    /**
+     * Поиск по таблице с учебными программами
+     */
+    var journalSearch = function() {
+        $('#tableJournalList > tbody > tr').each(function() {
+            if(($(this).find('a').html().toUpperCase()).indexOf($("#inputJournalSearch").val().toUpperCase()) > -1) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    };
+
+    $("#buttonJournalSearch").click(journalSearch);
+    $("#inputJournalSearch").change(journalSearch).keyup(journalSearch);
+
 });
 

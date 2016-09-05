@@ -146,7 +146,7 @@ def index(request):
 @login_required
 def users(request):
     """
-    Формирорвание списка пользователей на основе прав доступа
+    Отображение списка пользователей на основе прав доступа
     :param request:
     :return:
     """
@@ -192,6 +192,36 @@ def users(request):
                 "probationer_list": probationer_list,
                 "fire_user_list": fire_user_list
             }
+        )
+    else:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+        }
+        return render(request, "alert.html", result)
+
+
+@login_required
+def journals(request):
+    """
+    Отображение списка учебных программ
+    :param request:
+    :return:
+    """
+    if request.user.user_type == UserProfile.CURATOR:
+        return render(
+            request,
+            "main/journals.html"
+        )
+    elif request.user.user_type == UserProfile.ADMIN:
+        return render(
+            request,
+            "main/journals.html"
+        )
+    elif request.user.user_type == UserProfile.OPERATOR:
+        return render(
+            request,
+            "main/journals.html"
         )
     else:
         result = {
@@ -1482,6 +1512,3 @@ def cancel_exam(request, id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     exam.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-

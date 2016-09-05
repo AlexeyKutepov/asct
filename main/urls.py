@@ -62,4 +62,5 @@ urlpatterns = patterns('',
         url(r'^edit/exam/(?P<id>\d+)/$', views.edit_exam, name="edit_exam"),
         url(r'^cancel/exam/(?P<id>\d+)/$', views.cancel_exam, name="cancel_exam"),
         url(r'^users/$', views.users, name="users"),
+        url(r'^journals/$', views.journals, name="journals"),
 )
