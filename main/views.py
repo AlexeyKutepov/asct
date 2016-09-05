@@ -141,6 +141,11 @@ def index(request):
 
 @login_required
 def users(request):
+    """
+    Формирорвание списка пользователей на основе прав доступа
+    :param request:
+    :return:
+    """
     if request.user.user_type == UserProfile.CURATOR:
         user_list = UserProfile.objects.filter(is_active=True).order_by('last_name')
         fire_user_list = UserProfile.objects.filter(is_active=False).order_by('last_name')
@@ -153,13 +158,43 @@ def users(request):
             }
         )
     elif request.user.user_type == UserProfile.ADMIN:
-        return render(request, "main/users.html")
+        user_list = UserProfile.objects.filter(
+            Q(user_type=UserProfile.OPERATOR, company=request.user.company, is_active=True) | Q(
+                user_type=UserProfile.PROBATIONER,
+                company=request.user.company, is_active=True)
+        ).order_by('last_name')
+        fire_user_list = UserProfile.objects.filter(
+            Q(user_type=UserProfile.OPERATOR, company=request.user.company, is_active=False) | Q(
+                user_type=UserProfile.PROBATIONER,
+                company=request.user.company, is_active=False)
+        ).order_by('last_name')
+        return render(
+            request,
+            "main/users.html",
+            {
+                "user_list": user_list,
+                "fire_user_list": fire_user_list
+            }
+        )
     elif request.user.user_type == UserProfile.OPERATOR:
-        return render(request, "main/users.html")
-    elif request.user.user_type == UserProfile.PROBATIONER:
-        return render(request, "main/users.html")
+        probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company,
+                                                      is_active=True).order_by('last_name')
+        fire_user_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company,
+                                                    is_active=False).order_by('last_name')
+        return render(
+            request,
+            "main/users.html",
+            {
+                "probationer_list": probationer_list,
+                "fire_user_list": fire_user_list
+            }
+        )
     else:
-        return render(request, "main/start_page.html")
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+        }
+        return render(request, "alert.html", result)
 
 
 @login_required
