@@ -232,6 +232,41 @@ def journals(request):
 
 
 @login_required
+def companies(request):
+    """
+    Отображение списка компаний и должностей
+    :param request:
+    :return:
+    """
+    if request.user.user_type == UserProfile.CURATOR:
+        company_list = Company.objects.all().order_by('name')
+        position_list = Position.objects.all().order_by('name')
+        return render(
+            request,
+            "main/companies.html",
+            {
+                "company_list": company_list,
+                "position_list": position_list
+            }
+        )
+    elif request.user.user_type == UserProfile.ADMIN:
+        position_list = Position.objects.all().order_by('name')
+        return render(
+            request,
+            "main/companies.html",
+            {
+                "position_list": position_list
+            }
+        )
+    else:
+        result = {
+            "status": "danger",
+            "message": "Доступ запрещён"
+        }
+        return render(request, "alert.html", result)
+
+
+@login_required
 def get_department_list(request):
     if "id" in request.POST:
         company = Company.objects.get(id=request.POST["id"])

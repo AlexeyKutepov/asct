@@ -72,13 +72,17 @@
 {#                                                       aria-hidden="true"></span> Назад</a>#}
 {#                </li>#}
             {% endblock %}
-            <li>
-                <a href="{% url "index" %}"><i class="fa fa-dashboard fa-fw"></i> Рабочий стол</a>
-            </li>
             {% if user.user_type != 'PROBATIONER' %}
+                {% if user.user_type != 'OPERATOR' %}
+                    <li><a href="{% url "companies" %}"><i class="fa fa-industry"></i> Компании</a></li>
+                {% endif %}
                 <li><a href="{% url "journals" %}"><i class="fa fa-tasks"></i> Программы</a></li>
                 <li><a href="{% url "users" %}"><i class="fa fa-users"></i> Пользователи</a></li>
                 <li><a href="{% url "reports" %}"><i class="fa fa-area-chart"></i> Отчёты</a></li>
+            {% else %}
+                <li>
+                    <a href="{% url "index" %}"><i class="fa fa-dashboard fa-fw"></i> Рабочий стол</a>
+                </li>
             {% endif %}
         </ul>
         <ul class="nav navbar-top-links navbar-right">

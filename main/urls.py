@@ -63,4 +63,5 @@ urlpatterns = patterns('',
         url(r'^cancel/exam/(?P<id>\d+)/$', views.cancel_exam, name="cancel_exam"),
         url(r'^users/$', views.users, name="users"),
         url(r'^journals/$', views.journals, name="journals"),
+        url(r'^companies/$', views.companies, name="companies"),
 )
