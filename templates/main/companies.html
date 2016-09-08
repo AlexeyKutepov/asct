@@ -231,23 +231,5 @@
     <script src="/static/js/sort-elements.js"></script>
     <script src="/static/js/search.js"></script>
     <script src="/static/js/sort.js"></script>
-    <script>
-        $(document).ready(function () {
-            $("#aCompanies").click(function (e) {
-                e.preventDefault();
-                $("#liCompanies").addClass("active");
-                $("#liPositions").removeClass("active");
-                $("#divCompanies").show();
-                $("#divPositions").hide();
-            });
-
-            $("#aPositions").click(function (e) {
-                e.preventDefault();
-                $("#liCompanies").removeClass("active");
-                $("#liPositions").addClass("active");
-                $("#divCompanies").hide();
-                $("#divPositions").show();
-            });
-        });
-    </script>
+    <script src="/static/js/switch.js"></script>
 {% endblock %}
