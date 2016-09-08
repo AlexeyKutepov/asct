@@ -1,9 +1,253 @@
 {% extends "base.html" %}
 {% block dashboard %}
+    <form id="formAddCompany" action="{% url "create_new_company" %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div id="modalAddCompany" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalAddCompany">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Создание новой компании</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label>Название компании</label>
+                                    <input type="text" class="form-control" name="company"
+                                           placeholder="Название компании">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                        <button type="submit" name="save" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <form id="formAddPosition" action="{% url "add_position" %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div id="modalAddPosition" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalAddPosition">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Добавление должности</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label>Название должности</label>
+                                    <input type="text" class="form-control" name="name"
+                                           placeholder="Название должности">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                        <button type="submit" name="save" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 
+    <div class="row">
+        <div class="col-lg-12">
+            <h4 class="page-header">Компании и должности</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <ul class="nav nav-tabs">
+                <li id="liCompanies" role="presentation" class="active"><a id="aCompanies" href="#">Компании</a>
+                </li>
+                <li id="liPositions" role="presentation"><a id="aPositions" href="#">Должности</a>
+                </li>
+            </ul>
+            <br>
+        </div>
+    </div>
+    <div id="divCompanies" class="row">
+        <div class="col-lg-6">
+            <div class="input-group custom-search-form">
+                <input id="inputCompanySearch" type="text" class="form-control" placeholder="Поиск...">
+                    <span class="input-group-btn">
+                        <button id="buttonCompanySearch" class="btn btn-default" type="button">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+            </div>
+            <br>
+        </div>
+        <div class="col-lg-6">
+            <input type="button" class="btn btn-success pull-right" data-toggle="modal"
+                   data-target="#modalAddCompany" value="Добавить компанию"/>
+            <br>
+        </div>
+        <div class="col-lg-12">
+            <table id="tableCompanyList" class="table table-hover">
+                <thead>
+                <th id="thCompanyName" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
+                                                                    aria-hidden="true"></span> Название
+                </th>
+                </thead>
+                {% for company in company_list %}
+                    <tr>
+                        <td><a href="{% url "edit_company" company.id %}">{{ company.name }}</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <div id="divPositions" class="row" hidden>
+        <div class="col-lg-6">
+            <div class="input-group custom-search-form">
+                <input id="inputPositionSearch" type="text" class="form-control" placeholder="Поиск...">
+                    <span class="input-group-btn">
+                        <button id="buttonPositionSearch" class="btn btn-default" type="button">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+            </div>
+            <br>
+        </div>
+        <div class="col-lg-6">
+            <input type="button" class="btn btn-success pull-right" data-toggle="modal"
+                   data-target="#modalAddPosition" value="Добавить должность"/>
+            <br>
+        </div>
+        <div class="col-lg-12">
+
+            <table id="tablePositionList" class="table table-hover">
+                <thead>
+                <th id="thPositionName" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
+                                                                     aria-hidden="true"></span> Название
+                </th>
+                </thead>
+                {% for position in position_list %}
+                    <tr>
+                        <td>{{ position.name }}</td>
+                        <td width="110px">
+                            <form id="formDeletePosition{{ forloop.counter }}"
+                                  action="{% url "delete_position" id=position.id %}" method="post">
+                                {% csrf_token %}
+                                <!-- Modal dialog delete -->
+                                <div class="modal fade" id="modalDeletePosition{{ forloop.counter }}"
+                                     tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close"><span
+                                                        aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">Удаление
+                                                    должности</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                Вы действительно хотите удалить должность "{{ position.name }}"?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary"
+                                                        data-dismiss="modal">Нет
+                                                </button>
+                                                <button type="submit" name="delete" class="btn btn-default">Да
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <form id="formEditPosition{{ forloop.counter }}"
+                                  action="{% url "edit_position" id=position.id %}" method="post"
+                                  enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div id="modalEditPosition{{ forloop.counter }}" class="modal fade"
+                                     tabindex="-1" role="dialog" aria-labelledby="modalEditPositionLabel">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close"><span
+                                                        aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="modalEditPositionLabel">
+                                                    Редактирование должности</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group">
+                                                            <label>Название должности</label>
+                                                            <input type="text" class="form-control" name="name"
+                                                                   placeholder="Название должности"
+                                                                   value="{{ position.name }}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default"
+                                                        data-dismiss="modal">Отмена
+                                                </button>
+                                                <button type="submit" name="save" class="btn btn-primary">
+                                                    Сохранить
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <button id="btnEdit{{ forloop.counter }}" type="button" data-toggle="modal"
+                                    data-target="#modalEditPosition{{ forloop.counter }}"
+                                    class="btn btn-primary"
+                                    title="Редактировать должность">
+                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            </button>
+
+                            <button id="buttonDeletePosition{{ forloop.counter }}" type="button"
+                                    data-toggle="modal"
+                                    data-target="#modalDeletePosition{{ forloop.counter }}"
+                                    class="btn btn-danger"
+                                    title="Удалить должность">
+                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
 {% endblock %}
 {% block scripts %}
     <script src="/static/js/sort-elements.js"></script>
     <script src="/static/js/search.js"></script>
     <script src="/static/js/sort.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#aCompanies").click(function (e) {
+                e.preventDefault();
+                $("#liCompanies").addClass("active");
+                $("#liPositions").removeClass("active");
+                $("#divCompanies").show();
+                $("#divPositions").hide();
+            });
+
+            $("#aPositions").click(function (e) {
+                e.preventDefault();
+                $("#liCompanies").removeClass("active");
+                $("#liPositions").addClass("active");
+                $("#divCompanies").hide();
+                $("#divPositions").show();
+            });
+        });
+    </script>
 {% endblock %}

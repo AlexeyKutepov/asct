@@ -51,5 +51,37 @@ $(document).ready(function () {
     $("#buttonJournalSearch").click(journalSearch);
     $("#inputJournalSearch").change(journalSearch).keyup(journalSearch);
 
+    /**
+     * Поиск по таблице компаний
+     */
+    var companySearch = function() {
+        $('#tableCompanyList > tbody > tr').each(function() {
+            if(($(this).find('a').html().toUpperCase()).indexOf($("#inputCompanySearch").val().toUpperCase()) > -1) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    };
+
+    $("#buttonCompanySearch").click(companySearch);
+    $("#inputCompanySearch").change(companySearch).keyup(companySearch);
+
+    /**
+     * Поиск по таблице должностей
+     */
+    var positiontSearch = function() {
+        $('#tablePositionList > tbody > tr').each(function() {
+            if(($(this).find("td:first").html().toUpperCase()).indexOf($("#inputPositionSearch").val().toUpperCase()) > -1) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    };
+
+    $("#buttonPositionSearch").click(positiontSearch);
+    $("#inputPositionSearch").change(positiontSearch).keyup(positiontSearch);
+
 });
 
