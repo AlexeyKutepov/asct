@@ -33,7 +33,7 @@
 
     <div class="row">
         <div class="col-lg-12">
-           <h4 class="page-header"><a href="{% url "index" %}">Рабочий стол</a> > {{ title }}</h4>
+           <h4 class="page-header"><a href="{% url "companies" %}">Компании</a> > {{ title }}</h4>
         </div>
     </div>
     <form action="{% url "delete_company" id=company.id %}" method="post">
