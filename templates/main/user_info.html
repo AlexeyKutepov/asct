@@ -310,7 +310,7 @@
                                 <tr class="success">
                             {% endif %}
                         <td>
-                            <a href="{% url "journal_settings" id=item.theme.journal.id %}">{{ item.theme.journal.name }}</a>
+                            {{ item.theme.journal.name }}
                         </td>
                         <td><a href="{% url "theme_settings" id=item.theme.id %}">{{ item.theme.name }}</a></td>
                         {% if item.status == 'ASSIGNED' %}
