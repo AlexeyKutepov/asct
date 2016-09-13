@@ -43,61 +43,6 @@ def calculate_progress(user):
     return progress
 
 
-def prepare_curator_page(request):
-    user_list = UserProfile.objects.filter(is_active=True).order_by('last_name')
-    fire_user_list = UserProfile.objects.filter(is_active=False).order_by('last_name')
-    company_list = Company.objects.all().order_by('name')
-    position_list = Position.objects.all().order_by('name')
-    return render(
-        request,
-        "main/curator_profile.html",
-        {
-            "user_list": user_list,
-            "company_list": company_list,
-            "position_list": position_list,
-            "fire_user_list": fire_user_list
-        }
-    )
-
-
-def prepare_admin_page(request):
-    user_list = UserProfile.objects.filter(
-        Q(user_type=UserProfile.OPERATOR, company=request.user.company, is_active=True) | Q(
-            user_type=UserProfile.PROBATIONER,
-            company=request.user.company, is_active=True)
-    ).order_by('last_name')
-    fire_user_list = UserProfile.objects.filter(
-        Q(user_type=UserProfile.OPERATOR, company=request.user.company, is_active=False) | Q(
-            user_type=UserProfile.PROBATIONER,
-            company=request.user.company, is_active=False)
-    ).order_by('last_name')
-    position_list = Position.objects.all().order_by('name')
-    return render(
-        request,
-        "main/admin_profile.html",
-        {
-            "user_list": user_list,
-            "position_list": position_list,
-            "fire_user_list": fire_user_list
-        }
-    )
-
-
-def prepare_operator_page(request):
-    probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company,
-                                                  is_active=True).order_by('last_name')
-    fire_user_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company,
-                                                is_active=False).order_by('last_name')
-    return render(
-        request,
-        "main/operator_profile.html",
-        {
-            "probationer_list": probationer_list,
-            "fire_user_list": fire_user_list
-        }
-    )
-
-
 def prepare_probationer_page(request):
     scheduled_theme_list = ScheduledTheme.objects.filter(user=request.user)
     for scheduled_theme in scheduled_theme_list:
@@ -127,16 +72,6 @@ def prepare_probationer_page(request):
 
 @login_required
 def index(request):
-    # if request.user.user_type == UserProfile.CURATOR:
-    #     return prepare_curator_page(request)
-    # elif request.user.user_type == UserProfile.ADMIN:
-    #     return prepare_admin_page(request)
-    # elif request.user.user_type == UserProfile.OPERATOR:
-    #     return prepare_operator_page(request)
-    # elif request.user.user_type == UserProfile.PROBATIONER:
-    #     return prepare_probationer_page(request)
-    # else:
-    #     return render(request, "base.html")
     if request.user.user_type == UserProfile.PROBATIONER:
         return prepare_probationer_page(request)
     else:
@@ -390,7 +325,7 @@ def edit_company(request, id):
     try:
         company = Company.objects.get(id=id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     department_list = Department.objects.filter(company=company).order_by('name')
     return render(
         request,
@@ -416,7 +351,7 @@ def edit_company_save(request):
         try:
             company = Company.objects.get(id=request.POST["companyId"])
         except:
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         company.name = request.POST["company"]
         company.save()
         result = {
@@ -512,7 +447,7 @@ def delete_company(request, id):
     try:
         company = Company.objects.get(id=id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     name = company.name
     user_list = UserProfile.objects.filter(company=company)
     for item in user_list:
@@ -586,7 +521,7 @@ def edit_journal(request, id):
     try:
         journal = Journal.objects.get(id=id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     if "name" in request.POST:
         journal.name = request.POST["name"]
     if "description" in request.POST:
@@ -616,7 +551,7 @@ def clone_journal(request, id):
     try:
         journal = Journal.objects.get(id=id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     if "company" in request.POST:
         try:
             company = Company.objects.get(id=request.POST["company"])
@@ -683,7 +618,7 @@ def journal_settings(request, id):
     try:
         journal = Journal.objects.get(id=id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     theme_list = Theme.objects.filter(journal=journal)
     test_list = Test.objects.filter(journal=journal)
     if request.user.user_type == UserProfile.CURATOR:
@@ -716,7 +651,7 @@ def create_theme(request):
         try:
             journal = Journal.objects.get(id=request.POST["save"])
         except:
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         theme = Theme.objects.create(
             name=request.POST["themeName"],
             description=request.POST["description"],
@@ -725,7 +660,7 @@ def create_theme(request):
         )
         return HttpResponseRedirect(reverse("journal_settings", args=[journal.id, ]))
     else:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
@@ -740,7 +675,7 @@ def delete_theme(request, id):
         theme = Theme.objects.get(id=id)
         journal = Journal.objects.get(id=theme.journal.id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     theme.delete()
     return HttpResponseRedirect(reverse("journal_settings", args=[journal.id, ]))
 
@@ -756,7 +691,7 @@ def theme_settings(request, id):
     try:
         theme = Theme.objects.get(id=id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     if theme:
         examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER), company=theme.journal.company,
                                                    is_active=True)
@@ -799,7 +734,7 @@ def create_sub_theme(request):
         try:
             theme = Theme.objects.get(id=request.POST["save"])
         except:
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         sub_theme = SubTheme.objects.create(
             name=request.POST["subThemeName"],
             description=request.POST["description"],
@@ -808,7 +743,7 @@ def create_sub_theme(request):
         )
         return HttpResponseRedirect(reverse("theme_settings", args=[theme.id, ]))
     else:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
@@ -823,7 +758,7 @@ def delete_sub_theme(request, id):
         sub_theme = SubTheme.objects.get(id=id)
         theme = Theme.objects.get(id=sub_theme.parent_theme.id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     sub_theme.delete()
     return HttpResponseRedirect(reverse("theme_settings", args=[theme.id, ]))
 
@@ -872,7 +807,7 @@ def schedule_theme(request, id):
             theme = Theme.objects.get(id=id)
             user = UserProfile.objects.get(id=request.POST["user"])
         except:
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         scheduled_theme = ScheduledTheme.objects.create(
             date_to=datetime.datetime.strptime(request.POST["dateTo"], "%d.%m.%Y"),
             user=user,
@@ -901,7 +836,7 @@ def schedule_theme(request, id):
             pass
         return HttpResponseRedirect(reverse("theme_settings", args=[theme.id, ]))
     else:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
@@ -917,7 +852,7 @@ def schedule_theme_to_user(request):
             theme = Theme.objects.get(id=request.POST["theme"])
             user = UserProfile.objects.get(id=request.POST["user"])
         except:
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         scheduled_theme = ScheduledTheme.objects.create(
             date_to=datetime.datetime.strptime(request.POST["dateTo"], "%d.%m.%Y"),
             user=user,
@@ -946,7 +881,7 @@ def schedule_theme_to_user(request):
             pass
         return HttpResponseRedirect(reverse("user_info", args=[user.id, ]))
     else:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
@@ -954,7 +889,7 @@ def cancel_theme(request, id):
     try:
         scheduled_theme = ScheduledTheme.objects.get(id=id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     scheduled_theme.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -1273,7 +1208,7 @@ def delete_journal(request, id):
     try:
         journal = Journal.objects.get(id=id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     name = journal.name
     journal.delete()
     result = {
@@ -1288,7 +1223,7 @@ def probationer_theme_settings(request, id):
     try:
         scheduled_theme = ScheduledTheme.objects.get(id=id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     if scheduled_theme.date_to < timezone.now() - timezone.timedelta(
             days=1) and scheduled_theme.status != ScheduledTheme.COMPLETED and scheduled_theme.status != ScheduledTheme.OVERDUE:
         scheduled_theme.status = ScheduledTheme.OVERDUE
@@ -1317,7 +1252,7 @@ def theme_in_work(request, id):
     try:
         scheduled_theme = ScheduledTheme.objects.get(id=id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     scheduled_theme.status = ScheduledTheme.IN_WORK
     scheduled_theme.save()
     return HttpResponseRedirect(reverse("probationer_theme_settings", args=[id, ]))
@@ -1328,7 +1263,7 @@ def theme_completed(request, id):
     try:
         scheduled_theme = ScheduledTheme.objects.get(id=id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     scheduled_sub_theme_list = ScheduledSubTheme.objects.filter(scheduled_theme=scheduled_theme)
     for item in scheduled_sub_theme_list:
         item.status = ScheduledSubTheme.COMPLETED
@@ -1337,7 +1272,6 @@ def theme_completed(request, id):
     scheduled_theme.progress = 100
     scheduled_theme.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    # return HttpResponseRedirect(reverse("probationer_theme_settings", args=[id, ]))
 
 
 @login_required
@@ -1345,7 +1279,7 @@ def stop_learning_theme(request, id):
     try:
         scheduled_theme = ScheduledTheme.objects.get(id=id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     scheduled_sub_theme_list = ScheduledSubTheme.objects.filter(scheduled_theme=scheduled_theme)
     for item in scheduled_sub_theme_list:
         item.status = ScheduledSubTheme.ASSIGNED
@@ -1361,7 +1295,7 @@ def sub_theme_in_work(request, id):
     try:
         scheduled_sub_theme = ScheduledSubTheme.objects.get(id=id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     scheduled_sub_theme.status = ScheduledSubTheme.IN_WORK
     scheduled_sub_theme.save()
     return HttpResponseRedirect(reverse("probationer_theme_settings", args=[scheduled_sub_theme.scheduled_theme.id, ]))
@@ -1372,7 +1306,7 @@ def sub_theme_completed(request, id):
     try:
         scheduled_sub_theme = ScheduledSubTheme.objects.get(id=id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     scheduled_sub_theme.status = ScheduledSubTheme.COMPLETED
     scheduled_sub_theme.save()
 
@@ -1393,7 +1327,7 @@ def stop_learning_sub_theme(request, id):
     try:
         scheduled_sub_theme = ScheduledSubTheme.objects.get(id=id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     scheduled_sub_theme.status = ScheduledSubTheme.ASSIGNED
     scheduled_sub_theme.save()
 
@@ -1415,7 +1349,7 @@ def upload_file_to_sub_theme(request):
         try:
             sub_theme = SubTheme.objects.get(id=request.POST["subThemeId"])
         except:
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         if "file" in request.FILES:
             uploaded_file = request.FILES["file"]
             file = File.objects.create(
@@ -1471,7 +1405,7 @@ def edit_theme(request, id):
         theme = Theme.objects.get(id=id)
         journal = Journal.objects.get(id=theme.journal.id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     if "themeName" in request.POST:
         theme.name = request.POST["themeName"]
     if "description" in request.POST:
@@ -1486,7 +1420,7 @@ def edit_sub_theme(request, id):
         sub_theme = SubTheme.objects.get(id=id)
         theme = Theme.objects.get(id=sub_theme.parent_theme.id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     if "subThemeName" in request.POST:
         sub_theme.name = request.POST["subThemeName"]
     if "description" in request.POST:
@@ -1519,13 +1453,13 @@ def delete_position(request, id):
     try:
         position = Position.objects.get(id=id)
     except:
-        return HttpResponseRedirect(reverse("index"))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     user_list = UserProfile.objects.filter(position=position)
     for user in user_list:
         user.position = None
         user.save()
     position.delete()
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
