@@ -301,7 +301,7 @@ def fire_user(request, id):
         user_data.save()
         result = {
             "status": "success",
-            "message": "<p>Пользователь " + full_name + " уволен</p>"
+            "message": "<p>Пользователь <a href=\"" + request.META.get('HTTP_REFERER') + "\">"  + full_name + "</a>  уволен</p>"
         }
         return render(request, "alert.html", result)
 
@@ -327,6 +327,6 @@ def hire_user(request, id):
         user_data.save()
         result = {
             "status": "success",
-            "message": "<p>Пользователь " + full_name + " принят на работу</p>"
+            "message": "<p>Пользователь <a href=\"" + request.META.get('HTTP_REFERER') + "\">"  + full_name + "</a> принят на работу</p>"
         }
         return render(request, "alert.html", result)
