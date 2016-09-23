@@ -37,13 +37,15 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <a href="{% url "stop_learning_theme" id=scheduled_theme.id %}">
-                <input type="button" class="btn btn-warning pull-right" value="Отменить изучение темы"/>
-            </a>
+    {% if is_probationer %}
+        <div class="row">
+            <div class="col-lg-12">
+                <a href="{% url "stop_learning_theme" id=scheduled_theme.id %}">
+                    <input type="button" class="btn btn-warning pull-right" value="Отменить изучение темы"/>
+                </a>
+            </div>
         </div>
-    </div>
+    {% endif %}
     {% elif scheduled_theme.status == 'OVERDUE' %}
     <div class="row">
         <div class="col-lg-12">
@@ -67,7 +69,7 @@
                 <th>Описание</th>
                 <th>Статус</th>
                 <th>Учебные материалы</th>
-                <th>Действия</th>
+                {% if is_probationer %}<th>Действия</th>{% endif %}
                 </thead>
                 <tbody>
                     {% for item in scheduled_sub_theme_list %}
@@ -89,6 +91,7 @@
                                     <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
                                 </button></a>
                             </td>
+                        {% if is_probationer %}
                             <td>
                                 {% if scheduled_theme.status == 'IN_WORK' %}
                                     {% if item.status == 'ASSIGNED' %}
@@ -135,6 +138,7 @@
                                     </button>
                                 {% endif %}
                             </td>
+                        {% endif %}
                         </tr>
                     {% endfor %}
                 </tbody>

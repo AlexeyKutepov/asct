@@ -1228,19 +1228,28 @@ def probationer_theme_settings(request, id):
             days=1) and scheduled_theme.status != ScheduledTheme.COMPLETED and scheduled_theme.status != ScheduledTheme.OVERDUE:
         scheduled_theme.status = ScheduledTheme.OVERDUE
         scheduled_theme.save()
+    is_probationer = True
     if scheduled_theme.user != request.user:
-        result = {
-            "status": "danger",
-            "message": "Доступ запрещён"
-        }
-        return render(request, "alert.html", result)
-    sub_theme_list = SubTheme.objects.filter(parent_theme=scheduled_theme.theme)
-    scheduled_sub_theme_list = ScheduledSubTheme.objects.filter(sub_theme__in=sub_theme_list, user=request.user,
-                                                                scheduled_theme=scheduled_theme)
+        if request.user.user_type != UserProfile.PROBATIONER:
+            sub_theme_list = SubTheme.objects.filter(parent_theme=scheduled_theme.theme)
+            scheduled_sub_theme_list = ScheduledSubTheme.objects.filter(sub_theme__in=sub_theme_list, user=scheduled_theme.user,
+                                                                        scheduled_theme=scheduled_theme)
+            is_probationer = False
+        else:
+            result = {
+                "status": "danger",
+                "message": "Доступ запрещён"
+            }
+            return render(request, "alert.html", result)
+    else:
+        sub_theme_list = SubTheme.objects.filter(parent_theme=scheduled_theme.theme)
+        scheduled_sub_theme_list = ScheduledSubTheme.objects.filter(sub_theme__in=sub_theme_list, user=request.user,
+                                                                    scheduled_theme=scheduled_theme)
     return render(
         request,
         "main/probationer_theme_settings.html",
         {
+            "is_probationer": is_probationer,
             "scheduled_theme": scheduled_theme,
             "scheduled_sub_theme_list": scheduled_sub_theme_list,
         }

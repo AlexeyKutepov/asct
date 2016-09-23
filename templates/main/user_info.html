@@ -312,7 +312,7 @@
                         <td>
                             {{ item.theme.journal.name }}
                         </td>
-                        <td><a href="{% url "theme_settings" id=item.theme.id %}">{{ item.theme.name }}</a></td>
+                        <td><a href="{% url "probationer_theme_settings" id=item.id %}">{{ item.theme.name }}</a></td>
                         {% if item.status == 'ASSIGNED' %}
                             <td>Назначена</td>
                         {% elif item.status == 'IN_WORK' %}
@@ -488,7 +488,7 @@
                                 <td>
                                     {{ exam.theme.journal.name }}
                                 </td>
-                                <td><a href="{% url "theme_settings" id=exam.theme.id %}">{{ exam.theme.name }}</a></td>
+                                <td>{{ exam.theme.name }}</td>
                                 <td>{{ exam.datetime|date:"d.m.Y H:i" }}</td>
                                 <td>{{ exam.place }}</td>
                                 <td>
