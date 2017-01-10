@@ -50,7 +50,7 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Удаление программы</h4>
+                        <h4 class="modal-title" id="myModalLabel">Удаление учебной программы</h4>
                     </div>
                     <div class="modal-body">
                         Вы действительно хотите удалить программу "{{ journal.name }}"?
@@ -71,14 +71,14 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Редактирование программы</h4>
+                        <h4 class="modal-title" id="myModalLabel">Редактирование учебной программы</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label>Название программы</label>
-                                    <input type="text" class="form-control" name="name" placeholder="Название программы" value="{{ journal.name }}" >
+                                    <label>Название учебной программы</label>
+                                    <input type="text" class="form-control" name="name" placeholder="Название учебной программы" value="{{ journal.name }}" >
                               </div>
                             </div>
                         </div>
@@ -158,14 +158,14 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Дублирование программы</h4>
+                        <h4 class="modal-title" id="myModalLabel">Дублирование учебной программы</h4>
                     </div>
                         <div class="modal-body">
                         {% if user.user_type == "ADMIN" %}
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label><b>Выберите компанию для копии программы</b></label>
+                                    <label><b>Выберите компанию для копии учебной программы</b></label>
                                     <p><select name="company" class="selectpicker">
                                         {% for company in company_list %}
                                             <option value="{{ company.id }}">{{ company.name }}</option>
@@ -230,7 +230,7 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <h4 class="page-header"><a href="{% url "index" %}"></a>Журналы > {{ journal.name }}</h4>
+            <h4 class="page-header"><a href="{% url "index" %}">Учебные программы</a> > {{ journal.name }}</h4>
         </div>
     </div>
     <div class="row">

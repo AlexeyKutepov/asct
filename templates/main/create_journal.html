@@ -5,7 +5,7 @@
 {% block dashboard %}
     <div class="row">
         <div class="col-lg-12">
-            <h3 class="page-header">Создание новой программы</h3>
+            <h3 class="page-header">Создание новой учебной программы</h3>
         </div>
     </div>
     <form id="formCreateJournal" action="{% url "create_journal" %}" method="post" enctype="multipart/form-data">
@@ -13,50 +13,11 @@
         <div class="row">
             <div class="col-lg-11">
                 <div class="form-group">
-                    <label for="inputFirstName">* Название программы</label>
+                    <label for="inputFirstName">* Название учебной программы</label>
                     <input type="text" class="form-control" id="inputName" name="name"
-                           placeholder="Название программы" required>
+                           placeholder="Название учебной программы" required>
                 </div>
             </div>
-            {% if user.user_type == "ADMIN" %}
-            <div class="col-lg-11">
-                <div class="form-group">
-                    <label for="selectCompany"><b>Компания</b></label>
-                    <p><select id="selectCompany" name="company" class="selectpicker">
-                        {% for company in company_list %}
-                            {% if company == user.company %}
-                                <option value="{{ company.id }}" selected>{{ company }}</option>
-                            {% else %}
-                                <option value="{{ company.id }}">{{ company }}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-            {% endif %}
-            {% if department_list %}
-            <div class="col-lg-11">
-                <label for="selectDepartment"><b>Подразделение</b></label>
-                <div class="row">
-                    <div class="col-lg-2">
-                        <div class="form-group">
-                            <p><select id="selectDepartment" name="department" class="selectpicker">
-                                {% for department in department_list %}
-                                    <option value="{{ department.id }}">{{ department }}</option>
-                                {% endfor %}
-                            </select></p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="checkbox">
-                          <label>
-                            <input id="checkboxBindDepartment" type="checkbox" name="bindDepartment" checked> Привязать к подразделению
-                          </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
             <div class="col-lg-11">
                 <div class="form-group">
                     <label for="inputDescription">Описание</label>

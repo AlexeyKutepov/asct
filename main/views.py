@@ -382,42 +382,19 @@ def create_journal(request):
         }
         return render(request, "alert.html", result)
     if "save" in request.POST:
-        if "company" in request.POST:
-            try:
-                company = Company.objects.get(id=request.POST["company"])
-            except:
-                company = request.user.company
-        else:
-            company = request.user.company
-        if "bindDepartment" in request.POST and request.POST["bindDepartment"] == 'on' and "department" in request.POST:
-            department = Department.objects.get(id=request.POST["department"])
-        else:
-            department = None
+        company = Company.objects.get_or_create(id=1)[0]
         journal = Journal.objects.create(
             name=request.POST["name"],
             description=request.POST["description"],
             owner=request.user,
             company=company,
-            department=department
         )
         return HttpResponseRedirect(reverse("journal_settings", args=[journal.id, ]))
     else:
-        if request.user.user_type == UserProfile.ADMIN:
-            company_list = Company.objects.all()
-        else:
-            company_list = []
-        if request.user.company.id:
-            company = Company.objects.get(id=request.user.company.id)
-            department_list = Department.objects.filter(company=company)
-        else:
-            department_list = []
         return render(
             request,
             "main/create_journal.html",
-            {
-                "company_list": company_list,
-                "department_list": department_list
-            }
+            {}
         )
 
 
