@@ -46,9 +46,7 @@
                     <p><b>Подразделение: </b>{{ user_data.department | default:"" }}</p>
 
                     <p><b>Должность: </b>{{ user_data.position | default:"" }}</p>
-                    {% if user_data.user_type == "CURATOR" %}
-                        <p><b>Тип пользователя: </b>Куратор</p>
-                    {% elif user_data.user_type == "ADMIN" %}
+                    {% if user_data.user_type == "ADMIN" %}
                         <p><b>Тип пользователя: </b>Администратор</p>
                     {% elif user_data.user_type == "OPERATOR" %}
                         <p><b>Тип пользователя: </b>Оператор</p>

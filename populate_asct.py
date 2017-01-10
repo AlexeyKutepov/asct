@@ -52,48 +52,6 @@ def populate():
 
     super_user = add_super_user(company1, department1, position6)
     add_user(
-        "curator1",
-        "curator1@mail.ru",
-        "123456",
-        "Бондарь",
-        "Татьяна",
-        "Батьковна",
-        "1990-02-02",
-        UserProfile.FEMALE,
-        UserProfile.CURATOR,
-        company1,
-        department2,
-        position1
-    )
-    add_user(
-        "curator2",
-        "curator2@mail.ru",
-        "123456",
-        "Секисова",
-        "Валерия",
-        "Батьковна",
-        "1990-03-03",
-        UserProfile.FEMALE,
-        UserProfile.CURATOR,
-        company1,
-        department4,
-        position2
-    )
-    add_user(
-        "curator3",
-        "curator3@mail.ru",
-        "123456",
-        "Сидоров",
-        "Виктор",
-        "Павлович",
-        "1990-04-04",
-        UserProfile.MALE,
-        UserProfile.CURATOR,
-        company3,
-        department13,
-        position2
-    )
-    add_user(
         "user1",
         "user1@mail.ru",
         "123456",

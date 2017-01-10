@@ -412,7 +412,7 @@ def reports(request):
             "message": "Доступ запрещён"
         }
         return render(request, "alert.html", result)
-    elif request.user.user_type == UserProfile.CURATOR:
+    elif request.user.user_type == UserProfile.ADMIN:
         probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, is_active=True).order_by("last_name")
         company_list = Company.objects.all().order_by("name")
     else:

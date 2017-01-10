@@ -3,36 +3,36 @@ $(document).ready(function () {
      * Переключение вкладок в окне компаний и должностей
      */
     if (supports_html5_storage) {
-        var tabCompanyPosition = window.localStorage.getItem("tabCompanyPosition");
-        if (tabCompanyPosition == "company") {
-            $("#liCompanies").addClass("active");
+        var tabDepartmentPosition = window.localStorage.getItem("tabDepartmentPosition");
+        if (tabDepartmentPosition == "department") {
+            $("#liDepartments").addClass("active");
             $("#liPositions").removeClass("active");
-            $("#divCompanies").show();
+            $("#divDepartments").show();
             $("#divPositions").hide();
-        } else if (tabCompanyPosition == "position") {
-            $("#liCompanies").removeClass("active");
+        } else if (tabDepartmentPosition == "position") {
+            $("#liDepartments").removeClass("active");
             $("#liPositions").addClass("active");
-            $("#divCompanies").hide();
+            $("#divDepartments").hide();
             $("#divPositions").show();
         }
     }
 
-    $("#aCompanies").click(function (e) {
+    $("#aDepartments").click(function (e) {
         e.preventDefault();
-        $("#liCompanies").addClass("active");
+        $("#liDepartments").addClass("active");
         $("#liPositions").removeClass("active");
-        $("#divCompanies").show();
+        $("#divDepartments").show();
         $("#divPositions").hide();
-        window.localStorage.setItem("tabCompanyPosition", "company")
+        window.localStorage.setItem("tabDepartmentPosition", "department")
     });
 
     $("#aPositions").click(function (e) {
         e.preventDefault();
-        $("#liCompanies").removeClass("active");
+        $("#liDepartments").removeClass("active");
         $("#liPositions").addClass("active");
-        $("#divCompanies").hide();
+        $("#divDepartments").hide();
         $("#divPositions").show();
-        window.localStorage.setItem("tabCompanyPosition", "position")
+        window.localStorage.setItem("tabDepartmentPosition", "position")
     });
 });
 

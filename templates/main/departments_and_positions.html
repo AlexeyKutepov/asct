@@ -1,34 +1,5 @@
 {% extends "base.html" %}
 {% block dashboard %}
-    <form id="formAddCompany" action="{% url "create_new_company" %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div id="modalAddCompany" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalAddCompany">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Создание новой компании</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="form-group">
-                                    <label>Название компании</label>
-                                    <input type="text" class="form-control" name="company"
-                                           placeholder="Название компании">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                        <button type="submit" name="save" class="btn btn-primary">Сохранить</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
     <form id="formAddPosition" action="{% url "add_position" %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div id="modalAddPosition" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalAddPosition">
@@ -58,16 +29,80 @@
             </div>
         </div>
     </form>
+    <form id="formAddDepartment" action="{% url "add_department" %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div id="modalAddDepartment" class="modal fade" tabindex="-1" role="dialog"
+             aria-labelledby="modalAddDepartment">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Добавить новое подразделение</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label>Название подразделения</label>
+                                    <input type="text" class="form-control" name="name"
+                                           placeholder="Название подразделения">
+                                    <input type="hidden" name="companyId" value="{{ company.id }}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                        <button type="submit" name="save" class="btn btn-primary">Сохранить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 
     <div class="row">
         <div class="col-lg-12">
-            <h4 class="page-header">Компании и должности</h4>
+            <h4 class="page-header">Подразделения и должности</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <form id="formCompanySettings" action="{% url "edit_company" %}" method="post"
+                  enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <input type="hidden" name="companyId" value="{{ company.id|default:"" }}"/>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label for="inputCompany">Название компании</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-11">
+                                    <input type="text" class="form-control" id="inputCompany" name="company"
+                                           placeholder="Введите название компании..."
+                                           value="{{ company.name|default:"" }}" required>
+                                </div>
+                                <div class="col-lg-1">
+                                    <button id="btnSubmit" type="submit" class="btn btn-success pull-right" name="save">
+                                        Сохранить
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-12">
             <ul class="nav nav-tabs">
-                <li id="liCompanies" role="presentation" class="active"><a id="aCompanies" href="#">Компании</a>
+                <li id="liDepartments" role="presentation" class="active"><a id="aDepartments"
+                                                                             href="#">Подразделения</a>
                 </li>
                 <li id="liPositions" role="presentation"><a id="aPositions" href="#">Должности</a>
                 </li>
@@ -75,43 +110,81 @@
             <br>
         </div>
     </div>
-    <div id="divCompanies" class="row">
-        <div class="col-lg-6">
-            <div class="input-group custom-search-form">
-                <input id="inputCompanySearch" type="text" class="form-control" placeholder="Поиск...">
-                    <span class="input-group-btn">
-                        <button id="buttonCompanySearch" class="btn btn-default" type="button">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </span>
-            </div>
-            <br>
-        </div>
-        <div class="col-lg-6">
-            <input type="button" class="btn btn-success pull-right" data-toggle="modal"
-                   data-target="#modalAddCompany" value="Добавить компанию"/>
-            <br>
-        </div>
+    <div id="divDepartments" class="row">
         <div class="col-lg-12">
-            <table id="tableCompanyList" class="table table-hover">
-                <thead>
-                <th id="thCompanyName" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
-                                                                    aria-hidden="true"></span> Название
-                </th>
-                </thead>
-                {% for company in company_list %}
-                    <tr>
-                        <td><a href="{% url "edit_company" company.id %}">{{ company.name }}</a></td>
-                    </tr>
-                {% endfor %}
-            </table>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            Подразделения
+                        </div>
+                        <div class="panel-body user-panel">
+                            <table id="tableDepartmentList" class="table table-hover">
+                                {% for department in department_list %}
+                                    <tr>
+                                        <td>
+                                            <a href="{% url "department_settings" id=department.id %}">{{ department }}</a>
+                                        </td>
+                                        <td width="100px">
+                                            <form id="formDeleteDepartment{{ forloop.counter }}"
+                                                  action="{% url "delete_department" id=department.id %}" method="post">
+                                                {% csrf_token %}
+                                                <!-- Modal dialog delete -->
+                                                <div class="modal fade" id="modalDeleteDepartment{{ forloop.counter }}"
+                                                     tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                                     aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                        aria-label="Close"><span
+                                                                        aria-hidden="true">&times;</span></button>
+                                                                <h4 class="modal-title" id="myModalLabel">Удаление
+                                                                    подразделения</h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Вы действительно хотите удалить подразделение
+                                                                "{{ department.name }}"?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-primary"
+                                                                        data-dismiss="modal">Нет
+                                                                </button>
+                                                                <button type="submit" name="delete"
+                                                                        class="btn btn-default">Да
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+                                            <button name="buttonDelete" type="button" class="btn btn-danger pull-right"
+                                                    title="Удалить подразделение" data-toggle="modal"
+                                                    data-target="#modalDeleteDepartment{{ forloop.counter }}">
+                                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-offset-1 col-lg-6">
+                    <input id="buttonAddDepartment" type="button" class="btn btn-primary pull-right"
+                           value="Добавить подразделение" data-toggle="modal" data-target="#modalAddDepartment"/>
+                </div>
+            </div>
         </div>
     </div>
     <div id="divPositions" class="row" hidden>
         <div class="col-lg-6">
             <div class="input-group custom-search-form">
                 <input id="inputPositionSearch" type="text" class="form-control" placeholder="Поиск...">
-                    <span class="input-group-btn">
+                <span class="input-group-btn">
                         <button id="buttonPositionSearch" class="btn btn-default" type="button">
                             <i class="fa fa-search"></i>
                         </button>

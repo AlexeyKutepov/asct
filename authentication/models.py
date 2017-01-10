@@ -16,12 +16,10 @@ class UserProfile(AbstractUser):
         (FEMALE, 'FEMALE'),
     )
 
-    CURATOR = 'CURATOR'
     ADMIN = 'ADMIN'
     OPERATOR = 'OPERATOR'
     PROBATIONER = 'PROBATIONER'
     USER_TYPE = (
-        (CURATOR, 'CURATOR'),
         (ADMIN, 'ADMIN'),
         (OPERATOR, 'OPERATOR'),
         (PROBATIONER, 'PROBATIONER'),
@@ -43,7 +41,7 @@ class UserProfile(AbstractUser):
     # The user's registration date
     registration_date = models.DateTimeField(default=timezone.now)
     # user type
-    user_type = models.CharField(max_length=11, choices=USER_TYPE, default=CURATOR)
+    user_type = models.CharField(max_length=11, choices=USER_TYPE, default=ADMIN)
 
     objects = UserManager()
 

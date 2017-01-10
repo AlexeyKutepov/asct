@@ -16,7 +16,7 @@ from exam.models import Test, TestJournal
 
 
 def test_page(request):
-    return render(request, "main/start_page.html")
+    return journals(request)
 
 
 def calculate_progress(user):
@@ -75,7 +75,7 @@ def index(request):
     if request.user.user_type == UserProfile.PROBATIONER:
         return prepare_probationer_page(request)
     else:
-        return render(request, "main/start_page.html")
+        return journals(request)
 
 
 @login_required
@@ -85,28 +85,9 @@ def users(request):
     :param request:
     :return:
     """
-    if request.user.user_type == UserProfile.CURATOR:
+    if request.user.user_type == UserProfile.ADMIN:
         user_list = UserProfile.objects.filter(is_active=True).order_by('last_name')
         fire_user_list = UserProfile.objects.filter(is_active=False).order_by('last_name')
-        return render(
-            request,
-            "main/users.html",
-            {
-                "user_list": user_list,
-                "fire_user_list": fire_user_list
-            }
-        )
-    elif request.user.user_type == UserProfile.ADMIN:
-        user_list = UserProfile.objects.filter(
-            Q(user_type=UserProfile.OPERATOR, company=request.user.company, is_active=True) | Q(
-                user_type=UserProfile.PROBATIONER,
-                company=request.user.company, is_active=True)
-        ).order_by('last_name')
-        fire_user_list = UserProfile.objects.filter(
-            Q(user_type=UserProfile.OPERATOR, company=request.user.company, is_active=False) | Q(
-                user_type=UserProfile.PROBATIONER,
-                company=request.user.company, is_active=False)
-        ).order_by('last_name')
         return render(
             request,
             "main/users.html",
@@ -143,17 +124,7 @@ def journals(request):
     :param request:
     :return:
     """
-    if request.user.user_type == UserProfile.CURATOR:
-        return render(
-            request,
-            "main/journals.html"
-        )
-    elif request.user.user_type == UserProfile.ADMIN:
-        return render(
-            request,
-            "main/journals.html"
-        )
-    elif request.user.user_type == UserProfile.OPERATOR:
+    if request.user.user_type != UserProfile.PROBATIONER:
         return render(
             request,
             "main/journals.html"
@@ -167,29 +138,22 @@ def journals(request):
 
 
 @login_required
-def companies(request):
+def departments_and_positions(request):
     """
     Отображение списка компаний и должностей
     :param request:
     :return:
     """
-    if request.user.user_type == UserProfile.CURATOR:
-        company_list = Company.objects.all().order_by('name')
+    if request.user.user_type == UserProfile.ADMIN:
+        company = Company.objects.get_or_create(id=1)[0]
+        department_list = Department.objects.filter(company=company)
         position_list = Position.objects.all().order_by('name')
         return render(
             request,
-            "main/companies.html",
+            "main/departments_and_positions.html",
             {
-                "company_list": company_list,
-                "position_list": position_list
-            }
-        )
-    elif request.user.user_type == UserProfile.ADMIN:
-        position_list = Position.objects.all().order_by('name')
-        return render(
-            request,
-            "main/companies.html",
-            {
+                "company": company,
+                "department_list": department_list,
                 "position_list": position_list
             }
         )
@@ -266,7 +230,7 @@ def get_journal_list(request):
                 Q(company=user.company) & (Q(department=user.department) | Q(department=None)))
         else:
             journal_list = []
-    elif request.user.user_type == UserProfile.CURATOR:
+    elif request.user.user_type == UserProfile.ADMIN:
         journal_list = Journal.objects.all()
     elif request.user.user_type != UserProfile.PROBATIONER:
         journal_list = Journal.objects.filter(company=request.user.company)
@@ -285,7 +249,7 @@ def get_journal_list(request):
 
 @login_required
 def create_new_company(request):
-    if request.user.user_type == UserProfile.CURATOR:
+    if request.user.user_type == UserProfile.ADMIN:
         if "company" in request.POST:
             company_list = Company.objects.filter(name=request.POST["company"])
             if company_list:
@@ -313,34 +277,8 @@ def create_new_company(request):
         }
         return render(request, "alert.html", result)
 
-
 @login_required
-def edit_company(request, id):
-    if request.user.user_type == UserProfile.PROBATIONER:
-        result = {
-            "status": "danger",
-            "message": "Доступ запрещён"
-        }
-        return render(request, "alert.html", result)
-    try:
-        company = Company.objects.get(id=id)
-    except:
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    department_list = Department.objects.filter(company=company).order_by('name')
-    return render(
-        request,
-        "main/company_settings.html",
-        {
-            "isCreate": False,
-            "title": "Редактирование компании",
-            "company": company,
-            "department_list": department_list
-        }
-    )
-
-
-@login_required
-def edit_company_save(request):
+def edit_company(request):
     if request.user.user_type == UserProfile.PROBATIONER:
         result = {
             "status": "danger",
@@ -385,7 +323,7 @@ def add_department(request):
             }
             return render(request, "alert.html", result)
 
-    return HttpResponseRedirect(reverse("edit_company", args=[company.id, ]))
+    return HttpResponseRedirect(reverse("departments_and_positions"))
 
 
 @login_required
@@ -433,34 +371,7 @@ def delete_department(request, id):
         item.save()
     department.delete()
 
-    return HttpResponseRedirect(reverse("edit_company", args=[company.id, ]))
-
-
-@login_required
-def delete_company(request, id):
-    if request.user.user_type == UserProfile.PROBATIONER:
-        result = {
-            "status": "danger",
-            "message": "Доступ запрещён"
-        }
-        return render(request, "alert.html", result)
-    try:
-        company = Company.objects.get(id=id)
-    except:
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    name = company.name
-    user_list = UserProfile.objects.filter(company=company)
-    for item in user_list:
-        item.company = None
-        item.department = None
-        item.save()
-    company.delete()
-    result = {
-        "status": "success",
-        "message": "Компания \"" + name + "\" удалена!"
-    }
-    return render(request, "alert.html", result)
-
+    return HttpResponseRedirect(reverse("departments_and_positions"))
 
 @login_required
 def create_journal(request):
@@ -491,7 +402,7 @@ def create_journal(request):
         )
         return HttpResponseRedirect(reverse("journal_settings", args=[journal.id, ]))
     else:
-        if request.user.user_type == UserProfile.CURATOR:
+        if request.user.user_type == UserProfile.ADMIN:
             company_list = Company.objects.all()
         else:
             company_list = []
@@ -621,7 +532,7 @@ def journal_settings(request, id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     theme_list = Theme.objects.filter(journal=journal)
     test_list = Test.objects.filter(journal=journal)
-    if request.user.user_type == UserProfile.CURATOR:
+    if request.user.user_type == UserProfile.ADMIN:
         company_list = Company.objects.all()
     else:
         company_list = []
@@ -698,7 +609,7 @@ def theme_settings(request, id):
     else:
         examiner_list = UserProfile.objects.filter(~Q(user_type=UserProfile.PROBATIONER), is_active=True)
     sub_theme_list = SubTheme.objects.filter(parent_theme=theme)
-    if request.user.user_type == UserProfile.CURATOR:
+    if request.user.user_type == UserProfile.ADMIN:
         scheduled_theme_list = ScheduledTheme.objects.filter(theme=theme)
     else:
         user_list = UserProfile.objects.filter(company=request.user.company, is_active=True)

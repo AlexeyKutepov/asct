@@ -59,9 +59,7 @@
                             <td><a href="{% url "user_info" id=item.id %}">{{ item.get_full_name }}</a></td>
                             <td>{{ item.position }}</td>
                             <td>{{ item.company }}</td>
-                            {% if item.user_type == "CURATOR" %}
-                                <td><input name="tdcurator" hidden>Куратор</td>
-                            {% elif item.user_type == "ADMIN" %}
+                            {% if item.user_type == "ADMIN" %}
                                 <td><input name="tdadmin" hidden>Администратор</td>
                             {% elif item.user_type == "OPERATOR" %}
                                 <td><input name="tdoperator" hidden>Оператор</td>
@@ -110,9 +108,7 @@
                             <td><a href="{% url "user_info" id=item.id %}">{{ item.get_full_name }}</a></td>
                             <td>{{ item.position }}</td>
                             <td>{{ item.company }}</td>
-                            {% if item.user_type == "CURATOR" %}
-                                <td><input name="tdcurator" hidden>Куратор</td>
-                            {% elif item.user_type == "ADMIN" %}
+                            {% if item.user_type == "ADMIN" %}
                                 <td><input name="tdadmin" hidden>Администратор</td>
                             {% elif item.user_type == "OPERATOR" %}
                                 <td><input name="tdoperator" hidden>Оператор</td>

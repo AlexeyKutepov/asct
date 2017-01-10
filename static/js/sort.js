@@ -65,7 +65,7 @@ $(document).ready(function () {
      */
     var tableJournalList = $("#tableJournalList");
 
-    $('#thJournalName, #thJournalCompany')
+    $('#thJournalName')
         .wrapInner('<span title="sort this column"/>')
         .each(function(){
         var th = $(this),

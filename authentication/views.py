@@ -188,7 +188,7 @@ def create_new_user(request):
         }
         return render(request, "alert.html", result)
     else:
-        if request.user.user_type == UserProfile.CURATOR:
+        if request.user.user_type == UserProfile.ADMIN:
             company_list = Company.objects.all()
         else:
             company_list = [
@@ -217,7 +217,7 @@ def create_new_user(request):
 
 @login_required
 def give_new_password(request, id):
-    if request.user.user_type != UserProfile.ADMIN and request.user.user_type != UserProfile.CURATOR:
+    if request.user.user_type != UserProfile.ADMIN:
         result = {
             "status": "danger",
             "message": "Доступ запрещён"

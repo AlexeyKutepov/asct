@@ -220,27 +220,13 @@
             </div>
         </div>
     {% endif %}
-    {% if user.user_type == "CURATOR" %}
-        {% if user_data.user_type == "CURATOR" %}
+    {% if user.user_type == "ADMIN" %}
+        {% if user_data.user_type == "ADMIN" %}
             <div class="row">
                 <div class="form-group">
                     <label for="selectUserType"><b>Тип пользователя:</b></label>
 
                     <p><select id="selectUserType" name="userType" class="selectpicker">
-                        <option value="CURATOR" selected>Куратор</option>
-                        <option value="ADMIN">Администратор</option>
-                        <option value="OPERATOR">Оператор</option>
-                        <option value="PROBATIONER">Испытуемый</option>
-                    </select></p>
-                </div>
-            </div>
-        {% elif user_data.user_type == "ADMIN" %}
-            <div class="row">
-                <div class="form-group">
-                    <label for="selectUserType"><b>Тип пользователя:</b></label>
-
-                    <p><select id="selectUserType" name="userType" class="selectpicker">
-                        <option value="CURATOR">Куратор</option>
                         <option value="ADMIN" selected>Администратор</option>
                         <option value="OPERATOR">Оператор</option>
                         <option value="PROBATIONER">Испытуемый</option>
@@ -253,7 +239,6 @@
                     <label for="selectUserType"><b>Тип пользователя:</b></label>
 
                     <p><select id="selectUserType" name="userType" class="selectpicker">
-                        <option value="CURATOR">Куратор</option>
                         <option value="ADMIN">Администратор</option>
                         <option value="OPERATOR" selected>Оператор</option>
                         <option value="PROBATIONER">Испытуемый</option>
@@ -266,7 +251,6 @@
                     <label for="selectUserType"><b>Тип пользователя:</b></label>
 
                     <p><select id="selectUserType" name="userType" class="selectpicker">
-                        <option value="CURATOR">Куратор</option>
                         <option value="ADMIN">Администратор</option>
                         <option value="OPERATOR">Оператор</option>
                         <option value="PROBATIONER" selected>Испытуемый</option>
@@ -274,31 +258,6 @@
                 </div>
             </div>
         {% endif %}
-    {% elif user.user_type == "ADMIN" and user != user_data %}
-        {% if user_data.user_type == "OPERATOR" %}
-            <div class="row">
-                <div class="form-group">
-                    <label for="selectUserType"><b>Тип пользователя:</b></label>
-
-                    <p><select id="selectUserType" name="userType" class="selectpicker">
-                        <option value="OPERATOR" selected>Оператор</option>
-                        <option value="PROBATIONER">Испытуемый</option>
-                    </select></p>
-                </div>
-            </div>
-        {% else %}
-            <div class="row">
-                <div class="form-group">
-                    <label for="selectUserType"><b>Тип пользователя:</b></label>
-
-                    <p><select id="selectUserType" name="userType" class="selectpicker">
-                        <option value="OPERATOR">Оператор</option>
-                        <option value="PROBATIONER" selected>Испытуемый</option>
-                    </select></p>
-                </div>
-            </div>
-        {% endif %}
-    {% endif %}
     <div class="row">
         <div class="form-group">
             <label for="selectCompany"><b>Компания</b></label>

@@ -93,7 +93,6 @@ $(document).ready(function () {
 
     $("#aShowAllUsers").click(function() {
         $(this).html("<i class=\"fa fa-check\"></i> Все пользователи");
-        $("#aShowCurators").text("Кураторы");
         $("#aShowAdmins").text("Администраторы");
         $("#aShowOperators").text("Операторы");
         $("#aShowProbationers").text("Испытуемые");
@@ -103,25 +102,9 @@ $(document).ready(function () {
         return false;
     });
 
-    $("#aShowCurators").click(function() {
-        $("#aShowAllUsers").text("Все пользователи");
-        $(this).html("<i class=\"fa fa-check\"></i> Кураторы");
-        $("#aShowAdmins").text("Администраторы");
-        $("#aShowOperators").text("Операторы");
-        $("#aShowProbationers").text("Испытуемые");
-        $('#tableUserList > tbody > tr').each(function() {
-            if($(this).find('input').attr("name") != "tdcurator") {
-                $(this).hide();
-            } else {
-                $(this).show();
-            }
-        });
-        return false;
-    });
 
     $("#aShowAdmins").click(function() {
         $("#aShowAllUsers").text("Все пользователи");
-        $("#aShowCurators").text("Кураторы");
         $(this).html("<i class=\"fa fa-check\"></i> Администраторы");
         $("#aShowOperators").text("Операторы");
         $("#aShowProbationers").text("Испытуемые");
@@ -137,7 +120,6 @@ $(document).ready(function () {
 
     $("#aShowOperators").click(function() {
         $("#aShowAllUsers").text("Все пользователи");
-        $("#aShowCurators").text("Кураторы");
         $("#aShowAdmins").text("Администраторы");
         $(this).html("<i class=\"fa fa-check\"></i> Операторы");
         $("#aShowProbationers").text("Испытуемые");
@@ -153,7 +135,6 @@ $(document).ready(function () {
 
     $("#aShowProbationers").click(function() {
         $("#aShowAllUsers").text("Все пользователи");
-        $("#aShowCurators").text("Кураторы");
         $("#aShowAdmins").text("Администраторы");
         $("#aShowOperators").text("Операторы");
         $(this).html("<i class=\"fa fa-check\"></i> Испытуемые");

@@ -58,25 +58,18 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{% url "index" %}"><b>Premier E-ducation Hub
-                {% if user.company %}
-                    ({{ user.company }})
-                {% endif %}
+            <a class="navbar-brand" href="{% url "index" %}"><b>E-ducation Hub
             </b></a>
         </div>
         <!-- /.navbar-header -->
         <ul class="nav navbar-top-links navbar-left">
             {% block backbutton %}
-{#                <li>#}
-{#                    <a style="cursor: pointer" onclick="history.go(-1);"><span class="glyphicon glyphicon-triangle-left"#}
-{#                                                       aria-hidden="true"></span> Назад</a>#}
-{#                </li>#}
             {% endblock %}
             {% if user.user_type != 'PROBATIONER' %}
+                <li><a href="{% url "index" %}"><i class="fa fa-tasks"></i> Журналы</a></li>
                 {% if user.user_type != 'OPERATOR' %}
-                    <li><a href="{% url "companies" %}"><i class="fa fa-industry"></i> Компании</a></li>
+                    <li><a href="{% url "departments_and_positions" %}"><i class="fa fa-industry"></i> Подразделения и должности</a></li>
                 {% endif %}
-                <li><a href="{% url "journals" %}"><i class="fa fa-tasks"></i> Программы</a></li>
                 <li><a href="{% url "users" %}"><i class="fa fa-users"></i> Пользователи</a></li>
                 <li><a href="{% url "reports" %}"><i class="fa fa-area-chart"></i> Отчёты</a></li>
             {% else %}
@@ -98,8 +91,7 @@
                 {% endif %}
             </li>
             <li>{{ user.get_full_name }}
-                {% if user.user_type == 'CURATOR' %}(Куратор)
-                {% elif user.user_type == 'ADMIN' %}(Администратор)
+                {% if user.user_type == 'ADMIN' %}(Администратор)
                 {% elif user.user_type == 'OPERATOR' %}(Оператор)
                 {% elif user.user_type == 'PROBATIONER' %}(Испытуемый)
                 {% endif %}
@@ -110,7 +102,7 @@
                     <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-user">
-                    {% if user.user_type == "CURATOR" %}
+                    {% if user.user_type == "ADMIN" %}
                         <li><a href="{% url "user_settings" id=user.id %}"><i class="fa fa-user fa-fw"></i> Профиль</a>
                         <li class="divider"></li>
                     {% endif %}

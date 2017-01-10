@@ -82,7 +82,7 @@
                               </div>
                             </div>
                         </div>
-                        {% if user.user_type == "CURATOR" %}
+                        {% if user.user_type == "ADMIN" %}
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
@@ -149,7 +149,7 @@
         </div>
     </form>
 
-    {% if user.user_type == "CURATOR" %}
+    {% if user.user_type == "ADMIN" %}
     <form id="formCloneJournal" action="{% url "clone_journal" id=journal.id %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
         <div id="modalCloneJournal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalCloneJournal">
@@ -161,7 +161,7 @@
                         <h4 class="modal-title" id="myModalLabel">Дублирование программы</h4>
                     </div>
                         <div class="modal-body">
-                        {% if user.user_type == "CURATOR" %}
+                        {% if user.user_type == "ADMIN" %}
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
@@ -230,14 +230,14 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <h4 class="page-header"><a href="{% url "journals" %}">Программы</a> > {{ journal.name }}</h4>
+            <h4 class="page-header"><a href="{% url "index" %}"></a>Журналы > {{ journal.name }}</h4>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-12">
             <div class="pull-right">
                 <input id="buttonEditJournal" type="button" class="btn btn-primary" value="Редактировать программу" data-toggle="modal" data-target="#modalEditJournal"/>
-                {% if user.user_type == "CURATOR" %}
+                {% if user.user_type == "ADMIN" %}
                 <input id="buttonCloneJournal" type="button" class="btn btn-primary" value="Дублировать программу" data-toggle="modal" data-target="#modalCloneJournal"/>
                 {% endif %}
                 <input id="buttonDeleteJournal" type="button" class="btn btn-danger" value="Удалить программу" data-toggle="modal" data-target="#modalDeleteJournal"/>
