@@ -79,21 +79,17 @@ $(document).ready(function () {
             ;
             var journalList = data["journal_list"];
             for (var i = 0; i < journalList.length; i++) {
-                var companyName = "";
-                if (journalList[i]["company"]) {
-                    companyName = " (" + journalList[i]["company"] + ")";
-                }
                 $('#selectJournal').append($("<option/>", {
                     value: journalList[i]["id"],
-                    text: journalList[i]["name"] + companyName
+                    text: journalList[i]["name"]
                 })).selectpicker('refresh');
                 $('#selectExamJournal').append($("<option/>", {
                     value: journalList[i]["id"],
-                    text: journalList[i]["name"] + companyName
+                    text: journalList[i]["name"]
                 })).selectpicker('refresh');
                 $('#selectJournalTest').append($("<option/>", {
                     value: journalList[i]["id"],
-                    text: journalList[i]["name"] + companyName
+                    text: journalList[i]["name"]
                 })).selectpicker('refresh');
             }
             $("#selectJournal").trigger( "change" );

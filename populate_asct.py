@@ -16,68 +16,52 @@ def populate():
     Populates the database.
     :return:
     """
-    company1 = add_company("Premier Hotels and Resorts")
-    company2 = add_company("Гостиница \"Премьер Палас\"")
-    company3 = add_company("Гостиница \"Русь\"")
+    company = add_company("Company")
 
-    department1 = add_department(company1, "Администрация")
-    department2 = add_department(company1, "Отдел управления персоналом")
-    department3 = add_department(company1, "Отдел стандартизации и качества")
-    department4 = add_department(company1, "Центральный отдел продаж")
+    department1 = add_department(company, "Администрация")
+    department2 = add_department(company, "Бухгалтерия")
+    department3 = add_department(company, "Отдел разработки")
+    department4 = add_department(company, "Отдел закупки")
+    department5 = add_department(company, "Отдел продаж")
+    department6 = add_department(company, "ИТ")
 
-    department5 = add_department(company2, "Отдел бронирования")
-    department6 = add_department(company2, "Отдел продаж")
-    department7 = add_department(company2, "Служба приема и размещения")
-    department8 = add_department(company2, "Служба гостиничного хозяйства")
-    department9 = add_department(company2, "Отдел мероприятий")
-    department10 = add_department(company2, "Ресторан")
-    department11 = add_department(company2, "Служба безопасности")
-    department12 = add_department(company2, "Отдел управления персоналом")
-
-    department13 = add_department(company3, "Отдел бронирования")
-    department14 = add_department(company3, "Отдел продаж")
-    department15 = add_department(company3, "Служба приема и размещения")
-    department16 = add_department(company3, "Служба гостиничного хозяйства")
-    department17 = add_department(company3, "Отдел мероприятий")
-    department18 = add_department(company3, "Ресторан")
-    department19 = add_department(company3, "Служба безопасности")
-    department20 = add_department(company3, "Отдел управления персоналом")
-
-    position1 = add_position("Специалист по обучению")
+    position1 = add_position("Директор")
     position2 = add_position("Начальник отдела")
     position3 = add_position("Заместитель начальника отедла")
-    position4 = add_position("Начальник отдела стандартизации и качества")
-    position5 = add_position("Менеджер")
+    position4 = add_position("Менеджер")
+    position5 = add_position("Администратор")
     position6 = add_position("Разработчик")
+    position7 = add_position("Рабочий")
 
-    super_user = add_super_user(company1, department1, position6)
+
+    super_user = add_super_user(company, department6, position5)
     add_user(
         "user1",
         "user1@mail.ru",
         "123456",
-        "Худык",
-        "Леся",
-        "Батьковна",
+        "Иванов",
+        "Иван",
+        "Иванович",
         "1990-02-02",
-        UserProfile.FEMALE,
-        UserProfile.ADMIN,
-        company2,
-        department12,
-        position1
+        UserProfile.MALE,
+        UserProfile.OPERATOR,
+        company,
+        department5,
+        position4
     )
     add_user(
         "user2",
         "user2@mail.ru",
         "123456",
-        "Нечеса",
-        "Ольга",
-        "Батьковна",
+        "Петров",
+        "Пётр",
+        "Петрович",
         "1990-03-03",
-        UserProfile.FEMALE,
-        UserProfile.ADMIN,
-        company3,
-        department13,
-        position1
+        UserProfile.MALE,
+        UserProfile.OPERATOR,
+        company,
+        department5,
+        position2
     )
     add_user(
         "user3",
@@ -88,101 +72,60 @@ def populate():
         "Сидорович",
         "1990-04-04",
         UserProfile.MALE,
-        UserProfile.ADMIN,
-        company3,
-        department14,
-        position1
+        UserProfile.OPERATOR,
+        company,
+        department4,
+        position3
     )
     add_user(
         "user4",
         "user4@mail.ru",
         "123456",
-        "Метельский",
-        "Алексей",
-        "Анатольевич",
+        "Александров",
+        "Александр",
+        "Александрович",
         "1990-05-05",
         UserProfile.MALE,
-        UserProfile.OPERATOR,
-        company2,
-        department6,
-        position2
+        UserProfile.PROBATIONER,
+        company,
+        department2,
+        position4
     )
     add_user(
         "user5",
         "user5@mail.ru",
         "123456",
-        "Бородина",
-        "Марина",
-        "Викторовна",
+        "Викторов",
+        "Виктор",
+        "Викторович",
         "1990-06-06",
-        UserProfile.FEMALE,
-        UserProfile.OPERATOR,
-        company3,
-        department15,
+        UserProfile.MALE,
+        UserProfile.PROBATIONER,
+        company,
+        department2,
         position2
     )
     add_user(
         "user6",
         "user6@mail.ru",
         "123456",
-        "Авдеенко",
-        "Алексей",
-        "Батькович",
+        "Сергеев",
+        "Сергей",
+        "Сергеевич",
         "1990-07-07",
         UserProfile.MALE,
-        UserProfile.OPERATOR,
-        company2,
-        department7,
-        position3
-    )
-    add_user(
-        "user7",
-        "user7@mail.ru",
-        "123456",
-        "Аркадьев",
-        "Аркадий",
-        "Аркадьевич",
-        "1990-08-08",
-        UserProfile.MALE,
         UserProfile.PROBATIONER,
-        company1,
-        department2,
-        position5
+        company,
+        department3,
+        position6
     )
-    add_user(
-        "user8",
-        "user8@mail.ru",
-        "123456",
-        "Григорьев",
-        "Григорий",
-        "Григорьевич",
-        "1990-09-09",
-        UserProfile.MALE,
-        UserProfile.PROBATIONER,
-        company2,
-        department4,
-        position5
-    )
-    add_user(
-        "user9",
-        "user9@mail.ru",
-        "123456",
-        "Никифоров",
-        "Никифор",
-        "Никифорович",
-        "1990-10-10",
-        UserProfile.MALE,
-        UserProfile.PROBATIONER,
-        company3,
-        department6,
-        position5
-    )
+
 
     journal1 = add_journal(
         "Производственное обучение",
         "",
         super_user,
-        company1
+        company
     )
 
     theme1 = add_theme(
@@ -241,78 +184,10 @@ def populate():
         theme2
     )
     sub_theme8 = add_sub_theme(
-        "Сюзерены и вассалы",
-        "",
-        super_user,
-        theme2
-    )
-    sub_theme9 = add_sub_theme(
         "Делопроизводство и документооборот",
         "",
         super_user,
         theme2
-    )
-
-    theme3 = add_theme(
-        "Услуги и виды обслуживания в оделе",
-        "",
-        super_user,
-        journal1
-    )
-    sub_theme10 = add_sub_theme(
-        "Что полезное мы делаем для общества, и за что нам платят деньги",
-        "",
-        super_user,
-        theme3
-    )
-    sub_theme11 = add_sub_theme(
-        "Наши конференц-возможности",
-        "",
-        super_user,
-        theme3
-    )
-    sub_theme12 = add_sub_theme(
-        "Деловые мероприятия",
-        "",
-        super_user,
-        theme3
-    )
-    sub_theme13 = add_sub_theme(
-        "Торжественные мероприятия",
-        "",
-        super_user,
-        theme3
-    )
-
-    theme4 = add_theme(
-        "Стандартыне процедуры обслуживания",
-        "",
-        super_user,
-        journal1
-    )
-    sub_theme14 = add_sub_theme(
-        "Жизненный цикл мероприятия",
-        "",
-        super_user,
-        theme4
-    )
-    sub_theme15 = add_sub_theme(
-        "Помоги закачику купить",
-        "",
-        super_user,
-        theme4
-    )
-    sub_theme16 = add_sub_theme(
-        "Организуй меропритие",
-        "",
-        super_user,
-        theme4
-    )
-    sub_theme17 = add_sub_theme(
-        "Проведи мероприятие",
-        "",
-        super_user,
-        theme4
     )
 
 
@@ -376,7 +251,7 @@ def add_super_user(company, department, position):
             last_name="Кутепов",
             middle_name="Леонидович",
             gender=UserProfile.MALE,
-            user_type=UserProfile.CURATOR,
+            user_type=UserProfile.ADMIN,
             company=company,
             department=department,
             position=position
