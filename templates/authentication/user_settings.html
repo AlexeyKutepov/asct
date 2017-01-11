@@ -258,21 +258,7 @@
                 </div>
             </div>
         {% endif %}
-    <div class="row">
-        <div class="form-group">
-            <label for="selectCompany"><b>Компания</b></label>
-
-            <p><select id="selectCompany" name="company" class="selectpicker">
-                {% for company in company_list %}
-                    {% if company == user_data.company %}
-                        <option value="{{ company.id }}" selected>{{ company }}</option>
-                    {% else %}
-                        <option value="{{ company.id }}">{{ company }}</option>
-                    {% endif %}
-                {% endfor %}
-            </select></p>
-        </div>
-    </div>
+    {% endif %}
     <div class="row">
         <div class="form-group">
             <label for="selectDepartment"><b>Подразделение</b></label>

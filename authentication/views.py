@@ -49,20 +49,8 @@ def user_settings(request, id):
             "message": "Пользователь не найден"
         }
         return render(request, "alert.html", result)
-    company_list = Company.objects.all()
-    if user_data.company:
-        department_list = Department.objects.filter(company=user_data.company)
-    else:
-        department_list = []
-    if len(department_list) > 0:
-        position_list = department_list[0].position.all()
-    else:
-        position_list = []
-    result = {
-        "user_data": user_data,
-        "company_list": company_list,
-        "department_list": department_list
-    }
+    department_list = Department.objects.all()
+    position_list = Position.objects.all()
     if "save" in request.POST:
         if "photo" in request.FILES:
             photo = request.FILES["photo"]
@@ -77,9 +65,7 @@ def user_settings(request, id):
         user_data.middle_name = request.POST["middleName"]
         user_data.date_of_birth = datetime.datetime.strptime(request.POST["dateOfBirth"], "%d.%m.%Y")
         user_data.gender = request.POST["gender"]
-        if "company" in request.POST:
-            company = Company.objects.get(id=request.POST["company"])
-            user_data.company = company
+        user_data.company = Company.objects.get_or_create(id=1)[0]
         if "department" in request.POST:
             department = Department.objects.get(id=request.POST["department"])
             user_data.department = department
@@ -107,7 +93,6 @@ def user_settings(request, id):
             "authentication/user_settings.html",
             {
                 "user_data": user_data,
-                "company_list": company_list,
                 "department_list": department_list,
                 "position_list": position_list,
                 "isCreate": False
@@ -144,10 +129,6 @@ def create_new_user(request):
             user_type = request.POST["userType"]
         else:
             user_type = UserProfile.PROBATIONER
-        if "company" in request.POST:
-            company = Company.objects.get(id=request.POST["company"])
-        else:
-            company = None
         if "department" in request.POST:
             department = Department.objects.get(id=request.POST["department"])
         else:
@@ -165,7 +146,7 @@ def create_new_user(request):
             first_name=request.POST["firstName"],
             middle_name=request.POST["middleName"],
             gender=request.POST["gender"],
-            company=company,
+            company=Company.objects.get_or_create(id=1)[0],
             department=department,
             position=position,
             user_type=user_type,
@@ -188,26 +169,12 @@ def create_new_user(request):
         }
         return render(request, "alert.html", result)
     else:
-        if request.user.user_type == UserProfile.ADMIN:
-            company_list = Company.objects.all()
-        else:
-            company_list = [
-                Company.objects.get(id=request.user.company.id)
-            ]
-
-        if company_list:
-            department_list = Department.objects.filter(company=company_list[0])
-        else:
-            department_list = []
-        if len(department_list) > 0:
-            position_list = department_list[0].position.all()
-        else:
-            position_list = []
+        department_list = Department.objects.all()
+        position_list = Position.objects.all()
         return render(
             request,
             "authentication/user_settings.html",
             {
-                "company_list": company_list,
                 "department_list": department_list,
                 "position_list": position_list,
                 "isCreate": True
