@@ -40,12 +40,12 @@ def calculate_progress(user):
     return progress
 
 
-def prepare_probationer_report(request, probationer_list, company_list):
+def prepare_probationer_report(request, probationer_list, department_list):
     """
     Формирование отчёта "Ведомость сотрудника"
     :param request:
     :param probationer_list: список испытуемых для селектора
-    :param company_list: список компаний для селектора
+    :param department_list: список подразделений
     :return:
     """
     try:
@@ -71,7 +71,7 @@ def prepare_probationer_report(request, probationer_list, company_list):
         "reports/reports.html",
         {
             "probationer_list": probationer_list,
-            "company_list": company_list,
+            "department_list": department_list,
             "user_data": user_data,
             "scheduled_theme_list": scheduled_theme_list,
             "scheduled_sub_theme_list": scheduled_sub_theme_list,
@@ -84,19 +84,14 @@ def prepare_probationer_report(request, probationer_list, company_list):
     )
 
 
-def prepare_company_report(request, probationer_list, company_list):
+def prepare_company_report(request, probationer_list, department_list):
     """
     Формирование отчёта "Мгновенный срез по компании"
     :param request:
     :param probationer_list: список испытуемых для селектора
-    :param company_list: список компаний для селектора
+    :param department_list: список подразделений
     :return:
     """
-    try:
-        company = Company.objects.get(id=request.POST["company"])
-        department_list = Department.objects.filter(company=company)
-    except:
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     company_report_data = []
     in_total_completed_probationer_count = 0
     in_total_probationer_count = 0
@@ -163,115 +158,20 @@ def prepare_company_report(request, probationer_list, company_list):
         "reports/reports.html",
         {
             "probationer_list": probationer_list,
-            "company_list": company_list,
-            "company": company,
+            "department_list": department_list,
+            "company": Company.objects.get_or_create(id=1)[0],
             "company_report_data": company_report_data,
             "in_total": in_total,
             "show_company_report": True,
         }
     )
 
-
-def prepare_all_company_report(request, probationer_list, company_list):
-    """
-    Формирование отчёта "Мгновенный срез по группе компаний"
-    :param request:
-    :param probationer_list: список испытуемых для селектора
-    :param company_list: список компаний для селектора
-    :return:
-    """
-    all_company_report_data = []
-    for company in company_list:
-        try:
-            department_list = Department.objects.filter(company=company)
-        except:
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        company_report_data = []
-        in_total_completed_probationer_count = 0
-        in_total_probationer_count = 0
-        in_total_theme_count = 0
-        in_total_completed_theme_count = 0
-        in_total_exam_count = 0
-        in_total_completed_exam_count = 0
-        in_total_assessment = 0
-        for department in department_list:
-            probationer_data_list = UserProfile.objects.filter(department=department, user_type=UserProfile.PROBATIONER, is_active=True)
-            if len(probationer_data_list) == 0:
-                continue
-            else:
-                in_total_probationer_count += len(probationer_data_list)
-                completed_probationer_count = 0
-                theme_count = 0
-                completed_theme_count = 0
-                exam_count = 0
-                completed_exam_count = 0
-                assessment = 0
-                for probationer_data in probationer_data_list:
-                    theme_list = ScheduledTheme.objects.filter(user=probationer_data)
-                    completed_theme_list = ScheduledTheme.objects.filter(user=probationer_data,
-                                                                         status=ScheduledTheme.COMPLETED)
-                    if len(theme_list) == len(completed_theme_list):
-                        in_total_completed_probationer_count += 1
-                        completed_probationer_count += 1
-                    theme_count += len(theme_list)
-                    in_total_theme_count += len(theme_list)
-                    completed_theme_count += len(completed_theme_list)
-                    in_total_completed_theme_count += len(completed_theme_list)
-
-                    exam_list = ThemeExam.objects.filter(user=probationer_data)
-                    exam_count += len(exam_list)
-                    in_total_exam_count += len(exam_list)
-                    for exam in exam_list:
-                        if exam.result:
-                            completed_exam_count += 1
-                            in_total_completed_exam_count += 1
-                            assessment += exam.result
-                            in_total_assessment += exam.result
-
-                result = {
-                    "department_name": department.name,
-                    "probationer_count": len(probationer_data_list),
-                    "completed_probationer_count": completed_probationer_count,
-                    "not_completed_probationer_count": len(probationer_data_list) - completed_probationer_count,
-                    "theme_progress": round(completed_theme_count / theme_count * 100, 1) if theme_count else 0,
-                    "exam_progress": round(completed_exam_count / exam_count * 100, 1) if completed_exam_count else 0,
-                    "assessment": round(assessment / completed_exam_count, 2) if completed_exam_count else 0,
-                }
-                company_report_data.append(result)
-        in_total = {
-            "probationer_count": in_total_probationer_count,
-            "completed_probationer_count": in_total_completed_probationer_count,
-            "not_completed_probationer_count": in_total_probationer_count - in_total_completed_probationer_count,
-            "theme_progress": round(in_total_completed_theme_count / in_total_theme_count * 100, 1) if in_total_theme_count else 0,
-            "exam_progress": round(in_total_completed_exam_count / in_total_exam_count * 100, 1) if in_total_completed_exam_count else 0,
-            "assessment": round(in_total_assessment / in_total_completed_exam_count, 2) if in_total_completed_exam_count else 0,
-        }
-        all_company_report_data.append(
-            {
-                "company": company,
-                "report": company_report_data,
-                "in_total": in_total
-            }
-        )
-
-    return render(
-        request,
-        "reports/reports.html",
-        {
-            "probationer_list": probationer_list,
-            "company_list": company_list,
-            "all_company_report_data": all_company_report_data,
-            "show_all_company_report": True,
-        }
-    )
-
-
-def prepare_exam_list_report(request, probationer_list, company_list):
+def prepare_exam_list_report(request, probationer_list, department_list):
     """
     Формирование отчёта "Зачётный лист сотрудника"
     :param request:
     :param probationer_list: список испытуемых для селектора
-    :param company_list: список компаний для селектора
+    :param department_list: список подразделений
     :return:
     """
     try:
@@ -296,7 +196,7 @@ def prepare_exam_list_report(request, probationer_list, company_list):
         "reports/reports.html",
         {
             "probationer_list": probationer_list,
-            "company_list": company_list,
+            "department_list": department_list,
             "user_data": user_data,
             "journal_list": result_journal_list,
             "exam_list": exam_list,
@@ -305,12 +205,12 @@ def prepare_exam_list_report(request, probationer_list, company_list):
     )
 
 
-def prepare_test_report(request, probationer_list, company_list):
+def prepare_test_report(request, probationer_list, department_list):
     """
     Формирование отчёта "План-график назначенных тестов"
     :param request:
     :param probationer_list: список испытуемых для селектора
-    :param company_list: список компаний для селектора
+    :param department_list: список подразделений
     :return:
     """
     try:
@@ -322,19 +222,19 @@ def prepare_test_report(request, probationer_list, company_list):
         "reports/reports.html",
         {
             "probationer_list": probationer_list,
-            "company_list": company_list,
+            "department_list": department_list,
             "test_list": test_list,
             "show_test_report": True,
         }
     )
 
 
-def prepare_department_report(request, probationer_list, company_list):
+def prepare_department_report(request, probationer_list, department_list):
     """
     Формирование отчёта "Ведомость подразделения"
     :param request:
     :param probationer_list: список испытуемых для селектора
-    :param company_list: список компаний для селектора
+    :param department_list: список подразделений
     :return:
     """
     try:
@@ -394,7 +294,7 @@ def prepare_department_report(request, probationer_list, company_list):
         "reports/reports.html",
         {
             "probationer_list": probationer_list,
-            "company_list": company_list,
+            "department_list": department_list,
             "department": department,
             "result_list": result_list,
             "in_total_progress": round((department_theme_progress)/len(user_list) * 100 if len(user_list) else 0, 2),
@@ -414,27 +314,25 @@ def reports(request):
         return render(request, "alert.html", result)
     elif request.user.user_type == UserProfile.ADMIN:
         probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, is_active=True).order_by("last_name")
-        company_list = Company.objects.all().order_by("name")
+        department_list = Department.objects.all().order_by("name")
     else:
         probationer_list = UserProfile.objects.filter(user_type=UserProfile.PROBATIONER, company=request.user.company, is_active=True)
-        company_list = [request.user.company, ]
+        department_list = Department.objects.all().order_by("name")
     if "probationer_report" in request.POST:
-        return prepare_probationer_report(request, probationer_list, company_list)
+        return prepare_probationer_report(request, probationer_list, department_list)
     elif "department_report" in request.POST:
-        return prepare_department_report(request, probationer_list, company_list)
+        return prepare_department_report(request, probationer_list, department_list)
     elif "company_report" in request.POST:
-        return prepare_company_report(request, probationer_list, company_list)
-    elif "all_company_report" in request.POST:
-        return prepare_all_company_report(request, probationer_list, company_list)
+        return prepare_company_report(request, probationer_list, department_list)
     elif "exam_list_report" in request.POST:
-        return prepare_exam_list_report(request, probationer_list, company_list)
+        return prepare_exam_list_report(request, probationer_list, department_list)
     elif "test_report" in request.POST:
-        return prepare_test_report(request, probationer_list, company_list)
+        return prepare_test_report(request, probationer_list, department_list)
     return render(
         request,
         "reports/reports.html",
         {
             "probationer_list": probationer_list,
-            "company_list": company_list
+            "department_list": department_list
         }
     )

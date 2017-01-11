@@ -19,9 +19,6 @@
         </li>
         <li id="liCompanyReport" role="presentation"><a id="aCompanyReport" href="#">Мгновенный срез по компании</a>
         </li>
-        <li id="liAllCompanyReport" role="presentation"><a id="aAllCompanyReport" href="#">Мгновенный срез по группе
-            компаний</a>
-        </li>
         <li id="liTestReport" role="presentation"><a id="aTestReport" href="#">План-график назначенных тестов</a>
         </li>
     </ul>
@@ -197,19 +194,11 @@
         <div class="row">
             <form id="formDepartmentReport" action="{% url "reports" %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <div class="form-group col-lg-2">
-                    <select id="selectCompany" name="company" class="selectpicker">
-                        {% for company in company_list %}
-                            {% if department and department.company == company %}
-                                <option value="{{ company.id }}" selected>{{ company.name }}</option>
-                            {% else %}
-                                <option value="{{ company.id }}">{{ company.name }}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group col-lg-2">
+                 <div class="form-group col-lg-2">
                     <select id="selectDepartment" name="department" class="selectpicker">
+                        {% for department in department_list %}
+                            <option value="{{ department.id }}">{{ department.name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="col-lg-4">
@@ -385,26 +374,8 @@
     </div>
     <div id="divCompanyReport" hidden>
         <div class="row">
-            <div class="col-lg-6">
-                <h5>Выберите компанию</h5>
-            </div>
-        </div>
-        <div class="row">
             <form id="formCompanyReport" action="{% url "reports" %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <div class="col-lg-4">
-                    <div class="form-group">
-                        <select name="company" class="selectpicker" data-width="100%" data-live-search="true" required>
-                            {% for item in company_list %}
-                                {% if company and company == item %}
-                                    <option value="{{ item.id }}" selected>{{ item.name }}</option>
-                                {% else %}
-                                    <option value="{{ item.id }}">{{ item.name }}</option>
-                                {% endif %}
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
                 <div class="col-lg-4">
                     <button type="submit" name="company_report" class="btn btn-success">Сформировать</button>
                 </div>
@@ -491,100 +462,6 @@
                     </table>
                 </div>
             </div>
-        {% endif %}
-    </div>
-    <div id="divAllCompanyReport" hidden>
-        <div class="row">
-            <form id="formAllCompanyReport" action="{% url "reports" %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="col-lg-4">
-                    <button type="submit" name="all_company_report" class="btn btn-success">Сформировать</button>
-                </div>
-            </form>
-        </div>
-        <p></p>
-        {% if show_all_company_report %}
-            {% for company_report_data in all_company_report_data %}
-                <div class="row">
-                    <div class="col-lg-12">
-                        <table class="table table-bordered table-hover">
-                            <thead>
-                            <tr>
-                                <th>Название компании</th>
-                                <th colspan="6">Критерии</th>
-                            </tr>
-                            <tr>
-                                <th>{{ company_report_data.company.name }}</th>
-                                <th width="12%">Всего испытуемых</th>
-                                <th width="12%">Всего испытуемых, завершивших обучение</th>
-                                <th width="12%">Всего обучаемых испытуемых</th>
-                                <th width="12%">Прогресс</th>
-                                <th width="12%">Зачеты</th>
-                                <th width="12%">Средняя оценка</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for data in company_report_data.report %}
-                                <tr>
-                                    <td>{{ data.department_name }}</td>
-                                    <td>{{ data.probationer_count }}</td>
-                                    <td>{{ data.completed_probationer_count }}</td>
-                                    <td>{{ data.not_completed_probationer_count }}</td>
-                                    <td>
-                                        <div class="progress">
-                                            <div class="progress-bar" role="progressbar"
-                                                 aria-valuenow="{{ data.theme_progress }}"
-                                                 aria-valuemin="0" aria-valuemax="100"
-                                                 style="width: {{ data.theme_progress }}%;">
-                                                {{ data.theme_progress }}%
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="progress">
-                                            <div class="progress-bar" role="progressbar"
-                                                 aria-valuenow="{{ data.exam_progress }}"
-                                                 aria-valuemin="0" aria-valuemax="100"
-                                                 style="width: {{ data.exam_progress }}%;">
-                                                {{ data.exam_progress }}%
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>{{ data.assessment }}</td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                            <tfoot>
-                            <th>Итого</th>
-                            <th>{{ company_report_data.in_total.probationer_count }}</th>
-                            <th>{{ company_report_data.in_total.completed_probationer_count }}</th>
-                            <th>{{ company_report_data.in_total.not_completed_probationer_count }}</th>
-                            <th>
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar"
-                                         aria-valuenow="{{ company_report_data.in_total.theme_progress }}"
-                                         aria-valuemin="0" aria-valuemax="100"
-                                         style="width: {{ company_report_data.in_total.theme_progress }}%;">
-                                        {{ company_report_data.in_total.theme_progress }}%
-                                    </div>
-                                </div>
-                            </th>
-                            <th>
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar"
-                                         aria-valuenow="{{ company_report_data.in_total.exam_progress }}"
-                                         aria-valuemin="0" aria-valuemax="100"
-                                         style="width: {{ company_report_data.in_total.exam_progress }}%;">
-                                        {{ company_report_data.in_total.exam_progress }}%
-                                    </div>
-                                </div>
-                            </th>
-                            <th>{{ company_report_data.in_total.assessment }}</th>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-            {% endfor %}
         {% endif %}
     </div>
     <div id="divTestReport" hidden>

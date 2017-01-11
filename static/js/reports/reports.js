@@ -80,13 +80,11 @@ $(document).ready(function () {
         $("#liDepartmentReport").removeClass( "active" );
         $("#liExamListReport").removeClass( "active" );
         $("#liCompanyReport").removeClass( "active" );
-        $("#liAllCompanyReport").removeClass( "active" );
         $("#liTestReport").removeClass( "active" );
         $("#divProbationerReport").show();
         $("#divDepartmentReport").hide();
         $("#divExamListReport").hide();
         $("#divCompanyReport").hide();
-        $("#divAllCompanyReport").hide();
         $("#divTestReport").hide();
         window.localStorage.setItem("tab", "probationerReport")
     });
@@ -97,13 +95,11 @@ $(document).ready(function () {
         $("#liDepartmentReport").addClass( "active" );
         $("#liExamListReport").removeClass( "active" );
         $("#liCompanyReport").removeClass( "active" );
-        $("#liAllCompanyReport").removeClass( "active" );
         $("#liTestReport").removeClass( "active" );
         $("#divProbationerReport").hide();
         $("#divDepartmentReport").show();
         $("#divExamListReport").hide();
         $("#divCompanyReport").hide();
-        $("#divAllCompanyReport").hide();
         $("#divTestReport").hide();
         window.localStorage.setItem("tab", "departmentReport")
     });
@@ -120,7 +116,6 @@ $(document).ready(function () {
         $("#divDepartmentReport").hide();
         $("#divExamListReport").show();
         $("#divCompanyReport").hide();
-        $("#divAllCompanyReport").hide();
         $("#divTestReport").hide();
         window.localStorage.setItem("tab", "examListReport")
     });
@@ -137,7 +132,6 @@ $(document).ready(function () {
         $("#divDepartmentReport").hide();
         $("#divExamListReport").hide();
         $("#divCompanyReport").show();
-        $("#divAllCompanyReport").hide();
         $("#divTestReport").hide();
         window.localStorage.setItem("tab", "companyReport")
     });
@@ -154,7 +148,6 @@ $(document).ready(function () {
         $("#divDepartmentReport").hide();
         $("#divExamListReport").hide();
         $("#divCompanyReport").hide();
-        $("#divAllCompanyReport").show();
         $("#divTestReport").hide();
         window.localStorage.setItem("tab", "allCompanyReport")
     });
@@ -171,7 +164,6 @@ $(document).ready(function () {
         $("#divDepartmentReport").hide();
         $("#divExamListReport").hide();
         $("#divCompanyReport").hide();
-        $("#divAllCompanyReport").hide();
         $("#divTestReport").show();
         window.localStorage.setItem("tab", "testReport")
     });
@@ -180,47 +172,6 @@ $(document).ready(function () {
         style: 'btn-default',
         size: 4
     });
-
-    $("#selectCompany").change(function() {
-        $.ajax({
-            type: "POST",
-            url: "/get/department/list/",
-            data: {
-                csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
-                id: $(this).val()
-            },
-            success: function (data) {
-                $('#selectDepartment')
-                    .find('option')
-                    .remove()
-                    .end()
-                    .selectpicker('refresh')
-                ;
-                var departmentList = data["department_list"];
-                for (var i = 0; i < departmentList.length; i++) {
-                    if ($('#departmentId').val() == departmentList[i]["id"]) {
-                        $('#selectDepartment').append($("<option/>", {
-                            value: departmentList[i]["id"],
-                            text: departmentList[i]["name"]
-                        })).selectpicker('refresh');
-                        $('#selectDepartment').val(departmentList[i]["id"]);
-                        $('#selectDepartment').selectpicker('refresh');
-                    } else {
-                        $('#selectDepartment').append($("<option/>", {
-                            value: departmentList[i]["id"],
-                            text: departmentList[i]["name"]
-                        })).selectpicker('refresh');
-                    }
-                }
-            },
-            error: function (xhr, textStatus, errorThrown) {
-                console.log("Error: " + errorThrown + xhr.status + xhr.responseText);
-            }
-        });
-    });
-
-    $("#selectCompany").trigger( "change" );
-
 });
 
 
