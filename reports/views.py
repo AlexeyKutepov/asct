@@ -246,6 +246,7 @@ def prepare_department_report(request, probationer_list, department_list):
     in_total_assessment = 0
     in_total_assessment_count = 0
     department_theme_progress = 0.0
+    not_assigned = 0
     for user in user_list:
         exam_list = ThemeExam.objects.filter(user=user)
         assessment = 0
@@ -277,7 +278,7 @@ def prepare_department_report(request, probationer_list, department_list):
             department_theme_progress += progress/100
         else:
             progress = "Темы не назначены"
-            department_theme_progress += 1
+            not_assigned += 1
 
         result_list.append(
             {
@@ -297,7 +298,7 @@ def prepare_department_report(request, probationer_list, department_list):
             "department_list": department_list,
             "department": department,
             "result_list": result_list,
-            "in_total_progress": round((department_theme_progress)/len(user_list) * 100 if len(user_list) else 0, 2),
+            "in_total_progress": round((department_theme_progress)/(len(user_list) - not_assigned) * 100 if len(user_list) else 0, 2),
             "in_total_assessment": in_total_assessment,
             "show_department_report": True
         }
