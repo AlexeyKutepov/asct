@@ -246,37 +246,6 @@ def get_journal_list(request):
         })
     return JsonResponse({"journal_list": result_list})
 
-
-@login_required
-def create_new_company(request):
-    if request.user.user_type == UserProfile.ADMIN:
-        if "company" in request.POST:
-            company_list = Company.objects.filter(name=request.POST["company"])
-            if company_list:
-                result = {
-                    "status": "danger",
-                    "message": "Компания " + request.POST["company"] + " уже существует!"
-                }
-                return render(request, "alert.html", result)
-            else:
-                company = Company.objects.create(name=request.POST["company"])
-                if "department" in request.POST:
-                    for department in request.POST.getlist("department"):
-                        Department.objects.create(name=department, company=company)
-                result = {
-                    "status": "success",
-                    "message": "Компания " + request.POST["company"] + " успешно добавлена!"
-                }
-                return render(request, "alert.html", result)
-        else:
-            return render(request, "main/company_settings.html", {"isCreate": True, "title": "Новая компания"})
-    else:
-        result = {
-            "status": "danger",
-            "message": "Доступ запрещён"
-        }
-        return render(request, "alert.html", result)
-
 @login_required
 def edit_company(request):
     if request.user.user_type == UserProfile.PROBATIONER:
@@ -324,41 +293,6 @@ def add_department(request):
             return render(request, "alert.html", result)
 
     return HttpResponseRedirect(reverse("departments_and_positions"))
-
-
-@login_required
-def department_settings(request, id):
-    department = Department.objects.get(id=id)
-    position_list = Position.objects.all().order_by('name')
-    if "save" in request.POST:
-        department.name = request.POST["department"]
-        in_department_list = request.POST.getlist("inDepartment")
-        i = 0
-        for position in position_list:
-            if str(i) in in_department_list:
-                if not position in department.position.all():
-                    department.position.add(position)
-            else:
-                if position in department.position.all():
-                    department.position.remove(position)
-            i += 1
-        department.save()
-        result = {
-            "status": "success",
-            "message": "Изменения успешно сохранены!"
-        }
-        return render(request, "alert.html", result)
-    else:
-        return render(
-            request,
-            "main/department_settings.html",
-            {
-                "department": department,
-                "position_list": position_list,
-                "department_position_list": department.position.all()
-            }
-        )
-
 
 @login_required
 def delete_department(request, id):
@@ -711,7 +645,7 @@ def schedule_theme(request, id):
             )
         try:
             send_mail(
-                'Вам назначена тема в Premier E-ducation Hub',
+                'Вам назначена тема в E-ducation Hub',
                 'Здравствуйте ' + user.first_name + '! \n \n Вам назначена тема для изучения: \"' + theme.name
                 + '\" \n\n Срок до ' + request.POST["dateTo"]
                 + ' \n\n Для изучения перейдите по ссылке: ' + request.build_absolute_uri(
@@ -756,7 +690,7 @@ def schedule_theme_to_user(request):
             )
         try:
             send_mail(
-                'Вам назначена тема в Premier E-ducation Hub',
+                'Вам назначена тема в E-ducation Hub',
                 'Здравствуйте ' + user.first_name + '! \n \n Вам назначена тема для изучения: \"' + theme.name
                 + '\" \n\n Срок до ' + request.POST["dateTo"]
                 + ' \n\n Для изучения перейдите по ссылке: ' + request.build_absolute_uri(
@@ -820,7 +754,7 @@ def schedule_exam(request, id):
         )
         try:
             send_mail(
-                'Вам назначен зачёт в Premier E-ducation Hub',
+                'Вам назначен зачёт в E-ducation Hub',
                 'Здравствуйте ' + user.first_name + '! \n \n Вам назначен зачёт по теме: \"' + theme.name
                 + '\" \n\n Дата и время проведения зачёта: ' + str(theme_exam.datetime).replace('T', ' ')
                 + ' \n\n Место проведения зачёта: ' + request.POST["place"]
@@ -856,7 +790,7 @@ def edit_exam(request, id):
         theme_exam.save()
         try:
             send_mail(
-                'Изменение информации по зачёту в Premier E-ducation Hub',
+                'Изменение информации по зачёту в E-ducation Hub',
                 'Здравствуйте ' + user.first_name + '! \n \n Информация по зачёту была изменена. Актуальная информация:  \n \n Зачёт по теме: \"' + theme_exam.theme.name
                 + '\" \n\n Дата и время проведения зачёта: ' + str(theme_exam.datetime).replace('T', ' ')
                 + ' \n\n Место проведения зачёта: ' + request.POST["place"]

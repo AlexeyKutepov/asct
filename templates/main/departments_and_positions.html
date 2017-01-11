@@ -123,7 +123,7 @@
                                 {% for department in department_list %}
                                     <tr>
                                         <td>
-                                            <a href="{% url "department_settings" id=department.id %}">{{ department }}</a>
+                                            {{ department }}
                                         </td>
                                         <td width="100px">
                                             <form id="formDeleteDepartment{{ forloop.counter }}"
