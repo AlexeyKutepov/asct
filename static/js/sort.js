@@ -8,7 +8,7 @@ $(document).ready(function () {
      */
     var tableUserList = $("#tableUserList");
 
-    $('#thUserName, #thUserPosition, #thUserCompany, #thUserType')
+    $('#thUserName, #thUserPosition, #thUserDepartment, #thUserType')
         .wrapInner('<span title="sort this column"/>')
         .each(function () {
             var th = $(this),
@@ -37,7 +37,7 @@ $(document).ready(function () {
      */
     var tableFireUserList = $("#tableFireUserList");
 
-    $('#thFireUserName, #thFireUserPosition, #thFireUserCompany, #thFireUserType')
+    $('#thFireUserName, #thFireUserPosition, #thFireUserDepartment, #thFireUserType')
         .wrapInner('<span title="sort this column"/>')
         .each(function(){
         var th = $(this),

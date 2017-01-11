@@ -47,8 +47,8 @@
                     <th id="thUserPosition" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
                                                                          aria-hidden="true"></span> Должность
                     </th>
-                    <th id="thUserCompany" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
-                                                                        aria-hidden="true"></span> Компания
+                    <th id="thUserDepartment" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
+                                                                        aria-hidden="true"></span> Подразделение
                     </th>
                     <th id="thUserType" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
                                                                      aria-hidden="true"></span> Права
@@ -58,7 +58,7 @@
                         <tr>
                             <td><a href="{% url "user_info" id=item.id %}">{{ item.get_full_name }}</a></td>
                             <td>{{ item.position }}</td>
-                            <td>{{ item.company }}</td>
+                            <td>{{ item.department }}</td>
                             {% if item.user_type == "ADMIN" %}
                                 <td><input name="tdadmin" hidden>Администратор</td>
                             {% elif item.user_type == "OPERATOR" %}
@@ -96,8 +96,8 @@
                     <th id="thFireUserPosition" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
                                                                              aria-hidden="true"></span> Должность
                     </th>
-                    <th id="thFireUserCompany" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
-                                                                            aria-hidden="true"></span> Компания
+                    <th id="thFireUserDepartment" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
+                                                                            aria-hidden="true"></span> Подразделение
                     </th>
                     <th id="thFireUserType" class="cursor-pointer"><span class="glyphicon glyphicon-sort"
                                                                          aria-hidden="true"></span> Права
@@ -107,7 +107,7 @@
                         <tr>
                             <td><a href="{% url "user_info" id=item.id %}">{{ item.get_full_name }}</a></td>
                             <td>{{ item.position }}</td>
-                            <td>{{ item.company }}</td>
+                            <td>{{ item.department }}</td>
                             {% if item.user_type == "ADMIN" %}
                                 <td><input name="tdadmin" hidden>Администратор</td>
                             {% elif item.user_type == "OPERATOR" %}

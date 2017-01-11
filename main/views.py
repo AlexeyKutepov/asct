@@ -316,12 +316,10 @@ def create_journal(request):
         }
         return render(request, "alert.html", result)
     if "save" in request.POST:
-        company = Company.objects.get_or_create(id=1)[0]
         journal = Journal.objects.create(
             name=request.POST["name"],
             description=request.POST["description"],
             owner=request.user,
-            company=company,
         )
         return HttpResponseRedirect(reverse("journal_settings", args=[journal.id, ]))
     else:
@@ -348,16 +346,6 @@ def edit_journal(request, id):
         journal.name = request.POST["name"]
     if "description" in request.POST:
         journal.description = request.POST["description"]
-    if "company" in request.POST:
-        try:
-            company = Company.objects.get(id=request.POST["company"])
-            journal.company = company
-        except:
-            pass
-    if "bindDepartment" in request.POST and request.POST["bindDepartment"] == 'on' and "department" in request.POST:
-        journal.department = Department.objects.get(id=request.POST["department"])
-    else:
-        journal.department = None
     journal.save()
     return HttpResponseRedirect(reverse("journal_settings", args=[journal.id, ]))
 
@@ -374,18 +362,10 @@ def clone_journal(request, id):
         journal = Journal.objects.get(id=id)
     except:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    if "company" in request.POST:
-        try:
-            company = Company.objects.get(id=request.POST["company"])
-        except:
-            company = request.user.company
-    else:
-        company = request.user.company
     cloned_journal = Journal.objects.create(
         name=journal.name,
         description=journal.description,
         owner=request.user,
-        company=company
     )
     theme_list = Theme.objects.filter(journal=journal)
     for theme in theme_list:
@@ -413,7 +393,7 @@ def clone_journal(request, id):
                     )
     test_list = Test.objects.filter(journal=journal)
     for test in test_list:
-        cloned_test = Test.objects.create(
+        Test.objects.create(
             name=test.name,
             description=test.description,
             test=test.test,
@@ -424,7 +404,7 @@ def clone_journal(request, id):
 
     result = {
         "status": "success",
-        "message": "Программа \"" + journal.name + "\" дублирована для компании \"" + company.name + "\""
+        "message": "Учебная программа \"" + journal.name + "\" успешно продублирована!"
     }
     return render(request, "alert.html", result)
 
