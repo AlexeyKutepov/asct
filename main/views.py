@@ -14,11 +14,6 @@ from main.models import Company, Department, Journal, Theme, SubTheme, Scheduled
     File, Position, ThemeExam
 from exam.models import Test, TestJournal
 
-
-def test_page(request):
-    return journals(request)
-
-
 def calculate_progress(user):
     theme_list = ScheduledTheme.objects.filter(user=user)
     completed_theme_list = ScheduledTheme.objects.filter(user=user,
